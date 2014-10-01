@@ -1,0 +1,33 @@
+MVC honlap
+	-AB
+
+----------------
+regisztráció
+	//jogosultságok
+	oldal szintû regisztráció
+
+szervezetek
+	saját készítése, meghívás másikba
+	leiro doksi
+	projektek
+		létrehozás, szerkesztés, nézõ(felügyelõ) meghívása
+		láthatóság
+		issue
+			létrehozás, vagy assign
+			todo, doing, done (huzogatás)
+			commentek
+			bugreportok
+			képek, feltöltés, nézegetés
+			értesítések (comment érkezett, assign-t kaptál, státusz változás)
+		wiki page létrehozása
+	projektek wiki page-ei összeszedése (fa szerk)
+		
+kimutatások, statisztikák
+	emberekre lebontott stat.
+	projekt elõrehaladása
+	diagrammok (bugok száma, issue, idõ)
+
+-------------------
+
+
+
