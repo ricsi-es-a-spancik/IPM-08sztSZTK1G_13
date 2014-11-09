@@ -11,3 +11,4 @@ Folyamatban lévő feladatok:
     Balu: AccountController
     Ricsi: IssueController
     Dávid: HomeController, OrganizationController
+	Peti: ProjectController
