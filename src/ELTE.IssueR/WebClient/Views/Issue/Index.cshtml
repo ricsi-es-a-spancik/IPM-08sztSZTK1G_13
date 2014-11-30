@@ -1,0 +1,16 @@
+﻿@using ELTE.IssueR.WebClient.Models
+@using Models
+@model IssueViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.DropDownListFor(vm => vm.CurrentProjectId, new SelectList(Model.Projects, "Id", "Name"), new { onchange = Html.Action("Index") })
+
+@foreach(Epic epic in Model.CurrentEpics)
+{
+    <div>
+        @epic.Id
+    </div>
+}
