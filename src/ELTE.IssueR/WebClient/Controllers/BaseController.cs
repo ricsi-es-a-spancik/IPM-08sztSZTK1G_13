@@ -13,7 +13,13 @@ namespace WebClient.Controllers
         public BaseController()
         {
             _database = new Models.IssueREntities();
+            
         }
 
+        public void Log(ELTE.IssueR.WebClient.Models.Logger.LogType t, String msg)
+        {
+            //Multithread
+            System.Threading.Tasks.Task.Run(() => ELTE.IssueR.WebClient.Models.Logger.Logger.Log(t, msg));
+        }
     }
 }

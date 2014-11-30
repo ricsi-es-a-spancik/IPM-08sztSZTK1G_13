@@ -1,0 +1,4 @@
+Ide kerülnek az Application[]-beli kulcs-érték párok, hogy tudjuk mit lehet használni és milyen néven.
+
+|  Kulcs  |  Érték  |  Típus  |
+| usersList | A bejelentkezett felhasználók nevei. |  List<String>  |

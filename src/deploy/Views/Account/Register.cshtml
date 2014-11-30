@@ -1,0 +1,90 @@
+﻿@using ELTE.IssueR.WebClient.Models.Account;
+@using Recaptcha.Web.Mvc;
+
+@model NewUserViewModel
+
+@section AddToHead
+{
+    <link href="@Url.Content("~/Content/Styles/AccountStyle.css")" rel="stylesheet" type="text/css" />
+}
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    ViewBag.Title = "Regisztráció";
+}
+
+@using (Html.BeginForm()) // egy űrlapban töltjük ki a tartalmat
+{
+    @Html.AntiForgeryToken() // védelem XSRF támadás ellen
+
+        <table class="registerTable">
+            <tr>
+                <td colspan="2" class="registerTableData">
+                    <div class="registerError">@Html.ValidationSummary(true, "A regisztráció sikertelen!")</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="registerTableData">
+                    <div class="registerText">Felhasználónév (3-20 karakter):</div>
+                </td>
+                <td class="registerTableData">
+                    @Html.EditorFor(user => user.UserName)
+                    @Html.ValidationMessageFor(user => user.UserName)
+                </td>
+            </tr>
+            <tr>
+                <td class="registerTableData">
+                    <div class="registerText">Név (max 50 karakter):</div>
+                </td>
+                <td class="registerTableData">
+                    @Html.EditorFor(user => user.Name)
+                    @Html.ValidationMessageFor(user => user.Name)
+                </td>
+            </tr>
+            <tr>
+                <td class="registerTableData">
+                    <div class="registerText">E-mail cím:</div>
+                </td>
+                <td class="registerTableData" colspan="2">
+                    @Html.EditorFor(user => user.Email)
+                    @Html.ValidationMessageFor(user => user.Email)
+                </td>
+
+            </tr>
+            <tr>
+                <td class="registerTableData">
+                    <div class="registerText">Jelszó (5-40 karakter):</div>
+                </td>
+                <td class="registerTableData">
+                    @Html.EditorFor(user => user.UserPassword)
+                    @Html.ValidationMessageFor(user => user.UserPassword)
+                </td>
+            </tr>
+            <tr>
+                <td class="registerTableData">
+                    <div class="registerText">Jelszó megismétlése:</div>
+                </td>
+                <td class="registerTableData">
+                    @Html.EditorFor(user => user.UserConfirmPassword)
+                    @Html.ValidationMessageFor(user => user.UserConfirmPassword)
+                </td>
+            </tr>
+            <tr>
+                <td class="registerTableData">
+                    <div class="registerText">Írd be a képen látható szöveget:</div>
+                </td>
+                <td class="registerTableData">
+                    @Html.Recaptcha(theme: Recaptcha.Web.RecaptchaTheme.Clean)
+                </td>
+            </tr>
+            <tr>
+                <td class="registerTableData" colspan="2">
+                    <input type="submit" value="Regisztráció" class="registerSubmit" />
+                </td>
+            </tr>
+        </table>
+}
+

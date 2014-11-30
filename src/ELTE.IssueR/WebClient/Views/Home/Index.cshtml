@@ -3,5 +3,14 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Babinéni CSŐŐŐ!</h2>
+@section AddToHead
+{
+    <link href="@Url.Content("~/Content/Styles/HomeStyle.css")" rel="stylesheet" type="text/css" />
+}
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index Cím</h1>
 
