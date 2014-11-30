@@ -1,0 +1,4 @@
+Ide kerülnek a Session[]-beli kulcs-érték párok, hogy tudjuk mit lehet használni és milyen néven.
+
+|  Kulcs  |  Érték  |  Típus  |
+| userName | A bejelentkezett felhasználó neve (unique). |  String  |

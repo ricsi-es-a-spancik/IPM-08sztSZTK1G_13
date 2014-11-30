@@ -13,7 +13,6 @@
         <EntityTypeShape EntityType="IssueRModel.Message" Width="1.5" PointX="3" PointY="7.25" IsExpanded="true" />
         <EntityTypeShape EntityType="IssueRModel.Organization" Width="1.5" PointX="1.5" PointY="14.25" IsExpanded="true" />
         <EntityTypeShape EntityType="IssueRModel.Project" Width="1.5" PointX="0.75" PointY="1.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="IssueRModel.sysdiagram" Width="1.5" PointX="5.75" PointY="7.75" IsExpanded="true" />
         <EntityTypeShape EntityType="IssueRModel.UserImage" Width="1.5" PointX="3" PointY="10.625" IsExpanded="true" />
         <EntityTypeShape EntityType="IssueRModel.User" Width="1.5" PointX="0.75" PointY="5.125" IsExpanded="true" />
         <AssociationConnector Association="IssueRModel.FK_CoverImages_Organizations" ManuallyRouted="false" />

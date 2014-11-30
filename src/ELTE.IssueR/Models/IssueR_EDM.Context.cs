@@ -33,7 +33,6 @@ namespace Models
         public virtual DbSet<Message> Messages { get; set; }
         public virtual DbSet<Organization> Organizations { get; set; }
         public virtual DbSet<Project> Projects { get; set; }
-        public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<UserImage> UserImages { get; set; }
         public virtual DbSet<User> Users { get; set; }
     }

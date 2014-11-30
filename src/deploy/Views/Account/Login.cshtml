@@ -1,0 +1,51 @@
+﻿@using ELTE.IssueR.WebClient.Models.Account;
+
+@model UserViewModel
+
+@section AddToHead
+{
+    <link href="@Url.Content("~/Content/Styles/AccountStyle.css")" rel="stylesheet" type="text/css" />
+}
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    ViewBag.Title = "Bejelentkezés";
+}
+
+@using (Html.BeginForm()) // egy űrlapban töltjük ki a tartalmat
+{
+    @Html.AntiForgeryToken() // védelem XSRF támadás ellen
+
+        <table class="loginTable">
+            <tr>
+                <td class="loginTableData" colspan="2">
+                    <div class="loginError">@ViewBag.Information</div>
+                    <div class="loginError">@Html.ValidationSummary(true, "A bejelentkezés sikertelen!")</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="loginTableData">
+                    <div class="loginText">Felhasználónév:</div>
+                </td>
+                <td class="loginTableData">
+                    @Html.EditorFor(user => user.UserName)
+                </td>
+            </tr>
+            <tr>
+                <td class="loginTableData">
+                    <div class="loginText">Jelszó:</div>
+                </td>
+                <td class="loginTableData">
+                    @Html.EditorFor(user => user.UserPassword)
+                </td>
+            </tr>
+            <tr>
+                <td class="loginTableData" colspan="2">
+                    <input type="submit" autofocus value="Bejelentkezés" class="loginSubmit" />
+                </td>
+            </tr>
+        </table>
+}
