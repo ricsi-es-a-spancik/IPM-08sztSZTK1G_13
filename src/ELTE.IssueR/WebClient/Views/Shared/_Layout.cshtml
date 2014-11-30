@@ -10,6 +10,7 @@
     <title>@ViewBag.Title - My ASP.NET Application</title>
     <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/Styles/LayoutStyle.css")" rel="stylesheet" type="text/css" />
     <script src="~/Scripts/modernizr-2.6.2.js"></script>
     @if (IsSectionDefined("AddToHead"))
     {
@@ -17,30 +18,80 @@
     }
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("Home", "Index", "Home", null, new { @class = "navbar-brand" })
-                @Html.ActionLink("Issue", "Index", "Issue", null, new { @class = "navbar-brand" })
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                </ul>
-            </div>
-        </div>
-    </div>
 
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
+    <div id="bodywrapper">
+
+        <div id="header">
+            
+            <table id="headerlayouttable">
+                <tr>
+                    <td id="logobox">
+                        <img src="Images/issuerlogo.jpg" />
+                    </td>
+                    <td id="searchbox">
+                        <form action="">
+                            <input id="searchfield" type="text" placeholder="vállalat neve..." />
+                            <input type="submit" class="accountbutton" value="Keresés"/>
+                        </form>
+                    </td>
+                    <td id="accountbox">
+                        <!-- Guest -->
+                        <!--
+                        <button class="accountbutton">Bejelentkezés</button>
+                        -->
+
+                        <!-- Logged in -->
+                        
+                        <table>
+                            <tr>
+                                <td>
+                                    <img src="Images/newmail.jpg" />
+                                </td>
+                                <td>
+                                    <button class="accountbutton">David Hornyak</button>
+                                </td>
+                                <td>
+                                    <button class="accountbutton">Kijelentkezés</button>
+                                </td>
+                            </tr>
+                        </table>
+                        
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div id="contentwrapper">
+            <!-- Auto generated block-->
+            <div class="navbar navbar-inverse navbar-fixed-top">
+                <div class="container">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        @Html.ActionLink("Application name", "Index", "Home", null, new { @class = "navbar-brand" })
+                    </div>
+                    <div class="navbar-collapse collapse">
+                        <ul class="nav navbar-nav"></ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container body-content">
+                @RenderBody()
+                <hr />
+                <footer>
+                    <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+                </footer>
+            </div>
+            <!-- Auto genrated block end-->
+        </div>
+
+        <div id="footer">
+
+        </div>
     </div>
 
     <script src="~/Scripts/jquery-1.10.2.min.js"></script>
