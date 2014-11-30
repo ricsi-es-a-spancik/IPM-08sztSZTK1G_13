@@ -10,12 +10,19 @@ namespace WebClient.Controllers
 {
     public class IssueController : BaseController
     {
-        private IssueViewModel issuevm = null;
+        IssueViewModel issuevm;
 
         public ActionResult Index()
         {
             issuevm = new IssueViewModel(_database);
-            ViewData.Add("projectlist", issuevm.Projects);
+            return View("Index", issuevm);
+        }
+
+        public ActionResult SelectProject(int prjid)
+        {
+            issuevm = new IssueViewModel(_database);
+            issuevm.CurrentProjectId = prjid;
+            issuevm.CurrentProject = issuevm.Projects.Find(prj => prj.Id == prjid);
             return View("Index", issuevm);
         }
     }

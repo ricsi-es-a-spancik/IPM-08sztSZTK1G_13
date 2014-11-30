@@ -37,9 +37,10 @@ namespace ELTE.IssueR.WebClient.Models
             get { return curProject; }
             set 
             { 
-                curProject = value; 
-                curEpics = entity.Epics.Where(epic => epic.ProjectId == curProject.Id).ToList();
-                curIssues = entity.Issues.Where(issue => curEpics.Exists(epic => epic.Id == issue.EpicId)).ToList();
+                curProject = value;
+                curProjectId = value.Id;
+                curEpics = entity.Epics.Where(epic => epic.ProjectId == curProject.Id).Select(epic => epic).ToList();
+                curIssues = entity.Issues.ToList().FindAll(issue => curEpics.Exists(epic => epic.Id == issue.EpicId));
             }
         }
 
@@ -59,6 +60,9 @@ namespace ELTE.IssueR.WebClient.Models
         {
             this.entity = entity;
             projects = entity.Projects.ToList();
+
+            if (projects.Count != 0)
+                CurrentProject = projects[0];
         }
     }
 }
