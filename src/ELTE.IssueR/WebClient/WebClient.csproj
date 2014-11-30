@@ -102,8 +102,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Styles\AccountStyle.css" />
+    <Content Include="Content\Styles\LayoutStyle.css" />
     <Content Include="Global.asax" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Images\issuerlogo.jpg" />
+    <Content Include="Images\mail.jpg" />
+    <Content Include="Images\newmail.jpg" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
