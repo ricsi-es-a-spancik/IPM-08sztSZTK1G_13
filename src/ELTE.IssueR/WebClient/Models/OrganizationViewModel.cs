@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
-namespace WebClient.Models.Organization
+namespace WebClient.Models
 {
     public class OrganizationViewModel
     {
@@ -13,7 +13,6 @@ namespace WebClient.Models.Organization
         public string Name { get; set; }
 
         [Required(ErrorMessage = "Az alapítás évének megadása kötelező.")]
-        [Range(0, System.DateTime.Now.Year, ErrorMessage = "Az alapítás éve nagyobb, mint a jelenlegi dátum.")]
         public int FoundationYear { get; set; }
 
         [Required(ErrorMessage = "Az ország megadása kötelező.")]
