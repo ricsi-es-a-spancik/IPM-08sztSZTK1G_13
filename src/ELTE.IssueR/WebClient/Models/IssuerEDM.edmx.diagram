@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="a867311877e543b98651b93f3adc9b39" Name="Diagram1">
+        <EntityTypeShape EntityType="IssueRModel.CoverImage" Width="1.5" PointX="3.75" PointY="13.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="IssueRModel.Document" Width="1.5" PointX="3" PointY="17.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="IssueRModel.Employee" Width="1.5" PointX="3" PointY="3.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="IssueRModel.Epic" Width="1.5" PointX="3" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="IssueRModel.Issue" Width="1.5" PointX="5.25" PointY="3.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="IssueRModel.Message" Width="1.5" PointX="3" PointY="7.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="IssueRModel.Organization" Width="1.5" PointX="1.5" PointY="14.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="IssueRModel.Project" Width="1.5" PointX="0.75" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="IssueRModel.sysdiagram" Width="1.5" PointX="5.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="IssueRModel.UserImage" Width="1.5" PointX="3" PointY="10.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="IssueRModel.User" Width="1.5" PointX="0.75" PointY="5.125" IsExpanded="true" />
+        <AssociationConnector Association="IssueRModel.FK_CoverImages_Organizations" ManuallyRouted="false" />
+        <AssociationConnector Association="IssueRModel.FK_Documents_Projects" ManuallyRouted="false" />
+        <AssociationConnector Association="IssueRModel.FK_Employees_Projects" ManuallyRouted="false" />
+        <AssociationConnector Association="IssueRModel.FK_Employees_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="IssueRModel.FK_Issues_Employees" ManuallyRouted="false" />
+        <AssociationConnector Association="IssueRModel.FK_Epics_Projects" ManuallyRouted="false" />
+        <AssociationConnector Association="IssueRModel.FK_Issues_Epics" ManuallyRouted="false" />
+        <AssociationConnector Association="IssueRModel.FK_MessagesFrom_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="IssueRModel.FK_MessagesTo_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="IssueRModel.FK_Projects_Organizations" ManuallyRouted="false" />
+        <AssociationConnector Association="IssueRModel.FK_UserImages_Users" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

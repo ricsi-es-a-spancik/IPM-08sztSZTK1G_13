@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Models;
 
-namespace WebClient.Models
+namespace ELTE.IssueR.WebClient.Models
 {
     public class IssueViewModel
     {
@@ -36,10 +37,9 @@ namespace WebClient.Models
             get { return curProject; }
             set 
             { 
-                curProject = value;
-                curProjectId = value.Id;
-                curEpics = entity.Epics.Where(epic => epic.ProjectId == curProject.Id).Select(epic => epic).ToList();
-                curIssues = entity.Issues.ToList().FindAll(issue => curEpics.Exists(epic => epic.Id == issue.EpicId));
+                curProject = value; 
+                curEpics = entity.Epics.Where(epic => epic.ProjectId == curProject.Id).ToList();
+                curIssues = entity.Issues.Where(issue => curEpics.Exists(epic => epic.Id == issue.EpicId)).ToList();
             }
         }
 
@@ -59,9 +59,6 @@ namespace WebClient.Models
         {
             this.entity = entity;
             projects = entity.Projects.ToList();
-
-            if (projects.Count != 0)
-                CurrentProject = projects[0];
         }
     }
 }

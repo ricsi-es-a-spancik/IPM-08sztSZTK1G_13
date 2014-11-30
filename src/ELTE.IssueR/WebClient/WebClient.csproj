@@ -55,6 +55,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.0.0\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -104,6 +106,23 @@
     <Content Include="Content\Styles\AccountStyle.css" />
     <Content Include="Content\Styles\LayoutStyle.css" />
     <Content Include="Global.asax" />
+    <EntityDeploy Include="Models\IssuerEDM.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>IssuerEDM.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\IssuerEDM.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>IssuerEDM.edmx</DependentUpon>
+      <LastGenOutput>IssuerEDM.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\IssuerEDM.edmx.diagram">
+      <DependentUpon>IssuerEDM.edmx</DependentUpon>
+    </Content>
+    <Content Include="Models\IssuerEDM.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>IssuerEDM.edmx</DependentUpon>
+      <LastGenOutput>IssuerEDM.cs</LastGenOutput>
+    </Content>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Images\issuerlogo.jpg" />
     <Content Include="Images\mail.jpg" />
@@ -133,7 +152,56 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Account\ProfileViewModel.cs" />
-    <Compile Include="Models\Issue\IssueViewModel.cs" />
+    <Compile Include="Models\CoverImage.cs">
+      <DependentUpon>IssuerEDM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Document.cs">
+      <DependentUpon>IssuerEDM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Employee.cs">
+      <DependentUpon>IssuerEDM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Epic.cs">
+      <DependentUpon>IssuerEDM.tt</DependentUpon>
+    </Compile>
+	<Compile Include="Models\Issue\IssueViewModel.cs" />
+    <Compile Include="Models\Issue.cs">
+      <DependentUpon>IssuerEDM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\IssuerEDM.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>IssuerEDM.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\IssuerEDM.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>IssuerEDM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\IssuerEDM.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>IssuerEDM.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Message.cs">
+      <DependentUpon>IssuerEDM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Organization.cs">
+      <DependentUpon>IssuerEDM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\OrganizationViewModel.cs" />
+    <Compile Include="Models\Project.cs">
+      <DependentUpon>IssuerEDM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sysdiagram.cs">
+      <DependentUpon>IssuerEDM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\User.cs">
+      <DependentUpon>IssuerEDM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\UserImage.cs">
+      <DependentUpon>IssuerEDM.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -152,10 +220,7 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Models\Models.csproj">
-      <Project>{e71f3942-4024-4f88-9b01-f2deb6c0d3c4}</Project>
-      <Name>Models</Name>
-    </ProjectReference>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

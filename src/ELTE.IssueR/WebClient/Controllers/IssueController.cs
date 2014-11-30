@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using Models;
-using ELTE.IssueR.WebClient.Models;
+using WebClient.Models;
 
 namespace WebClient.Controllers
 {
