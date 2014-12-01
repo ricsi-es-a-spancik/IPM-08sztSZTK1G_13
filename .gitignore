@@ -182,3 +182,6 @@ UpgradeLog*.htm
 
 # Microsoft Fakes
 FakesAssemblies/
+src/ELTE.IssueR/.nuget/NuGet.Config
+src/ELTE.IssueR/.nuget/NuGet.exe
+src/ELTE.IssueR/.nuget/NuGet.targets
