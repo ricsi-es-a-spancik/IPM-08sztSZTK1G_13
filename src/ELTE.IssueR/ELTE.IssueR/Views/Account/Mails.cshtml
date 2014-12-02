@@ -1,0 +1,26 @@
+﻿@section AddToHead
+{
+    <link href="@Url.Content("~/Content/Styles/AccountStyle.css")" rel="stylesheet" type="text/css" />
+}
+
+@{
+    ViewBag.Title = "Üzenetek";
+}
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (ViewBag.Information != null)
+{
+    <p>ViewBag.Information</p>
+}
+
+<h1 class="accountH1">Üzenetek</h1>
+
+<ul>
+    <li>@Html.ActionLink("Beérkezett üzenetek (" + @Html.Action("NewMails") + ")", "MailsReceive")</li>
+    <li>@Html.ActionLink("Elküldött üzenetek", "MailsSent")</li>
+    <li>@Html.ActionLink("Új üzenet írása", "NewMail")</li>
+</ul>
+

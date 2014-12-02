@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace ELTE.IssueR.WebClient.Models.Logger
+namespace ELTE.IssueR.Models.Logger
 {
     public enum LogType
     {
@@ -17,17 +17,21 @@ namespace ELTE.IssueR.WebClient.Models.Logger
         private static object _lockObject = new object();
         private static String _currentLogName = "log1";
 
-        public static void Log(LogType t, String msg)
+        public static void Log(LogType t, String msg, Func<String, String> MapPath)
         {
-            String filename = "~/App_Data/Log/" + _currentLogName + ".log";
+            String filename = MapPath("~/App_Data/Log/" + _currentLogName + ".log");
 
             String LineToWrite = DateTime.Now.ToString() + " - " + t.ToString() + " : " + msg;
 
             lock (_lockObject)
             {
-                using (System.IO.StreamWriter sw = new System.IO.StreamWriter(filename))
+                if (!System.IO.File.Exists(filename))
+                    System.IO.File.Create(filename);
+
+                using (System.IO.StreamWriter sw = new System.IO.StreamWriter(filename,true))
                 {
                     sw.WriteLine(LineToWrite);
+                    sw.Close();
                 }
             }
             
@@ -36,9 +40,10 @@ namespace ELTE.IssueR.WebClient.Models.Logger
             {
                 lock(_lockObject)
                 {
-                    System.IO.File.Copy(filename, "~/App_Data/Log/Archive/" + _currentLogName + ".log");
+                    String targetfile = MapPath("~/App_Data/Log/Archive/" + _currentLogName + ".log");
+                    System.IO.File.Copy(filename, targetfile);
                     _currentLogName = "log" + (Convert.ToInt32(_currentLogName.Substring(3)) + 1).ToString();
-                    filename = "~/App_Data/Log/" + _currentLogName + ".log";
+                    filename = MapPath("~/App_Data/Log/" + _currentLogName + ".log");
                     System.IO.File.Create(filename);
                 }
             }

@@ -129,8 +129,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Account\MessageViewModel.cs" />
     <Compile Include="Models\Account\NewUserViewModel.cs" />
-    <Compile Include="Models\Account\ProfileViewModel.cs" />
     <Compile Include="Models\Account\UserViewModel.cs" />
     <Compile Include="Models\CoverImage.cs">
       <DependentUpon>IssueREntities.tt</DependentUpon>
@@ -211,6 +211,7 @@
       <DependentUpon>IssueREntities.edmx</DependentUpon>
       <LastGenOutput>IssueREntities.cs</LastGenOutput>
     </Content>
+    <Content Include="App_Data\Log\log1.log" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -234,14 +235,17 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="Views\Account\Login.cshtml" />
-    <Content Include="Views\Account\ProfileIndex.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Issue\Index.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Account\UploadProfileImage.cshtml" />
+    <Content Include="Views\Account\ProfileIndex.cshtml" />
+    <Content Include="Views\Account\Mails.cshtml" />
+    <Content Include="Views\Account\MailsReceive.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
+    <Folder Include="App_Data\temp_upload\" />
     <Folder Include="Views\Organization\" />
   </ItemGroup>
   <ItemGroup>

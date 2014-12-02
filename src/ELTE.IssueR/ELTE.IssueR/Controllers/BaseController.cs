@@ -16,10 +16,11 @@ namespace ELTE.IssueR.Controllers
             
         }
 
-        public void Log(ELTE.IssueR.WebClient.Models.Logger.LogType t, String msg)
+        public void Log(ELTE.IssueR.Models.Logger.LogType t, String msg)
         {
             //Multithread
-            System.Threading.Tasks.Task.Run(() => ELTE.IssueR.WebClient.Models.Logger.Logger.Log(t, msg));
+            
+            System.Threading.Tasks.Task.Run(() => ELTE.IssueR.Models.Logger.Logger.Log(t, msg, Server.MapPath));
         }
     }
 }
