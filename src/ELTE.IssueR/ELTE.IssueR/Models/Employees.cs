@@ -12,22 +12,22 @@ namespace ELTE.IssueR.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Employee
+    public partial class Employees
     {
-        public Employee()
+        public Employees()
         {
-            this.Issues = new HashSet<Issue>();
+            this.Issues = new HashSet<Issues>();
         }
     
         public int Id { get; set; }
         public int UserId { get; set; }
+        public int OrganizationId { get; set; }
         public int ProjectId { get; set; }
         public short Status { get; set; }
-        public int OrganizationId { get; set; }
     
-        public virtual Project Project { get; set; }
-        public virtual User User { get; set; }
-        public virtual ICollection<Issue> Issues { get; set; }
-        public virtual Organization Organization { get; set; }
+        public virtual Organizations Organizations { get; set; }
+        public virtual Projects Projects { get; set; }
+        public virtual Users Users { get; set; }
+        public virtual ICollection<Issues> Issues { get; set; }
     }
 }

@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="ELTEModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="ELTEModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="CoverImages">
           <Key>
             <PropertyRef Name="Id" />
@@ -28,6 +28,7 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="OrganizationId" Type="int" Nullable="false" />
           <Property Name="ProjectId" Type="int" Nullable="false" />
           <Property Name="Status" Type="smallint" Nullable="false" />
         </EntityType>
@@ -129,6 +130,18 @@
             </Principal>
             <Dependent Role="Documents">
               <PropertyRef Name="ProjectId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Employees_Organizations">
+          <End Role="Organizations" Type="Self.Organizations" Multiplicity="1" />
+          <End Role="Employees" Type="Self.Employees" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Organizations">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Employees">
+              <PropertyRef Name="OrganizationId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -259,6 +272,10 @@
             <End Role="Projects" EntitySet="Projects" />
             <End Role="Documents" EntitySet="Documents" />
           </AssociationSet>
+          <AssociationSet Name="FK_Employees_Organizations" Association="Self.FK_Employees_Organizations">
+            <End Role="Organizations" EntitySet="Organizations" />
+            <End Role="Employees" EntitySet="Employees" />
+          </AssociationSet>
           <AssociationSet Name="FK_Employees_Projects" Association="Self.FK_Employees_Projects">
             <End Role="Projects" EntitySet="Projects" />
             <End Role="Employees" EntitySet="Employees" />
@@ -330,6 +347,8 @@
           <NavigationProperty Name="Project" Relationship="Self.FK_Employees_Projects" FromRole="Employees" ToRole="Projects" />
           <NavigationProperty Name="User" Relationship="Self.FK_Employees_Users" FromRole="Employees" ToRole="Users" />
           <NavigationProperty Name="Issues" Relationship="Self.FK_Issues_Employees" FromRole="Employees" ToRole="Issues" />
+          <Property Name="OrganizationId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Organization" Relationship="ELTEModel.FK_Employees_Organizations" FromRole="Employee" ToRole="Organization" />
         </EntityType>
         <EntityType Name="Epic">
           <Key>
@@ -385,6 +404,7 @@
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="CoverImages" Relationship="Self.FK_CoverImages_Organizations" FromRole="Organizations" ToRole="CoverImages" />
           <NavigationProperty Name="Projects" Relationship="Self.FK_Projects_Organizations" FromRole="Organizations" ToRole="Projects" />
+          <NavigationProperty Name="Employees" Relationship="ELTEModel.FK_Employees_Organizations" FromRole="Organization" ToRole="Employee" />
         </EntityType>
         <EntityType Name="Project">
           <Key>
@@ -612,7 +632,23 @@
             <End Role="Users" EntitySet="Users" />
             <End Role="UserImages" EntitySet="UserImages" />
           </AssociationSet>
+          <AssociationSet Name="FK_Employees_Organizations" Association="ELTEModel.FK_Employees_Organizations">
+            <End Role="Organization" EntitySet="Organizations" />
+            <End Role="Employee" EntitySet="Employees" />
+          </AssociationSet>
         </EntityContainer>
+        <Association Name="FK_Employees_Organizations">
+          <End Type="ELTEModel.Organization" Role="Organization" Multiplicity="1" />
+          <End Type="ELTEModel.Employee" Role="Employee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Organization">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Employee">
+              <PropertyRef Name="OrganizationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -641,6 +677,7 @@
           <EntitySetMapping Name="Employees">
             <EntityTypeMapping TypeName="ELTEModel.Employee">
               <MappingFragment StoreEntitySet="Employees">
+                <ScalarProperty Name="OrganizationId" ColumnName="OrganizationId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="ProjectId" ColumnName="ProjectId" />

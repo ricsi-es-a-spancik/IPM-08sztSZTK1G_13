@@ -26,6 +26,7 @@
         <AssociationConnector Association="ELTEModel.FK_MessagesTo_Users" ManuallyRouted="false" />
         <AssociationConnector Association="ELTEModel.FK_Projects_Organizations" ManuallyRouted="false" />
         <AssociationConnector Association="ELTEModel.FK_UserImages_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="ELTEModel.FK_Employees_Organizations" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

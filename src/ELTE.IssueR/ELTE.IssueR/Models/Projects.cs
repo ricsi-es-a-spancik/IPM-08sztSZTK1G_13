@@ -12,25 +12,24 @@ namespace ELTE.IssueR.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Organization
+    public partial class Projects
     {
-        public Organization()
+        public Projects()
         {
-            this.CoverImages = new HashSet<CoverImage>();
-            this.Projects = new HashSet<Project>();
-            this.Employees = new HashSet<Employee>();
+            this.Documents = new HashSet<Documents>();
+            this.Employees = new HashSet<Employees>();
+            this.Epics = new HashSet<Epics>();
         }
     
         public int Id { get; set; }
+        public int OrganizationId { get; set; }
         public string Name { get; set; }
-        public Nullable<int> FoundationYear { get; set; }
-        public string Country { get; set; }
-        public string City { get; set; }
-        public string Activity { get; set; }
         public string Description { get; set; }
+        public Nullable<System.DateTime> Deadline { get; set; }
     
-        public virtual ICollection<CoverImage> CoverImages { get; set; }
-        public virtual ICollection<Project> Projects { get; set; }
-        public virtual ICollection<Employee> Employees { get; set; }
+        public virtual ICollection<Documents> Documents { get; set; }
+        public virtual ICollection<Employees> Employees { get; set; }
+        public virtual ICollection<Epics> Epics { get; set; }
+        public virtual Organizations Organizations { get; set; }
     }
 }
