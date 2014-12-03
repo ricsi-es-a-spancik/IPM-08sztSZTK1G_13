@@ -1,0 +1,86 @@
+﻿@using ELTE.IssueR.Models.Account;
+
+@model AccountSettingsViewModel
+
+@section AddToHead
+{
+    <link href="@Url.Content("~/Content/Styles/AccountStyle.css")" rel="stylesheet" type="text/css" />
+}
+
+@{
+    ViewBag.Title = "Adatok módosítása";
+}
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (ViewBag.Information != null)
+{
+    <p>ViewBag.Information</p>
+}
+
+<h1 class="accountH1">Adatok módosítása</h1>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <table class="accountsettingsTable">
+        <tr>
+            <td class="accountsettingsTableData" colspan="2">
+                <div class="accountsettingsError">@ViewBag.Information</div>
+                <div class="accountsettingsError">@Html.ValidationSummary(true, "A módosítás sikertelen!")</div>
+            </td>
+        </tr>
+        <tr>
+            <td class="accountsettingsTableData">
+                <div class="accountsettingsText">Felhasználónév:</div>
+            </td>
+            <td class="accountsettingsTableData">
+                @Html.Action("IdToName", new { p_id = Model.Id }).ToString()
+            </td>
+        </tr>
+        <tr>
+            <td class="accountsettingsTableData">
+                <div class="accountsettingsText">Email megváltoztatása:</div>
+            </td>
+            <td class="accountsettingsTableData">
+                @Html.EditorFor(model => model.Email)
+                @Html.ValidationMessageFor(model => model.Email)
+            </td>
+        </tr>
+        <tr>
+            <td class="accountsettingsTableData">
+                <div class="accountsettingsText">Jelszó megváltoztatása:</div>
+            </td>
+            <td class="accountsettingsTableData">
+                @Html.EditorFor(model => model.UserPassword)
+                @Html.ValidationMessageFor(model => model.UserPassword)
+            </td>
+        </tr>
+        <tr>
+            <td class="accountsettingsTableData">
+                <div class="accountsettingsText">Jelszó megerősítése:</div>
+            </td>
+            <td class="accountsettingsTableData">
+                @Html.EditorFor(model => model.UserConfirmPassword)
+                @Html.ValidationMessageFor(model => model.UserConfirmPassword)
+            </td>
+        </tr>
+        <tr>
+            <td class="accountsettingsTableData">
+                <div class="accountsettingsText">Név megváltoztatása:</div>
+            </td>
+            <td class="accountsettingsTableData">
+                @Html.EditorFor(model => model.Name)
+                @Html.ValidationMessageFor(model => model.Name)
+            </td>
+        </tr>
+        <tr>
+            <td class="accountsettingsTableData" colspan="2">
+                <input type="submit" value="Módosítás" class="accountsettingsSubmit" />
+            </td>
+        </tr>
+    </table>
+}

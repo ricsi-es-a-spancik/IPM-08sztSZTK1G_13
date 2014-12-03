@@ -1,0 +1,60 @@
+﻿@using ELTE.IssueR.Models.Account;
+
+@model NewMessageViewModel
+
+@section AddToHead
+{
+    <link href="@Url.Content("~/Content/Styles/AccountStyle.css")" rel="stylesheet" type="text/css" />
+}
+
+@{
+    ViewBag.Title = "Üzenet írása";
+}
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (ViewBag.Information != null)
+{
+    <p>ViewBag.Information</p>
+}
+
+<h1 class="accountH1">Üzenet írása</h1>
+@Html.ActionLink("Vissza", "Mails")
+
+@if(Model == null)
+{
+    <p>Hiba történt, ezért nincs megjeleníthető adat.</p>
+}
+else
+{
+    using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="MessageInfo">
+            <p>Címzett: @Html.Action("IdToName", new { p_id = Model.ToId })</p>
+        </div>
+
+        <div class="MessageTextBoxForm">
+            <p>Téma:</p>
+            <div>
+                @Html.TextBoxFor(m => m.Subject)
+                @Html.ValidationMessageFor(m => m.Subject)
+            </div>
+        </div> <br />
+
+        <div class="MessageTextAreaForm">
+            <p>Üzenet tartalma:</p>
+            <div>
+                @Html.TextAreaFor(m => m.Content, new { @cols = 70, @rows = 25 })
+                @Html.ValidationMessageFor(m => m.Content)
+            </div>
+        </div>
+
+        <input class="MessageSubmit" type="submit" value="Elküld" />
+    }
+}
+
+

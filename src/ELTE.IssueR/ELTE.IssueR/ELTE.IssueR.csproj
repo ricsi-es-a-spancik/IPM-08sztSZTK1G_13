@@ -130,6 +130,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Account\AccountSettingsViewModel.cs" />
+    <Compile Include="Models\Account\NewMessageViewModel.cs" />
     <Compile Include="Models\Account\MessageViewModel.cs" />
     <Compile Include="Models\Account\NewUserViewModel.cs" />
     <Compile Include="Models\Account\UserViewModel.cs" />
@@ -246,6 +248,12 @@
     <Content Include="Views\Account\Mails.cshtml" />
     <Content Include="Views\Account\MailsReceive.cshtml" />
     <Content Include="Views\Project\Project.cshtml" />
+    <Content Include="Views\Account\DeleteMail.cshtml" />
+    <Content Include="Views\Account\MailsSent.cshtml" />
+    <Content Include="Views\Account\ReadMail.cshtml" />
+    <Content Include="Views\Account\NewMail.cshtml" />
+    <Content Include="Views\Account\NewMailList.cshtml" />
+    <Content Include="Views\Account\AccountSettings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\temp_upload\" />
