@@ -27,7 +27,17 @@ namespace ELTE.IssueR.Controllers
             User user = _database.Users.FirstOrDefault(u => u.UserName == Session["userName"]);
             Employee currentUser = _database.Employees.FirstOrDefault(e => e.UserId == user.Id);
 
-            return View("Project");
+            _database.Projects.Add(new Project {
+                OrganizationId = currentUser.OrganizationId,
+                Name = pvm.Name,
+                Description = pvm.Description,
+                Deadline = pvm.Deadline
+            });
+            _database.SaveChanges();
+
+            ViewBag.Information = "A projekt sikeresen létrejött.";
+
+            return RedirectToAction("Project");
         }
 	}
 }
