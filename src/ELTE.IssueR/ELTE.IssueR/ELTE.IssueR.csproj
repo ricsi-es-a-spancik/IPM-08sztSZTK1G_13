@@ -254,6 +254,7 @@
     <Content Include="Views\Account\NewMail.cshtml" />
     <Content Include="Views\Account\NewMailList.cshtml" />
     <Content Include="Views\Account\AccountSettings.cshtml" />
+    <Content Include="Views\Project\ProjectList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\temp_upload\" />
