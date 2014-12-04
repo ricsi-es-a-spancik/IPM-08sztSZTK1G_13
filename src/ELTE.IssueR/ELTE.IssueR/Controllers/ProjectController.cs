@@ -39,5 +39,16 @@ namespace ELTE.IssueR.Controllers
 
             return RedirectToAction("Project");
         }
+
+        public ActionResult ProjectList(ProjectListViewModel plvm)
+        {
+            plvm.ProjectList = _database.Projects.ToList();
+            return View("ProjectList", plvm);   
+        }
+
+        public ActionResult ProjectData(int id)
+        {
+            return RedirectToAction("Project");
+        }
 	}
 }

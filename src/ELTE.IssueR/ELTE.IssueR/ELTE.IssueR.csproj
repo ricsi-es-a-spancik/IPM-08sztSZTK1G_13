@@ -177,6 +177,7 @@
     <Compile Include="Models\Project.cs">
       <DependentUpon>IssueREntities.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Project\ProjectListViewModel.cs" />
     <Compile Include="Models\Project\ProjectViewModel.cs" />
     <Compile Include="Models\User.cs">
       <DependentUpon>IssueREntities.tt</DependentUpon>
