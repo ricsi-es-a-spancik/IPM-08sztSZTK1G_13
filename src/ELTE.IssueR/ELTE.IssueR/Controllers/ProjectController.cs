@@ -76,9 +76,15 @@ namespace ELTE.IssueR.Controllers
             };
             List<Employee> projectMembers = _database.Employees.Where(e => e.ProjectId == p.Id).ToList();
 
+            List<User> projectMembersUsers = new List<User>();
+            foreach (Employee employee in projectMembers)
+            {
+                projectMembersUsers.Add(_database.Users.FirstOrDefault(u => u.Id == employee.UserId));
+            }
+
             ProjectDataViewModel pdvm = new ProjectDataViewModel{
                 Project = pvm,
-                ProjectMembers = projectMembers
+                ProjectMembers = projectMembersUsers
             };
         
             return View("ProjectData", pdvm);

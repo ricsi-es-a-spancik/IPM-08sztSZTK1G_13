@@ -9,6 +9,6 @@ namespace ELTE.IssueR.Models
     {
         public ProjectViewModel Project { get; set; }
 
-        public List<Employee> ProjectMembers { get; set; }
+        public List<User> ProjectMembers { get; set; }
     }
 }

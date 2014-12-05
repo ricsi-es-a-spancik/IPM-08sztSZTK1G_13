@@ -23,3 +23,8 @@
         <td>@Model.Project.Deadline</td>
     </tr>
 </table>
+
+@foreach (User user in @Model.ProjectMembers)
+{
+    <p>@user.Name</p>
+}
