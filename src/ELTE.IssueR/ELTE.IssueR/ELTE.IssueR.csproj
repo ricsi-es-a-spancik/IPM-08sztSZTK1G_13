@@ -177,6 +177,7 @@
     <Compile Include="Models\Project.cs">
       <DependentUpon>IssueREntities.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Project\ProjectDataViewModel.cs" />
     <Compile Include="Models\Project\ProjectListViewModel.cs" />
     <Compile Include="Models\Project\ProjectViewModel.cs" />
     <Compile Include="Models\User.cs">
@@ -256,6 +257,7 @@
     <Content Include="Views\Account\NewMailList.cshtml" />
     <Content Include="Views\Account\AccountSettings.cshtml" />
     <Content Include="Views\Project\ProjectList.cshtml" />
+    <Content Include="Views\Project\ProjectData.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\temp_upload\" />

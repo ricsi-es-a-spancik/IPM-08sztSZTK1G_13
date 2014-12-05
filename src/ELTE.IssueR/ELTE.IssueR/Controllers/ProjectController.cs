@@ -34,7 +34,7 @@ namespace ELTE.IssueR.Controllers
                 return View("Project", pvm);
             }
 
-            User user = _database.Users.FirstOrDefault(u => u.UserName == Session["userName"]);
+            User user = _database.Users.FirstOrDefault(u => u.UserName == "asd");//Session["userName"]);
             Employee currentUser = _database.Employees.FirstOrDefault(e => e.UserId == user.Id);
 
             _database.Projects.Add(new Project {
@@ -67,8 +67,21 @@ namespace ELTE.IssueR.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
+
+            Project p = _database.Projects.FirstOrDefault(pr => pr.Id == id);
+            ProjectViewModel pvm = new ProjectViewModel{
+                Name = p.Name,
+                Description = p.Description,
+                Deadline = (DateTime)p.Deadline
+            };
+            List<Employee> projectMembers = _database.Employees.Where(e => e.ProjectId == p.Id).ToList();
+
+            ProjectDataViewModel pdvm = new ProjectDataViewModel{
+                Project = pvm,
+                ProjectMembers = projectMembers
+            };
         
-            return RedirectToAction("Project");
+            return View("ProjectData", pdvm);
         }
-	}
+    }
 }
