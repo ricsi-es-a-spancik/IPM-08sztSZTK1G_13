@@ -1,0 +1,38 @@
+﻿@model List<Int32>
+
+@section AddToHead
+{
+    <link href="@Url.Content("~/Content/Styles/AccountStyle.css")" rel="stylesheet" type="text/css" />
+}
+
+@{
+    ViewBag.Title = "Üzenet írása";
+}
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (ViewBag.Information != null)
+{
+    <p>ViewBag.Information</p>
+}
+
+<h1 class="accountH1">Üzenet írása</h1>
+@Html.ActionLink("Vissza", "Mails")
+
+@if(Model == null)
+{
+    <p>Hiba történt, ezért nincs megjeleníthető adat.</p>
+}
+else
+{
+    <ul>
+        @for (Int32 i = 0; i < Model.Count; ++i)
+        {
+            <li>@Html.ActionLink( Html.Action("IdToName", new { p_id = Model[i] }).ToString(), "NewMailTo", new { p_id = Model[i] })</li>
+        }
+    </ul>
+}
+
+

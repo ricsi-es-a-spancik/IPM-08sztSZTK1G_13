@@ -1,10 +1,10 @@
-﻿@using ELTE.IssueR.Models.Account;
-
-@model ProfileViewModel
-
-@section AddToHead
+﻿@section AddToHead
 {
     <link href="@Url.Content("~/Content/Styles/AccountStyle.css")" rel="stylesheet" type="text/css" />
+}
+
+@{
+    ViewBag.Title = "Profil";
 }
 
 @{
@@ -16,22 +16,12 @@
     <p>ViewBag.Information</p>
 }
 
-@if (Model == null)
-{
-    <p>Hiba történt, ezért nincs megjeleníthető adat.</p>
-}
-else
-{
-    <h1 class="accountH1">Profilom</h1>
+<h1 class="accountH1">Profilom</h1>
 
-    <h2 class="accountH2">Menü</h2>
+<h2 class="accountH2">Menü</h2>
 
-    <ul>
-        <li>@Html.ActionLink("Beérkezett üzenetek", "MailsRecv")</li>
-        <li>@Html.ActionLink("Elküldött üzenetek", "MailsSent")</li>
-        <li>@Html.ActionLink("Új üzenet írása", "MailWrite")</li>
-        <li>@Html.ActionLink("Adatok módosítása", "AccountSettings")</li>
-        <li>@Html.ActionLink("Profilkép feltöltése", "UploadProfileImage")</li>
-    </ul>
-
-}
+<ul>
+    <li>@Html.ActionLink("Üzenetek", "Mails")</li>
+    <li>@Html.ActionLink("Adatok módosítása", "AccountSettings")</li>
+    <li>@Html.ActionLink("Profilkép feltöltése", "UploadProfileImage")</li>
+</ul>

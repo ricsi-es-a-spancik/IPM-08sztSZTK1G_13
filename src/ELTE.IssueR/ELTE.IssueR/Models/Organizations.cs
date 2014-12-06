@@ -12,13 +12,13 @@ namespace ELTE.IssueR.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Organization
+    public partial class Organizations
     {
-        public Organization()
+        public Organizations()
         {
-            this.CoverImages = new HashSet<CoverImage>();
-            this.Projects = new HashSet<Project>();
-            this.Employees = new HashSet<Employee>();
+            this.CoverImages = new HashSet<CoverImages>();
+            this.Employees = new HashSet<Employees>();
+            this.Projects = new HashSet<Projects>();
         }
     
         public int Id { get; set; }
@@ -29,8 +29,8 @@ namespace ELTE.IssueR.Models
         public string Activity { get; set; }
         public string Description { get; set; }
     
-        public virtual ICollection<CoverImage> CoverImages { get; set; }
-        public virtual ICollection<Project> Projects { get; set; }
-        public virtual ICollection<Employee> Employees { get; set; }
+        public virtual ICollection<CoverImages> CoverImages { get; set; }
+        public virtual ICollection<Employees> Employees { get; set; }
+        public virtual ICollection<Projects> Projects { get; set; }
     }
 }

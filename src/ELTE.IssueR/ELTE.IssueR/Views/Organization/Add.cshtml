@@ -1,0 +1,70 @@
+﻿@using ELTE.IssueR.Models
+
+@model OrganizationViewModel
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Új vállalat felvétele</h2>
+
+@using(Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <table>
+        <tr>
+            <td>
+                Név
+            </td>
+            <td>
+                @Html.EditorFor(org => org.Name)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Alapítás éve
+            </td>
+            <td>
+                @Html.EditorFor(org => org.FoundationYear)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Ország
+            </td>
+            <td>
+                @Html.EditorFor(org => org.Country)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Város
+            </td>
+            <td>
+                @Html.EditorFor(org => org.City)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Tevékenység
+            </td>
+            <td>
+                @Html.EditorFor(org => org.Activity)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Bemutatkozás
+            </td>
+            <td>
+                @Html.TextAreaFor(org => org.Description)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="submit" autofocus value="Felvétel" />
+            </td>
+        </tr>
+    </table>
+}

@@ -20,6 +20,8 @@ namespace ELTE.IssueR.Models
         public string Subject { get; set; }
         public string Content { get; set; }
         public bool IsRead { get; set; }
+        public bool HideFromSender { get; set; }
+        public bool HideFromTarget { get; set; }
     
         public virtual User User { get; set; }
         public virtual User User1 { get; set; }

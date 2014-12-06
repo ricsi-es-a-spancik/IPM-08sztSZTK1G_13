@@ -1,0 +1,14 @@
+﻿@using ELTE.IssueR.Models
+@model ProjectListViewModel
+
+@{
+    ViewBag.Title = "ProjectList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>ProjectList</h2>
+
+@foreach (Project pr in Model.ProjectList)
+{
+    <p>@Html.ActionLink(pr.Name,"ProjectData","Project", new { pr.Id }, null)</p>
+}
