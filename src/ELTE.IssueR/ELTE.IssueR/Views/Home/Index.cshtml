@@ -17,6 +17,10 @@
 
 <h1>Főoldal</h1>
 
+<div id="neworgpanel">
+    @Html.ActionLink("+ Hozzáadom a vállalatom", "Add", "Organization", new { }, new { @class = "buttonlikelink green" })
+</div>
+
 @foreach(var org in Model)
 {
     <div>

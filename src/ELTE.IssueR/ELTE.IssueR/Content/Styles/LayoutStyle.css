@@ -50,6 +50,7 @@
 #contentwrapper {
     width: 80%;
     margin: auto;
+    min-height: 100vh;
 }
 
 #footer {
@@ -59,12 +60,25 @@
     background-color: #dbdbdb;
 }
 
-.accountbutton {
-    height: 30px;
-    margin-right: 10px;
-    background-color: #519ac5;
+.buttonlikelink {
     color: white;
-    font-weight: bold;
+    font-family: 'Arial Unicode MS';
+    text-decoration: none;
     border: none;
     white-space: nowrap;
+    padding: 5px;
+    margin-right: 5px;
 }
+
+.blue {
+    background-color: #519ac5;
+}
+
+.green {
+    background-color: #53d30c;
+}
+
+#neworgpanel {
+    text-align: right;
+}
+
