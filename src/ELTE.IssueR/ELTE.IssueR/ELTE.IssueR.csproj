@@ -272,6 +272,7 @@
     <Content Include="Views\Account\AccountSettings.cshtml" />
     <Content Include="Views\Project\ProjectList.cshtml" />
     <Content Include="Views\Project\ProjectData.cshtml" />
+    <Content Include="Views\Project\ProjectDataModify.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\temp_upload\" />
