@@ -8,52 +8,78 @@
     <meta charset="utf-8" />
     <title>@ViewBag.Title - IssueR</title>
     <link href="@Url.Content("~/Content/Styles/LayoutStyle.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/Styles/LayoutStyle.css")" rel="stylesheet" type="text/css" />
     @if (IsSectionDefined("AddToHead"))
     {
         @RenderSection("AddToHead", required: false)
     }
 </head>
 <body>
-    <header>
-        <div class="statusBar">
-            @if (Session["userName"] == null)
-            {
-                <ul>
-                    <li>
-                        @Html.ActionLink("Bejelentkezés", "Login", "Account")
-                    </li>
-                    <li>
-                        @Html.ActionLink("Regisztráció", "Register", "Account")
-                    </li>
-                </ul>
-            }
-            else
-            {
-                <ul>
-                    <li class="welcome">
-                        Üdvözlünk, @Session["userName"]!
-                    </li>
-                    <li>
-                        @Html.ActionLink("Profilom", "ProfileIndex", "Account")
-                    </li>
-                    <li>
-                        @Html.ActionLink("Kijelentkezés", "Logout", "Account")
-                    </li>
-                </ul>
-            }
+    <div id="bodywrapper">
+
+        <div id="header">
+
+            <table id="headerlayouttable">
+                <tr>
+                    <td id="logobox">
+                        <img src="Images/issuerlogo.jpg" />
+                    </td>
+                    <td id="searchbox">
+                        <form action="">
+                            <input id="searchfield" type="text" placeholder="vállalat neve..." />
+                            <input type="submit" class="accountbutton" value="Keresés" />
+                        </form>
+                    </td>
+                    <td id="accountbox">
+                        @if (Session["userName"] == null)
+                        {
+                            <table>
+                                <tr>
+                                    <td>
+                                        <button class="accountbutton">Bejelentkezés</button>
+                                    </td>
+                                    <td>
+                                        <button class="accountbutton">Regisztráció</button>
+                                    </td>
+                                </tr>
+                            </table>
+
+                        }
+                        else
+                        {
+                            <table>
+                                <tr>
+                                    <td>
+                                        <img src="Images/newmail.jpg" />
+                                    </td>
+                                    <td>
+                                        <button class="accountbutton">David Hornyak</button>
+                                    </td>
+                                    <td>
+                                        <button class="accountbutton">Kijelentkezés</button>
+                                    </td>
+                                </tr>
+                            </table>
+                        }
+
+                    </td>
+                </tr>
+            </table>
         </div>
-        <menu>
+
+        <div id="contentwrapper">
             <ul>
                 <li>@Html.ActionLink("Kezdőlap", "Index", "Home")</li>
             </ul>
-</menu>
-    </header>
-    <main>
-        @RenderBody()
-    </main>
-    <footer>
-        <p>&copy; @DateTime.Now.Year - IssueR</p>
-        <p><i>Ricsi-és-a-spancik</i></p>
-    </footer>
+
+            @RenderBody()
+        </div>
+
+        <div id="footer">
+            <p>&copy; @DateTime.Now.Year - IssueR</p>
+            <p><i>Ricsi-és-a-spancik</i></p>
+        </div>
+    </div>
+
 </body>
 </html>
