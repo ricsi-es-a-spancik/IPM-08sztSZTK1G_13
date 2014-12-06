@@ -1,0 +1,82 @@
+﻿@using ELTE.IssueR.Models
+@model IssueViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    table#t01 {
+        width: 80%; 
+        padding: 15px;
+    }
+    table#t01 tr:nth-child(even)
+    {
+        background-color: #eee;
+        padding: 15px;
+    }
+    table#t01 tr:nth-child(odd) 
+    {
+        background-color: #fff;
+    }
+    table#t01 th 
+    {
+        color: white;
+        background-color: black;
+        padding: 15px;
+    }
+</style>
+
+@if(Model.CurrentProjectId == null)
+{
+    <div>Nincs megjeleníthető projekt.</div>
+}
+else 
+{ 
+    using (Html.BeginForm())
+    {
+        <table>
+            <tr>
+                <td>Projektek:</td>
+                <td>
+                    @Html.DropDownListFor(m => m.CurrentProjectId, new SelectList(Model.Projects, "Id", "Name"), new { onchange = "this.form.submit();" })
+                    @Html.ValidationMessageFor(m => m.CurrentProjectId)
+                </td>
+            </tr>
+        </table>
+    }
+}
+
+@if (Model.CurrentIssues != null)
+{
+    if (Model.CurrentIssues.Count != 0)
+    {
+        <table id="t01">
+            <tr>
+                <th>Azonosító</th>
+                <th>Név</th>
+                <th>Típus</th>
+                <th>Hozzárendelt melós</th>
+                <th>Bázis azonosító</th>
+                <th>Státusz</th>
+                <th>Teljesítéshez szükséges idő</th>
+                <th>Eltöltött idő</th>
+                <th>Határidő</th>
+            </tr>
+            @foreach (Issue issue in Model.CurrentIssues)
+            {
+            <tr>
+                <td>@issue.Id</td>
+                <td>@issue.Name</td>
+                <td>@issue.Type</td>
+                <td>@issue.EmployeeId</td>
+                <td>@issue.EpicId</td>
+                <td>@issue.Status</td>
+                <td>@issue.EstimatedTime</td>
+                <td>@issue.TimeSpent</td>
+                <td>@issue.Deadline</td>
+            </tr>
+            }
+        </table>
+    }
+}

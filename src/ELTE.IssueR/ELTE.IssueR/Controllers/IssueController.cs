@@ -9,20 +9,39 @@ namespace ELTE.IssueR.Controllers
 {
     public class IssueController : BaseController
     {
-        IssueViewModel issuevm;
+        private void UpdateModel(IssueViewModel newModel)
+        {
+            newModel.Projects = _database.Projects.ToList();
+
+            if (newModel.CurrentProjectId == null && newModel.Projects.Count != 0)
+                newModel.CurrentProjectId = newModel.Projects[0].Id;
+
+            if(newModel.CurrentProjectId != null)
+            {
+                newModel.CurrentEpics = _database.Epics.Where(epic => epic.ProjectId == newModel.CurrentProjectId).ToList();
+                newModel.CurrentIssues = _database.Issues.ToList().FindAll(issue => newModel.CurrentEpics.Exists(epic => epic.Id == issue.EpicId));
+            }
+        }
 
         public ActionResult Index()
         {
-            issuevm = new IssueViewModel(_database);
-            return View("Index", issuevm);
+            return RedirectToAction("ListIssues");
         }
 
-        public ActionResult SelectProject(int prjid)
+        [HttpGet]
+        public ActionResult ListIssues()
         {
-            issuevm = new IssueViewModel(_database);
-            issuevm.CurrentProjectId = prjid;
-            issuevm.CurrentProject = issuevm.Projects.Find(prj => prj.Id == prjid);
-            return View("Index", issuevm);
+            IssueViewModel newModel = new IssueViewModel();
+            UpdateModel(newModel);
+
+            return View("ListIssues", newModel);
+        }
+
+        [HttpPost]
+        public ActionResult ListIssues(IssueViewModel newModel)
+        {
+            UpdateModel(newModel);
+            return View("ListIssues", newModel);
         }
     }
 }
