@@ -1,0 +1,44 @@
+﻿@using ELTE.IssueR.Models
+
+@model ProjectDataViewModel
+
+@{
+    ViewBag.Title = "ProjectDataModify";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>ProjectDataModify</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <table>
+        <tr>
+            <td>Név:</td>
+            <td>
+                @Html.EditorFor(project => project.Project.Name)
+                @Html.ValidationMessageFor(project => project.Project.Name)
+            </td>
+        </tr>
+        <tr>
+            <td>Leírás:</td>
+            <td>
+                @Html.EditorFor(project => project.Project.Description)
+                @Html.ValidationMessageFor(project => project.Project.Description)
+            </td>
+        </tr>
+        <tr>
+            <td>Határidő:</td>
+            <td>
+                @Html.EditorFor(project => project.Project.Deadline)
+                @Html.ValidationMessageFor(project => project.Project.Deadline)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="submit" value="Módosít"/>
+            </td>
+        </tr>
+    </table>
+}

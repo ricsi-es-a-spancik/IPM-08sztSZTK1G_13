@@ -11,11 +11,11 @@ namespace ELTE.IssueR.Controllers
     {
         [HttpGet]
         public ActionResult Project()
-        {
+        {/*
             if (Session["userName"] == null)
             {
                 return RedirectToAction("Index", "Home");
-            }
+            }*/
 
             return View("Project");
         }
@@ -23,11 +23,11 @@ namespace ELTE.IssueR.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Project(ProjectViewModel pvm)
-        {
+        {/*
             if (Session["userName"] == null)
             {
                 return RedirectToAction("Index", "Home");
-            }
+            }*/
 
             if (!ModelState.IsValid)
             {
@@ -51,22 +51,22 @@ namespace ELTE.IssueR.Controllers
         }
 
         public ActionResult ProjectList(ProjectListViewModel plvm)
-        {
+        {/*
             if (Session["userName"] == null)
             {
                 return RedirectToAction("Index", "Home");
-            }
+            }*/
 
             plvm.ProjectList = _database.Projects.ToList();
             return View("ProjectList", plvm);   
         }
 
         public ActionResult ProjectData(int id)
-        {
+        {/*
             if (Session["userName"] == null)
             {
                 return RedirectToAction("Index", "Home");
-            }
+            }*/
 
             Project p = _database.Projects.FirstOrDefault(pr => pr.Id == id);
             ProjectViewModel pvm = new ProjectViewModel{
@@ -83,11 +83,48 @@ namespace ELTE.IssueR.Controllers
             }
 
             ProjectDataViewModel pdvm = new ProjectDataViewModel{
+                Id = id,
                 Project = pvm,
                 ProjectMembers = projectMembersUsers
             };
         
             return View("ProjectData", pdvm);
+        }
+
+        [HttpGet]
+        public ActionResult ProjectDataModify(int id)
+        {/*
+            if (Session["userName"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }*/
+            
+            Project pr = _database.Projects.FirstOrDefault(p => p.Id == id);
+
+            ProjectDataViewModel pdvm = new ProjectDataViewModel{
+                Id = id,
+                Project = new ProjectViewModel{
+                    Name = pr.Name,
+                    Description = pr.Description,
+                    Deadline = (DateTime)pr.Deadline
+                },
+                ProjectMembers = new List<User>()
+            };
+            
+            return View("ProjectDataModify", pdvm);
+        }
+
+        [HttpPost]
+        public ActionResult ProjectDataModify(ProjectDataViewModel pdvm)
+        {/*
+            if (Session["userName"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }*/
+
+
+
+            return View("ProjectDataModify" /*, id */ );
         }
     }
 }
