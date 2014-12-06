@@ -1,4 +1,7 @@
-﻿
+﻿@using ELTE.IssueR.Models;
+
+@model List<Organization>
+
 @{
     ViewBag.Title = "Index";
 }
@@ -12,5 +15,16 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index Cím</h1>
+<h1>Főoldal</h1>
 
+@foreach(var org in Model)
+{
+    <div>
+        <h1>
+            @org.Name
+        </h1>
+        <h2>@org.Country @org.City (@org.FoundationYear)</h2>
+
+        <p>@org.Activity</p>
+    </div>    
+}

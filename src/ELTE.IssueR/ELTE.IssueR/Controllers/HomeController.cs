@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using ELTE.IssueR.Models;
 
 namespace ELTE.IssueR.Controllers
 {
@@ -12,9 +13,10 @@ namespace ELTE.IssueR.Controllers
         // GET: /Home/
         public ActionResult Index()
         {
-            
+            // Select a few organizations to show
+            List<Organization> orgs = _database.Organizations.Take(9).ToList();
 
-            return View("Index");
+            return View("Index", orgs);
         }
 	}
 }
