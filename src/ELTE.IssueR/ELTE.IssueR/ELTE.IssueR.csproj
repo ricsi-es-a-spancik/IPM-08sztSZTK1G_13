@@ -130,11 +130,14 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\IssueController.cs" />
     <Compile Include="Controllers\OrganizationController.cs" />
+    <Compile Include="Controllers\ProjectController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Account\AccountSettingsViewModel.cs" />
+    <Compile Include="Models\Account\NewMessageViewModel.cs" />
+    <Compile Include="Models\Account\MessageViewModel.cs" />
     <Compile Include="Models\Account\NewUserViewModel.cs" />
-    <Compile Include="Models\Account\ProfileViewModel.cs" />
     <Compile Include="Models\Account\UserViewModel.cs" />
     <Compile Include="Models\CoverImage.cs">
       <DependentUpon>IssueREntities.tt</DependentUpon>
@@ -178,6 +181,9 @@
     <Compile Include="Models\Project.cs">
       <DependentUpon>IssueREntities.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Project\ProjectDataViewModel.cs" />
+    <Compile Include="Models\Project\ProjectListViewModel.cs" />
+    <Compile Include="Models\Project\ProjectViewModel.cs" />
     <Compile Include="Models\User.cs">
       <DependentUpon>IssueREntities.tt</DependentUpon>
     </Compile>
@@ -215,6 +221,7 @@
       <DependentUpon>IssueREntities.edmx</DependentUpon>
       <LastGenOutput>IssueREntities.cs</LastGenOutput>
     </Content>
+    <Content Include="App_Data\Log\log1.log" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -238,15 +245,28 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="Views\Account\Login.cshtml" />
-    <Content Include="Views\Account\ProfileIndex.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Issue\Index.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Account\UploadProfileImage.cshtml" />
     <Content Include="Views\Organization\Add.cshtml" />
+    <Content Include="Views\Account\ProfileIndex.cshtml" />
+    <Content Include="Views\Account\Mails.cshtml" />
+    <Content Include="Views\Account\MailsReceive.cshtml" />
+    <Content Include="Views\Project\Project.cshtml" />
+    <Content Include="Views\Account\DeleteMail.cshtml" />
+    <Content Include="Views\Account\MailsSent.cshtml" />
+    <Content Include="Views\Account\ReadMail.cshtml" />
+    <Content Include="Views\Account\NewMail.cshtml" />
+    <Content Include="Views\Account\NewMailList.cshtml" />
+    <Content Include="Views\Account\AccountSettings.cshtml" />
+    <Content Include="Views\Project\ProjectList.cshtml" />
+    <Content Include="Views\Project\ProjectData.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
+    <Folder Include="App_Data\temp_upload\" />
+    <Folder Include="Views\Organization\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -286,7 +306,6 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

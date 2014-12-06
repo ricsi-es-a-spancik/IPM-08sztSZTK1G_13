@@ -1,0 +1,30 @@
+﻿@using ELTE.IssueR.Models
+
+@model ProjectDataViewModel 
+
+@{
+    ViewBag.Title = "ProjectData";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>ProjectData</h2>
+
+<table>
+    <tr>
+        <td>Név:</td>
+        <td>@Model.Project.Name</td>
+    </tr>
+    <tr>
+        <td>Leírás:</td>
+        <td>@Model.Project.Description</td>
+    </tr>
+    <tr>
+        <td>Határidő:</td>
+        <td>@Model.Project.Deadline</td>
+    </tr>
+</table>
+
+@foreach (User user in @Model.ProjectMembers)
+{
+    <p>@user.Name</p>
+}

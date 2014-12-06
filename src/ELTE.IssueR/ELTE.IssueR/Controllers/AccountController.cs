@@ -41,6 +41,41 @@ namespace ELTE.IssueR.Controllers
             return result;
         }
 
+        public HtmlString IdToName(Int32 p_id)
+        {
+            if (Session["userName"] == null)
+            {
+                return new HtmlString("");
+            }
+
+            String result;
+
+            User usr = _database.Users.FirstOrDefault(u => u.Id == p_id);
+            if (usr == null)
+                result = "";
+            else
+                result = usr.Name;
+
+            return new HtmlString(result);
+        }
+
+        public HtmlString MyId()
+        {
+            if (Session["userName"] == null)
+            {
+                return new HtmlString("");
+            }
+
+            String result;
+
+            String myName = (String)Session["userName"];
+            User me = _database.Users.FirstOrDefault(x => x.UserName == myName);
+
+            result = me.Id.ToString();
+
+            return new HtmlString(result);
+        }
+
         #endregion
 
         #region Login/Logout/Register
@@ -128,7 +163,7 @@ namespace ELTE.IssueR.Controllers
                 }
             }
 
-            Log(ELTE.IssueR.WebClient.Models.Logger.LogType.Account, "User " + registered.UserName + " logged in.");
+            Log(ELTE.IssueR.Models.Logger.LogType.Account, "User " + registered.UserName + " logged in.");
             return RedirectToAction("Index", "Home"); // átirányítjuk a főoldalra
         }
 
@@ -208,7 +243,7 @@ namespace ELTE.IssueR.Controllers
                 }
             }
 
-            Log(ELTE.IssueR.WebClient.Models.Logger.LogType.Account,"Successful Register (" + registering.UserName + ")");
+            Log(ELTE.IssueR.Models.Logger.LogType.Account,"Successful Register (" + registering.UserName + ")");
             return RedirectToAction("Login");            
         }
 
@@ -225,11 +260,11 @@ namespace ELTE.IssueR.Controllers
                 if (HttpContext.Application["usersList"] != null)
                     ((List<String>)HttpContext.Application["usersList"]).Remove(usrname);
 
-                Log(ELTE.IssueR.WebClient.Models.Logger.LogType.Account, "User " + usrname + " has logged out.");
+                Log(ELTE.IssueR.Models.Logger.LogType.Account, "User " + usrname + " has logged out.");
             }
             else
             {
-                Log(ELTE.IssueR.WebClient.Models.Logger.LogType.Bug, "User has logged out without being logged in.");
+                Log(ELTE.IssueR.Models.Logger.LogType.Bug, "User has logged out without being logged in.");
             }
 
             return RedirectToAction("Index", "Home"); // átirányítjuk a főoldalra
@@ -241,16 +276,336 @@ namespace ELTE.IssueR.Controllers
 
         public ActionResult ProfileIndex()
         {
-
+            if (Session["userName"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
 
             return View("ProfileIndex");
+        }
+
+        [HttpGet]
+        public ActionResult AccountSettings()
+        {
+            if (Session["userName"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            String myName = (String)Session["userName"];
+            User me = _database.Users.FirstOrDefault(x => x.UserName == myName);
+
+            AccountSettingsViewModel model = new AccountSettingsViewModel(me);
+
+            return View("AccountSettings", model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AccountSettings(AccountSettingsViewModel model)
+        {
+            if (Session["user"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError("", "Hibás adatok.");
+                return View("AccountSettings", model);
+            }
+
+            String myName = (String)Session["userName"];
+            User me = _database.Users.FirstOrDefault(x => x.UserName == myName);
+            model.Id = me.Id;
+
+            if (model.Email != me.Email)
+            {
+                me.Email = model.Email;
+                ViewBag.Information = "Email megváltozott.";
+            }
+
+            if (model.UserPassword != null && model.UserPassword != "")
+            {
+                // kódoljuk a jelszót
+                Byte[] passwordBytes = null;
+                using (SHA256CryptoServiceProvider provider = new SHA256CryptoServiceProvider())
+                {
+                    passwordBytes = Salt(Encoding.UTF8.GetBytes(me.UserName), provider.ComputeHash(Encoding.UTF8.GetBytes(model.UserPassword)));
+                }
+                me.Password = passwordBytes;
+
+                ViewBag.Information += " Jelszó megváltozott.";
+            }
+
+            //Real name
+            if (model.Name != me.Name)
+            {
+                me.Name = model.Name;
+                ViewBag.Information += " Név megváltozott.";
+            }
+
+            _database.SaveChanges();
+
+            ViewBag.Information += " A módosítás sikeres volt.";
+            Log(Models.Logger.LogType.Account, "Profile successfully changed by: " + myName + ".");
+
+            return View("AccountSettings", model);
+        }
+
+        [HttpGet]
+        public ActionResult UploadProfileImage()
+        {
+            if (Session["userName"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            return View("UploadProfileImage");
+        }
+
+        [HttpPost]
+        public ActionResult UploadProfileImage(HttpPostedFileBase file)
+        {
+            if (Session["userName"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            String myName = (String)Session["userName"];
+
+            // Verify that the user selected a file
+            if (file != null && file.ContentLength > 0)
+            {
+                string ImageName = System.IO.Path.GetFileName(file.FileName);
+                string physicalPath = Server.MapPath("~/App_Data/temp_upload/" + ImageName);
+
+                // save image in folder
+                file.SaveAs(physicalPath);
+                System.Web.Helpers.WebImage img = new System.Web.Helpers.WebImage(physicalPath);
+
+                if (img.Width > 2000)
+                    img.Resize(2000, 2000, true, true);
+
+                //save new record in database
+                User me = _database.Users.FirstOrDefault(x => x.UserName == myName);
+                UserImage usrimg = _database.UserImages.FirstOrDefault(x => x.UserId == me.Id);
+                if (usrimg == null)
+                {
+                    usrimg = new UserImage();
+                    usrimg.UserId = me.Id;
+                    img.Resize(100, 100, true, true);
+                    usrimg.Image = img.GetBytes();
+                    _database.UserImages.Add(usrimg);
+                }
+                else
+                {
+                    img.Resize(100, 100, true, true);
+                    usrimg.Image = img.GetBytes();
+                }
+
+                _database.SaveChanges();
+
+                System.IO.File.Delete(physicalPath);
+
+                ViewBag.Information += " A feltöltés sikeres volt.";
+                Log(ELTE.IssueR.Models.Logger.LogType.Account, "User " + myName + " has successfully uploaded an image.");
+            }
+            else
+            {
+                ViewBag.Information += " A feltöltés sikertelen volt.";
+                Log(ELTE.IssueR.Models.Logger.LogType.Account, "User " + myName + " has encountered an error during uploading an image.");
+            }
+
+            return RedirectToAction("ProfileIndex");
         }
 
         #endregion
 
         #region Messages
 
+        public ActionResult Mails()
+        {
+            if (Session["userName"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
 
+            return View("Mails");
+        }
+
+        public HtmlString NewMails()
+        {
+            if (Session["userName"] == null)
+            {
+                return new HtmlString("");
+            }
+
+            String result;
+
+            String myName = (String)Session["userName"];
+            User me = _database.Users.FirstOrDefault(u => u.UserName == myName);
+
+            result = _database.Messages.Where(x => x.ToId == me.Id && !x.IsRead).ToList().Count.ToString();
+
+            return new HtmlString(result);
+        }
+
+        public ActionResult MailsReceive()
+        {
+            if (Session["userName"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            String myName = (String)Session["userName"];
+            User me = _database.Users.FirstOrDefault(u => u.UserName == myName);
+
+            MessageViewModel vm = new MessageViewModel();
+
+            vm.Messages.AddRange(_database.Messages.Where(x => x.ToId == me.Id && !x.HideFromTarget).ToList());
+
+            return View("MailsReceive", vm);
+        }
+
+        public ActionResult MailsSent()
+        {
+            if (Session["userName"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            String myName = (String)Session["userName"];
+            User me = _database.Users.FirstOrDefault(u => u.UserName == myName);
+
+            MessageViewModel vm = new MessageViewModel();
+
+            vm.Messages.AddRange(_database.Messages.Where(x => x.FromId == me.Id && !x.HideFromSender).ToList());
+
+            return View("MailsSent", vm);
+        }
+
+        public ActionResult ReadMail(Int32 p_id)
+        {
+            if (Session["userName"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            String myName = (String)Session["username"];
+            User me = _database.Users.FirstOrDefault(x => x.UserName == myName);
+
+            Message msg = _database.Messages.FirstOrDefault(x => x.Id == p_id);
+            if (msg.ToId == me.Id)
+                msg.IsRead = true;
+
+            _database.SaveChanges();
+
+            return View("ReadMail", msg);
+        }
+
+        public ActionResult DeleteMail(Int32 p_id)
+        {
+            if (Session["userName"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            Message msg = _database.Messages.FirstOrDefault(x => x.Id == p_id);
+
+            return View("DeleteMail", msg);
+        }
+
+        public ActionResult DeleteMailConfirm(Int32 p_id)
+        {
+            if (Session["userName"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            Message msg = _database.Messages.FirstOrDefault(x => x.Id == p_id);
+            String myName = (String)Session["userName"];
+            User me = _database.Users.FirstOrDefault(u => u.UserName == myName);
+
+            if (msg.FromId == me.Id)
+            {
+                msg.HideFromSender = true;
+            }
+            else
+            {
+                msg.HideFromTarget = true;
+                msg.IsRead = false;
+            }
+
+            if (msg.HideFromSender && msg.HideFromTarget)
+            {
+                _database.Messages.Remove(msg);
+            }
+            _database.SaveChanges();
+
+
+            Log(Models.Logger.LogType.Account, "Mail deleted by: " + myName + ".");
+            return View("Mails", msg);
+        }
+
+        public ActionResult NewMail()
+        {
+            if (Session["userName"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            String myName = (String)Session["userName"];
+            List<Int32> ids = _database.Users.Where(x => x.UserName != myName).Select(x => x.Id).ToList();
+
+            return View("NewMailList", ids);
+        }
+
+        [HttpGet]
+        public ActionResult NewMailTo(Int32 p_id)
+        {
+            if (Session["userName"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            NewMessageViewModel vm = new NewMessageViewModel(p_id);
+
+            return View("NewMail", vm);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult NewMailTo(NewMessageViewModel model, Int32 p_id)
+        {
+            if (Session["userName"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError("", "Hibás adatok.");
+                return View("NewMail", model);
+            }
+
+            String myName = (String)Session["userName"];
+            User me = _database.Users.FirstOrDefault(u => u.UserName == myName);
+            User to = _database.Users.FirstOrDefault(u => u.Id == p_id);
+
+            _database.Messages.Add(new Message
+            {
+                Subject = model.Subject,
+                Content = model.Content,
+                FromId = me.Id,
+                ToId = p_id,
+                IsRead = false
+            });
+
+            _database.SaveChanges();
+            Log(Models.Logger.LogType.Account, "New Mail sent from: " + myName + ", to: " + to.UserName + ".");
+
+            return RedirectToAction("Mails");
+        }
 
         #endregion
 

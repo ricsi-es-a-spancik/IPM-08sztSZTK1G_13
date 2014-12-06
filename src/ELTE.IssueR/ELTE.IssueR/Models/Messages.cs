@@ -12,22 +12,18 @@ namespace ELTE.IssueR.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Employee
+    public partial class Messages
     {
-        public Employee()
-        {
-            this.Issues = new HashSet<Issue>();
-        }
-    
         public int Id { get; set; }
-        public int UserId { get; set; }
-        public int ProjectId { get; set; }
-        public short Status { get; set; }
-        public int OrganizationId { get; set; }
+        public int FromId { get; set; }
+        public int ToId { get; set; }
+        public string Subject { get; set; }
+        public string Content { get; set; }
+        public bool IsRead { get; set; }
+        public bool HideFromSender { get; set; }
+        public bool HideFromTarget { get; set; }
     
-        public virtual Project Project { get; set; }
-        public virtual User User { get; set; }
-        public virtual ICollection<Issue> Issues { get; set; }
-        public virtual Organization Organization { get; set; }
+        public virtual Users Users { get; set; }
+        public virtual Users Users1 { get; set; }
     }
 }

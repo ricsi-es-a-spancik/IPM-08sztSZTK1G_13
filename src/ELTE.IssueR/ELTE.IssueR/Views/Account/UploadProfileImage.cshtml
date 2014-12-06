@@ -1,0 +1,22 @@
+﻿@section AddToHead
+{
+    <link href="@Url.Content("~/Content/Styles/AccountStyle.css")" rel="stylesheet" type="text/css" />
+}
+
+@{
+    ViewBag.Title = "Profilkép feltöltése";
+}
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml"; // megadjuk az elrendezést
+}
+
+<h1 class="accountH1">Profilkép feltöltése</h1>
+
+@using (Html.BeginForm("UploadProfileImage", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <p>Kép (.png):</p>
+    <input class="uploadInputFile" type="file" name="file" accept="image/png" id="file" required /> <br />
+
+    <input class="uploadInputSubmit" type="submit" value="Feltöltés" />
+}
