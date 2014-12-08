@@ -21,7 +21,7 @@
 }
 
 <h1 class="accountH1">Elküldött üzenetek</h1>
-@Html.ActionLink("Vissza", "Mails")
+@Html.ActionLink("Vissza", "Mails", null, new { @class = "buttonlikelink blue" })
 
 @if(Model == null)
 {
@@ -29,7 +29,7 @@
 }
 else
 { 
-    <table>
+    <table class="accountTable">
         <tr>
             <th>Címzett</th>
             <th>Téma</th>
