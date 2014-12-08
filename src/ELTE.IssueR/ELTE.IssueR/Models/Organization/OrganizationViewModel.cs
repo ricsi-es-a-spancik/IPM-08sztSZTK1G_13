@@ -23,7 +23,6 @@ namespace ELTE.IssueR.Models
         [StringLength(50, ErrorMessage = "A város nevévek hossza legfeljebb 50 karakter lehet.")]
         public string City { get; set; }
 
-        [Required(ErrorMessage = "A tevékenység megadása kötelező.")]
         [StringLength(50, ErrorMessage = "A tevékenység leírása maximum 50 karakter lehet.")]
         public string Activity { get; set; }
 

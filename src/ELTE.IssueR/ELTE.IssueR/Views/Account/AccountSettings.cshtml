@@ -5,6 +5,7 @@
 @section AddToHead
 {
     <link href="@Url.Content("~/Content/Styles/AccountStyle.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/Styles/FancyFormStyle.css")" rel="stylesheet" type="text/css" />
 }
 
 @{
@@ -25,62 +26,31 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
+    @ViewBag.Information
+    @Html.ValidationSummary(true, "A módosítás sikertelen!")
 
-    <table class="accountsettingsTable">
-        <tr>
-            <td class="accountsettingsTableData" colspan="2">
-                <div class="accountsettingsError">@ViewBag.Information</div>
-                <div class="accountsettingsError">@Html.ValidationSummary(true, "A módosítás sikertelen!")</div>
-            </td>
-        </tr>
-        <tr>
-            <td class="accountsettingsTableData">
-                <div class="accountsettingsText">Felhasználónév:</div>
-            </td>
-            <td class="accountsettingsTableData">
-                @Html.Action("IdToName", new { p_id = Model.Id }).ToString()
-            </td>
-        </tr>
-        <tr>
-            <td class="accountsettingsTableData">
-                <div class="accountsettingsText">Email megváltoztatása:</div>
-            </td>
-            <td class="accountsettingsTableData">
-                @Html.EditorFor(model => model.Email)
-                @Html.ValidationMessageFor(model => model.Email)
-            </td>
-        </tr>
-        <tr>
-            <td class="accountsettingsTableData">
-                <div class="accountsettingsText">Jelszó megváltoztatása:</div>
-            </td>
-            <td class="accountsettingsTableData">
-                @Html.EditorFor(model => model.UserPassword)
-                @Html.ValidationMessageFor(model => model.UserPassword)
-            </td>
-        </tr>
-        <tr>
-            <td class="accountsettingsTableData">
-                <div class="accountsettingsText">Jelszó megerősítése:</div>
-            </td>
-            <td class="accountsettingsTableData">
-                @Html.EditorFor(model => model.UserConfirmPassword)
-                @Html.ValidationMessageFor(model => model.UserConfirmPassword)
-            </td>
-        </tr>
-        <tr>
-            <td class="accountsettingsTableData">
-                <div class="accountsettingsText">Név megváltoztatása:</div>
-            </td>
-            <td class="accountsettingsTableData">
-                @Html.EditorFor(model => model.Name)
-                @Html.ValidationMessageFor(model => model.Name)
-            </td>
-        </tr>
-        <tr>
-            <td class="accountsettingsTableData" colspan="2">
-                <input type="submit" value="Módosítás" class="accountsettingsSubmit" />
-            </td>
-        </tr>
-    </table>
+    <ul class="form-style-1">
+        <li>
+            <label>Email megváltoztatása:</label>
+            @Html.EditorFor(model => model.Email, new { @class = "field-long" })
+            <label class="required">@Html.ValidationMessageFor(model => model.Email)</label>
+        </li>
+        <li>
+            <label>Jelszó megváltoztatása:</label>
+            @Html.EditorFor(model => model.UserPassword, new { @class = "field-long" })
+            <label class="required">@Html.ValidationMessageFor(model => model.UserPassword)</label>
+        </li>
+        <li>
+            <label>Jelszó megerősítése:</label>
+            @Html.EditorFor(model => model.UserConfirmPassword, new { @class = "field-long" })
+            <label class="required">@Html.ValidationMessageFor(model => model.UserConfirmPassword)</label>
+        </li>
+        <li>
+            <label>Név megváltoztatása:</label>
+            @Html.EditorFor(model => model.Name, new { @class = "field-long" })
+            <label class="required">@Html.ValidationMessageFor(model => model.Name)</label>
+        </li>
+    </ul>
+    
+    <input type="submit" value="Módosítás" class="buttonlikelink green" />
 }

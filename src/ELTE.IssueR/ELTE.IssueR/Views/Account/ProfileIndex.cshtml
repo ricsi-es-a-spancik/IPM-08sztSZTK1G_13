@@ -18,10 +18,8 @@
 
 <h1 class="accountH1">Profilom</h1>
 
-<h2 class="accountH2">Menü</h2>
-
-<ul>
-    <li>@Html.ActionLink("Üzenetek", "Mails")</li>
-    <li>@Html.ActionLink("Adatok módosítása", "AccountSettings")</li>
-    <li>@Html.ActionLink("Profilkép feltöltése", "UploadProfileImage")</li>
+<ul class="account">
+    <li>@Html.ActionLink("Üzenetek", "Mails", null, new { @class="buttonlikelink blue" })</li>
+    <li>@Html.ActionLink("Adatok módosítása", "AccountSettings", null, new { @class = "buttonlikelink blue" })</li>
+    <li>@Html.ActionLink("Profilkép feltöltése", "UploadProfileImage", null, new { @class = "buttonlikelink blue" })</li>
 </ul>

@@ -8,7 +8,6 @@
     <meta charset="utf-8" />
     <title>@ViewBag.Title - IssueR</title>
     <link href="@Url.Content("~/Content/Styles/LayoutStyle.css")" rel="stylesheet" type="text/css" />
-    <link href="@Url.Content("~/Content/Styles/LayoutStyle.css")" rel="stylesheet" type="text/css" />
     @if (IsSectionDefined("AddToHead"))
     {
         @RenderSection("AddToHead", required: false)
@@ -22,7 +21,9 @@
             <table id="headerlayouttable">
                 <tr>
                     <td id="logobox">
-                        <img src="Images/issuerlogo.jpg" />
+                        <a href="@Url.Action("Index","Home")">
+                            <img src="@Url.Content("/Images/issuerlogo.jpg")" />
+                        </a>
                     </td>
                     <td id="searchbox">
                         <form action="">
@@ -36,10 +37,10 @@
                             <table>
                                 <tr>
                                     <td>
-                                        <button class="accountbutton">Bejelentkezés</button>
+                                        @Html.ActionLink("Bejelentkezés", "Login", "Account", new { }, new { @class = "buttonlikelink blue" })
                                     </td>
                                     <td>
-                                        <button class="accountbutton">Regisztráció</button>
+                                        @Html.ActionLink("Regisztráció", "Register", "Account", new { }, new { @class = "buttonlikelink blue" })
                                     </td>
                                 </tr>
                             </table>
@@ -50,13 +51,23 @@
                             <table>
                                 <tr>
                                     <td>
-                                        <img src="Images/newmail.jpg" />
+                                        
+                                            <a href="@Url.Action("Mails","Account")">
+                                                @if (@Html.Action("NewMails", "Account").ToString() != "0")
+                                                {
+                                                    <img src="@Url.Content("/Images/newmail.jpg")" />
+                                                }
+                                                else
+                                                {
+                                                    <img src="@Url.Content("/Images/mail.jpg")" />
+                                                }
+                                            </a>
                                     </td>
                                     <td>
-                                        <button class="accountbutton">David Hornyak</button>
+                                        @Html.ActionLink(Session["userName"].ToString(), "ProfileIndex", "Account", new { }, new { @class = "buttonlikelink blue" })
                                     </td>
                                     <td>
-                                        <button class="accountbutton">Kijelentkezés</button>
+                                        @Html.ActionLink("Kijelentkezés", "Logout", "Account", new { }, new { @class = "buttonlikelink blue" })
                                     </td>
                                 </tr>
                             </table>
@@ -67,11 +78,7 @@
             </table>
         </div>
 
-        <div id="contentwrapper">
-            <ul>
-                <li>@Html.ActionLink("Kezdőlap", "Index", "Home")</li>
-            </ul>
-
+        <div id="contentwrapper">   
             @RenderBody()
         </div>
 
