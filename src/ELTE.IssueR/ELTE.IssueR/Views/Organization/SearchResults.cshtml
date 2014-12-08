@@ -1,0 +1,25 @@
+﻿@using ELTE.IssueR.Models
+
+@model List<Organization>
+
+    @{
+        ViewBag.Title = "SearchResults";
+    }
+
+    <h2>SearchResults</h2>
+
+    @if (ViewBag.SearchWithEmptyString != null)
+    {
+        <p>Kérjük, adj meg egy keresőszót a fenti mezőben.</p>
+    }
+    else
+    {
+        <ul>
+            @foreach (var org in Model)
+            {
+                <li>
+                    @org.Name
+                </li>
+            }
+        </ul>
+    }

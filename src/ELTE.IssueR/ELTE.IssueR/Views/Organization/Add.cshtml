@@ -13,11 +13,11 @@
 
 <h2>Új vállalat felvétele</h2>
 
-@using(Html.BeginForm())
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true, "A vállalat regisztrációja sikertelen volt. Ellenőrizd a bevitt adatokat!")
-    
+
     <ul class="form-style-1">
         <li>
             <label>Név<span class="required">*</span></label>
@@ -55,6 +55,6 @@
             <label class="required">@Html.ValidationMessageFor(org => org.Description)</label>
         </li>
     </ul>
-    
-    <input type="submit" autofocus value="Felvétel" class="buttonlikelink green"/>
+
+    <input type="submit" autofocus value="Felvétel" class="buttonlikelink green" />
 }

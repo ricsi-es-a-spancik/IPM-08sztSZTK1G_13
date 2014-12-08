@@ -68,5 +68,24 @@ namespace ELTE.IssueR.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+
+        public ActionResult Details(int orgId)
+        {
+            return View("Details", _database.Organizations.Find(orgId));
+        }
+
+        public ActionResult Search(string orgName)
+        {
+            if(orgName == string.Empty)
+            {
+                ViewBag.SearchWithEmptyString = true;
+                return View("SearchResults");
+            }
+            else
+            {
+                List<Organization> searchResult = _database.Organizations.Where(org => org.Name.Contains(orgName)).ToList();
+                return View("SearchResults", searchResult);
+            }
+        }
 	}
 }

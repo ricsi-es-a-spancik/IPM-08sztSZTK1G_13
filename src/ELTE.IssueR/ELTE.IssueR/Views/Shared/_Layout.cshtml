@@ -27,10 +27,11 @@
                         </a>
                     </td>
                     <td id="searchbox">
-                        <form action="">
-                            <input id="searchfield" type="text" placeholder="vállalat neve..." />
+                        @using (@Html.BeginForm("Search", "Organization", FormMethod.Get))
+                        {
+                            <input id="searchfield" type="text" placeholder="vállalat neve..." name="orgName" />
                             <input type="submit" class="accountbutton" value="Keresés" />
-                        </form>
+                        }
                     </td>
                     <td id="accountbox">
                         @if (Session["userName"] == null)
