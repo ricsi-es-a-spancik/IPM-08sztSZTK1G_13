@@ -169,6 +169,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>IssueREntities.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\Issue\IssueState.cs" />
     <Compile Include="Models\Issue\IssueViewModel.cs" />
     <Compile Include="Models\Logger\Logger.cs" />
     <Compile Include="Models\Message.cs">
@@ -264,6 +265,7 @@
     <Content Include="Views\Project\ProjectList.cshtml" />
     <Content Include="Views\Project\ProjectData.cshtml" />
     <Content Include="Views\Project\ProjectDataModify.cshtml" />
+    <Content Include="Views\Issue\AddIssue.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\temp_upload\" />

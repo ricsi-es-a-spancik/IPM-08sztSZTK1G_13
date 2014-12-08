@@ -1,0 +1,52 @@
+﻿@model ELTE.IssueR.Models.IssueState
+
+@{
+    ViewBag.Title = "View";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <table class="addIssueTable">
+        <tr>
+            <td>
+                Leírás
+            </td>
+            <td>
+                @Html.EditorFor(issue => issue.Name)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Típus
+            </td>
+            <td>
+                @Html.EditorFor(issue => issue.Type)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Határidő
+            </td>
+            <td>
+                @Html.EditorFor(issue => issue.Deadline)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Bázis
+            </td>
+            <td>
+                @Html.DropDownListFor(m => m.EpicId, new SelectList(Model.Epics, "Id", "Name"))
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="submit" autofocus value="Felvétel" />
+            </td>
+        </tr>
+    </table>
+}
+       

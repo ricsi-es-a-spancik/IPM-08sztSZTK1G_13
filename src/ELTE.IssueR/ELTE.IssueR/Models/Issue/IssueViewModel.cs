@@ -9,8 +9,6 @@ namespace ELTE.IssueR.Models
     {
         public int? CurrentProjectId { get; set; }
 
-        public int? CurrentIssueId { get; set; }
-
         public List<Project> Projects { get; set; }
 
         public List<Epic> CurrentEpics { get; set; }
