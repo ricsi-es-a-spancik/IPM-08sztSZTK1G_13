@@ -5,6 +5,7 @@
 @section AddToHead
 {
     <link href="@Url.Content("~/Content/Styles/AccountStyle.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/Styles/FancyFormStyle.css")" rel="stylesheet" type="text/css" />
 }
 
 @{
@@ -21,7 +22,7 @@
 }
 
 <h1 class="accountH1">Üzenet írása</h1>
-@Html.ActionLink("Vissza", "Mails")
+@Html.ActionLink("Vissza", "Mails", null, new { @class = "buttonlikelink blue" } )
 
 @if(Model == null)
 {
@@ -32,28 +33,27 @@ else
     using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "A levelet nem sikerült elküldeni!")
 
-        <div class="MessageInfo">
-            <p>Címzett: @Html.Action("IdToName", new { p_id = Model.ToId })</p>
-        </div>
+        <ul class="form-style-1">
+            <li>
+                <label>Címzett: <i>@Html.Action("IdToName", new { p_id = Model.ToId })</i></label>
+            </li>
 
-        <div class="MessageTextBoxForm">
-            <p>Téma:</p>
-            <div>
-                @Html.TextBoxFor(m => m.Subject)
-                @Html.ValidationMessageFor(m => m.Subject)
-            </div>
-        </div> <br />
+            <li>
+                <label>Téma<span class="required">*</span></label>
+                @Html.TextBoxFor(m => m.Subject, new { @class = "field-long" })
+                <label class="required">@Html.ValidationMessageFor(m => m.Subject)</label>
+            </li>
 
-        <div class="MessageTextAreaForm">
-            <p>Üzenet tartalma:</p>
-            <div>
+            <li>
+                <label>Üzenet tartalma<span class="required">*</span></label>
                 @Html.TextAreaFor(m => m.Content, new { @cols = 70, @rows = 25 })
-                @Html.ValidationMessageFor(m => m.Content)
-            </div>
-        </div>
+                <label class="required">@Html.ValidationMessageFor(m => m.Content)</label>
+            </li>
+        </ul>
 
-        <input class="MessageSubmit" type="submit" value="Elküld" />
+    <input type="submit" value="Elküld" class="buttonlikelink green" />
     }
 }
 

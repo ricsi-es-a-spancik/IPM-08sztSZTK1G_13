@@ -18,9 +18,9 @@
 
 <h1 class="accountH1">Üzenetek</h1>
 
-<ul>
-    <li>@Html.ActionLink("Beérkezett üzenetek (" + @Html.Action("NewMails") + ")", "MailsReceive")</li>
-    <li>@Html.ActionLink("Elküldött üzenetek", "MailsSent")</li>
-    <li>@Html.ActionLink("Új üzenet írása", "NewMail")</li>
+<ul class="account">
+    <li>@Html.ActionLink("Beérkezett üzenetek (" + @Html.Action("NewMails") + ")", "MailsReceive", null, new { @class="buttonlikelink blue" })</li>
+    <li>@Html.ActionLink("Elküldött üzenetek", "MailsSent", null, new { @class = "buttonlikelink blue" })</li>
+    <li>@Html.ActionLink("Új üzenet írása", "NewMail", null, new { @class = "buttonlikelink blue" })</li>
 </ul>
 

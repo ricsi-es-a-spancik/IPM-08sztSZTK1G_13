@@ -19,7 +19,7 @@
 }
 
 <h1 class="accountH1">Üzenet írása</h1>
-@Html.ActionLink("Vissza", "Mails")
+@Html.ActionLink("Vissza", "Mails", null, new { @class = "buttonlikelink blue" } )
 
 @if(Model == null)
 {
@@ -27,10 +27,10 @@
 }
 else
 {
-    <ul>
+    <ul class="account">
         @for (Int32 i = 0; i < Model.Count; ++i)
         {
-            <li>@Html.ActionLink( Html.Action("IdToName", new { p_id = Model[i] }).ToString(), "NewMailTo", new { p_id = Model[i] })</li>
+            <li>@Html.ActionLink(Html.Action("IdToName", new { p_id = Model[i] }).ToString(), "NewMailTo", new { p_id = Model[i] }, new { @class = "buttonlikelink blue" })</li>
         }
     </ul>
 }
