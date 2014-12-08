@@ -122,9 +122,28 @@ namespace ELTE.IssueR.Controllers
                 return RedirectToAction("Index", "Home");
             }*/
 
+            Project p = _database.Projects.FirstOrDefault(pr => pr.Id == pdvm.Id);
 
+            p.Name = pdvm.Project.Name;
+            p.Description = pdvm.Project.Description;
+            p.Deadline = pdvm.Project.Deadline;
 
-            return View("ProjectDataModify" /*, id */ );
+            if (pdvm.ProjectMembers == null)
+            {
+                List<Employee> projectMembers = _database.Employees.Where(e => e.ProjectId == p.Id).ToList();
+
+                List<User> projectMembersUsers = new List<User>();
+                foreach (Employee employee in projectMembers)
+                {
+                    projectMembersUsers.Add(_database.Users.FirstOrDefault(u => u.Id == employee.UserId));
+                }
+
+                pdvm.ProjectMembers = projectMembersUsers;
+            }
+
+            _database.SaveChanges();
+
+            return View("ProjectData", pdvm);
         }
     }
 }
