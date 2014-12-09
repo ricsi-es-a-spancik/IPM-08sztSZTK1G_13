@@ -1,0 +1,17 @@
+﻿.cover_image {
+    width: 1000px;
+}
+
+.organization_wrapper .menubar {
+    margin-top: 10px;
+    text-align: right;
+}
+
+.project_wrapper {
+    margin-left: 20px;
+    width: 300px;
+}
+
+.project_wrapper .join {
+    text-align: right;
+}

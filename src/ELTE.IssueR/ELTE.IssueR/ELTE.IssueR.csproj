@@ -176,6 +176,7 @@
     <Compile Include="Models\Organization.cs">
       <DependentUpon>IssueREntities.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Organization\OrganizationDetails.cs" />
     <Compile Include="Models\Organization\OrganizationViewModel.cs" />
     <Compile Include="Models\Project.cs">
       <DependentUpon>IssueREntities.tt</DependentUpon>
@@ -203,7 +204,9 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Styles\AccountStyle.css" />
     <Content Include="Content\Styles\FancyFormStyle.css" />
+    <Content Include="Content\Styles\HomeStyle.css" />
     <Content Include="Content\Styles\LayoutStyle.css" />
+    <Content Include="Content\Styles\OrganizationStyle.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -216,6 +219,8 @@
     <None Include="Images\issuerlogo.jpg" />
     <None Include="Images\mail.jpg" />
     <None Include="Images\newmail.jpg" />
+    <None Include="Images\blank_cover_small.jpg" />
+    <None Include="Images\blank_cover.jpg" />
     <Content Include="RecaptchaNet.ReadMe.txt" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -289,10 +294,12 @@
     <Content Include="Views\Project\ProjectDataModify.cshtml" />
     <Content Include="Views\Organization\Details.cshtml" />
     <Content Include="Views\Organization\SearchResults.cshtml" />
+    <Content Include="Views\Shared\Partial_OrganizationTable.cshtml" />
+    <Content Include="Views\Organization\Modify.cshtml" />
+    <Content Include="Views\Organization\UploadCoverImage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\temp_upload\" />
-    <Folder Include="NewFolder1\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

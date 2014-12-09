@@ -2,6 +2,11 @@
 
 @model List<Organization>
 
+    @section AddToHead
+    {
+        <link href="@Url.Content("~/Content/Styles/HomeStyle.css")" rel="stylesheet" type="text/css" />
+    }
+
     @{
         ViewBag.Title = "SearchResults";
     }
@@ -14,12 +19,5 @@
     }
     else
     {
-        <ul>
-            @foreach (var org in Model)
-            {
-                <li>
-                    @org.Name
-                </li>
-            }
-        </ul>
+        @Html.Partial("Partial_OrganizationTable", Model)
     }

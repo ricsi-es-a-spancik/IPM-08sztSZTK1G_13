@@ -1,0 +1,33 @@
+﻿@using ELTE.IssueR.Models;
+
+@model List<Organization>
+
+    <table class="organization_table">
+        @for (int i = 0; i < Model.Count; i += 3)
+        {
+            <tr>
+                @for (int j = i; j < i + 3; ++j)
+                {
+                    if (j < Model.Count)
+                    {
+                        <td>
+                            <div class="wrapper">
+                                <div class="cover_small">
+                                    <img src="@Url.Action("CoverFor", "Organization", new { orgId = Model[j].Id, thumb = true })" />
+                                </div>
+                                <div class="details">
+                                    <p class="name_label">@Model[j].Name</p>
+                                    <p class="location_label">@Model[j].City, @Model[j].Country (@Model[j].FoundationYear)</p>
+                                    <div class="details">@Html.ActionLink("Részletek", "Details", "Organization", new { orgId = Model[j].Id }, new { @class = "buttonlikelink blue" })</div>
+                                </div>
+                            </div>
+                        </td>
+                    }
+                    else
+                    {
+                        <td></td>
+                    }
+                }
+            </tr>
+        }
+    </table>
