@@ -34,7 +34,8 @@ namespace ELTE.IssueR.Controllers
                 return View("Index", pvm);
             }
 
-            User user = _database.Users.FirstOrDefault(u => u.UserName == "asd");//Session["userName"]);
+            string username = Session["userName"].ToString();
+            User user = _database.Users.Where(u => u.UserName == username).FirstOrDefault();
             Employee currentUser = _database.Employees.FirstOrDefault(e => e.UserId == user.Id);
 
             _database.Projects.Add(new Project {
@@ -47,7 +48,7 @@ namespace ELTE.IssueR.Controllers
 
             ViewBag.Information = "A projekt sikeresen létrejött.";
 
-            return RedirectToAction("Index");
+            return RedirectToAction("ProjectList", new ProjectListViewModel());
         }
 
         public ActionResult ProjectList(ProjectListViewModel plvm)
