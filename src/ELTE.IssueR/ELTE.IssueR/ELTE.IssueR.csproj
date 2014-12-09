@@ -169,7 +169,7 @@
       <DependentUpon>IssueREntities.edmx</DependentUpon>
     </Compile>
     <Compile Include="Models\Issue\IssueViewModel.cs" />
-	<Compile Include="Models\Issue\IssueState.cs" />
+    <Compile Include="Models\Issue\IssueState.cs" />
     <Compile Include="Models\Logger\Logger.cs" />
     <Compile Include="Models\Message.cs">
       <DependentUpon>IssueREntities.tt</DependentUpon>
@@ -284,7 +284,7 @@
     <Content Include="Views\Account\ProfileIndex.cshtml" />
     <Content Include="Views\Account\Mails.cshtml" />
     <Content Include="Views\Account\MailsReceive.cshtml" />
-    <Content Include="Views\Project\Project.cshtml" />
+    <Content Include="Views\Project\Index.cshtml" />
     <Content Include="Views\Account\DeleteMail.cshtml" />
     <Content Include="Views\Account\MailsSent.cshtml" />
     <Content Include="Views\Account\ReadMail.cshtml" />

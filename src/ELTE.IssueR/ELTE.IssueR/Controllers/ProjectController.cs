@@ -10,19 +10,19 @@ namespace ELTE.IssueR.Controllers
     public class ProjectController : BaseController
     {
         [HttpGet]
-        public ActionResult Project()
+        public ActionResult Index()
         {/*
             if (Session["userName"] == null)
             {
                 return RedirectToAction("Index", "Home");
             }*/
 
-            return View("Project");
+            return View("Index");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Project(ProjectViewModel pvm)
+        public ActionResult Index(ProjectViewModel pvm)
         {/*
             if (Session["userName"] == null)
             {
@@ -31,7 +31,7 @@ namespace ELTE.IssueR.Controllers
 
             if (!ModelState.IsValid)
             {
-                return View("Project", pvm);
+                return View("Index", pvm);
             }
 
             User user = _database.Users.FirstOrDefault(u => u.UserName == "asd");//Session["userName"]);
@@ -47,7 +47,7 @@ namespace ELTE.IssueR.Controllers
 
             ViewBag.Information = "A projekt sikeresen létrejött.";
 
-            return RedirectToAction("Project");
+            return RedirectToAction("Index");
         }
 
         public ActionResult ProjectList(ProjectListViewModel plvm)

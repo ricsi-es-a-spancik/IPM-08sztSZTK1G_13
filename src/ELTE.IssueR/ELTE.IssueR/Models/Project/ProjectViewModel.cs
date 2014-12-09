@@ -17,6 +17,6 @@ namespace ELTE.IssueR.Models
         public String Description { get; set; }
 
         [Required(ErrorMessage = "A határidő magadása kötelező.")]
-        public DateTime Deadline { get; set;}
+        public Nullable<DateTime> Deadline { get; set;}
     }
 }

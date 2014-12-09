@@ -47,13 +47,22 @@
     <p>@Model.Org.Description</p>
 
     <h2>Projektek</h2>
+
+    @if(Session["userName"] != null)
+    {
+        <div class="join">
+            @Html.ActionLink("+ Új projekt indítása", "Index", "Project", new { }, new { @class = "buttonlikelink green" })
+        </div>
+    }
+    
+
     @foreach(Project project in Model.Projects)
     {
         <div class="project_wrapper">
             <h3>@project.Name</h3>
             <p>@project.Description</p>
             <div class="join">
-                <a href="" class="buttonlikelink green">Csatlakozok</a>
+                @Html.ActionLink("Részletek", "ProjectData", "Project", new { id = project.Id }, new { @class = "buttonlikelink green"})
             </div>
         </div>
     }
