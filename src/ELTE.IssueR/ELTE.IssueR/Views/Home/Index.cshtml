@@ -2,33 +2,25 @@
 
 @model List<Organization>
 
-@{
-    ViewBag.Title = "Index";
-}
+    @{
+        ViewBag.Title = "Index";
+    }
 
-@section AddToHead
-{
-    <link href="@Url.Content("~/Content/Styles/HomeStyle.css")" rel="stylesheet" type="text/css" />
-}
+    @section AddToHead
+    {
+        <link href="@Url.Content("~/Content/Styles/HomeStyle.css")" rel="stylesheet" type="text/css" />
+    }
 
-@{
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
+    @{
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
 
-<h1>Főoldal</h1>
+    <h1>Főoldal</h1>
 
-<div id="neworgpanel">
-    @Html.ActionLink("+ Hozzáadom a vállalatom", "Add", "Organization", new { }, new { @class = "buttonlikelink green" })
-</div>
+    <div id="neworgpanel">
+        @Html.ActionLink("+ Hozzáadom a vállalatom", "Add", "Organization", new { }, new { @class = "buttonlikelink green" })
+    </div>
 
-@foreach(var org in Model)
-{
-    <div>
-        <h1>
-            @org.Name
-        </h1>
-        <h2>@org.Country @org.City (@org.FoundationYear)</h2>
+    <p></p>
 
-        <p>@org.Activity</p>
-    </div>    
-}
+    @Html.Partial("Partial_OrganizationTable", Model)

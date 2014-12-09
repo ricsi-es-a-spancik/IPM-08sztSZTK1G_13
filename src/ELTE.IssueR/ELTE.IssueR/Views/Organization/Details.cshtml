@@ -1,0 +1,63 @@
+﻿@using ELTE.IssueR.Models
+
+@section AddToHead
+    {
+    <link href="@Url.Content("~/Content/Styles/OrganizationStyle.css")" rel="stylesheet" type="text/css" />
+}
+
+@model OrganizationDetails
+
+@{
+    ViewBag.Title = Model.Org.Name;
+}
+
+<div class="organization_wrapper">
+    <img src="@Url.Action("CoverFor", "Organization", new { orgId = Model.Org.Id, thumb = false })" class="cover_image" />
+
+    <div class="menubar">
+        @if(Session["userName"] != null)
+        {
+            @Html.ActionLink("Borítókép feltöltése", "UploadCoverImage", "Organization", new { orgId = Model.Org.Id }, new { @class = "buttonlikelink blue" })
+        }
+    </div>
+
+    @if (TempData["Information"] != null)
+    {
+        <p>@TempData["Information"]</p>
+    }
+
+    <h1>@Model.Org.Name</h1>
+
+    <h2>@Model.Org.City, @Model.Org.Country</h2>
+    
+    <p>Alapítva: @Model.Org.FoundationYear</p>
+
+    <p>
+        Tevékenységek:
+        @if (Model.Org.Activity != null) 
+        { 
+            @Model.Org.Activity 
+        }
+        else
+        {
+            <span>-</span>
+        }                      
+    </p>
+
+    <p>@Model.Org.Description</p>
+
+    <h2>Projektek</h2>
+    @foreach(Project project in Model.Projects)
+    {
+        <div class="project_wrapper">
+            <h3>@project.Name</h3>
+            <p>@project.Description</p>
+            <div class="join">
+                <a href="" class="buttonlikelink green">Csatlakozok</a>
+            </div>
+        </div>
+    }
+
+</div>
+
+

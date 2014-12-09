@@ -63,6 +63,26 @@ namespace ELTE.IssueR.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap blank_cover {
+            get {
+                object obj = ResourceManager.GetObject("blank_cover", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap blank_cover_small {
+            get {
+                object obj = ResourceManager.GetObject("blank_cover_small", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap issuerlogo {
             get {
                 object obj = ResourceManager.GetObject("issuerlogo", resourceCulture);

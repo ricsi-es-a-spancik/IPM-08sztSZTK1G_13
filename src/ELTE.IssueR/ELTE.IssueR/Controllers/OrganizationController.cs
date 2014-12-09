@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using ELTE.IssueR.Models;
+using System.Drawing;
+using System.IO;
 
 namespace ELTE.IssueR.Controllers
 {
@@ -67,6 +69,125 @@ namespace ELTE.IssueR.Controllers
             _database.SaveChanges();
 
             return RedirectToAction("Index", "Home");
+        }
+
+        public ActionResult Details(int orgId)
+        {
+            var org = _database.Organizations.Find(orgId);
+            var projects = _database.Projects.Where(p => p.OrganizationId == orgId);
+
+            return View("Details", new OrganizationDetails { Org = org, Projects = projects });
+        }
+
+        public ActionResult Search(string orgName)
+        {
+            if(orgName == string.Empty)
+            {
+                ViewBag.SearchWithEmptyString = true;
+                return View("SearchResults");
+            }
+            else
+            {
+                List<Organization> searchResult = _database.Organizations.Where(org => org.Name.Contains(orgName)).ToList();
+                return View("SearchResults", searchResult);
+            }
+        }
+
+        [HttpGet]
+        public ActionResult UploadCoverImage(int orgId)
+        {
+            if (Session["userName"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                return View("UploadCoverImage", orgId);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult UploadCoverImage(HttpPostedFileBase file, int orgId)
+        {
+            if (Session["userName"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            // Verify that the user selected a file
+            if (file != null && file.ContentLength > 0)
+            {
+                string ImageName = System.IO.Path.GetFileName(file.FileName);
+                string physicalPath = Server.MapPath("~/App_Data/temp_upload/" + ImageName);
+
+                // save image in folder
+                file.SaveAs(physicalPath);
+                System.Web.Helpers.WebImage img = new System.Web.Helpers.WebImage(physicalPath);
+
+                // check if image has the required dimensions
+                if ((double)img.Width / (double)img.Height != 2.00)
+                {
+                    ViewBag.ImageError = "A kép szélessége nem a magasság kétszerese!";
+                    return View("UploadCoverImage", orgId);
+                }
+
+                try
+                {
+                    // delete previous images
+                    var prevCovers = _database.CoverImages.Where(c => c.OrganizationId == orgId);
+                    foreach (var cover in prevCovers)
+                    {
+                        _database.CoverImages.Remove(cover);
+                    }
+
+                    // add new images
+                    img.Resize(1000, 500, true, true);
+                    _database.CoverImages.Add(new CoverImage { OrganizationId = orgId, Image = img.GetBytes() });
+
+                    _database.SaveChanges();
+                }
+                catch 
+                {
+                    ViewBag.ProcessError = "A kép feltöltése során hiba történt!";
+                    return View("UploadCoverImage", orgId);
+                }
+
+                System.IO.File.Delete(physicalPath);
+
+                TempData["Information"] = " A feltöltés sikeres volt.";
+                return RedirectToAction("Details", new { orgId = orgId });
+            }
+            else
+            {
+                ViewBag.ProcessError = "A kép feltöltése során hiba történt!";
+                return View("UploadCoverImage", orgId);
+            }
+        }
+
+        public FileResult CoverFor(int orgId, bool thumb)
+        {
+            IEnumerable<CoverImage> images = _database.Organizations.Where(org => org.Id == orgId).Select(org => org.CoverImages).FirstOrDefault();
+
+            if(images.Count() == 0)
+            {
+                return File("/Images/blank_cover.jpg", "image/jpg");
+            }
+            else
+            {
+                byte[] imageContent = images.First().Image;
+
+                if (!thumb)
+                {
+                    return File(imageContent, "image/jpg");
+                }
+                else
+                {
+                    Image img = Image.FromStream(new MemoryStream(imageContent));
+                    Bitmap bmp = new Bitmap(img, new Size(300, 150));
+                    ImageConverter converter = new ImageConverter();
+                    return File((byte[])converter.ConvertTo(bmp, typeof(byte[])), "image/jpg");
+                }
+            }
         }
 	}
 }
