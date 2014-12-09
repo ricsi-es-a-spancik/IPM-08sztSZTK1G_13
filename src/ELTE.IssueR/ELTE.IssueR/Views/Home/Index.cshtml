@@ -14,8 +14,8 @@
     @{
         Layout = "~/Views/Shared/_Layout.cshtml";
     }
-
-    <h1>Főoldal</h1>
+    <p></p>
+    <p>@Html.ActionLink("Feladatok", "Index", "Issue", new { }, new { @class = "buttonlikelink blue" })</p>
 
     <div id="neworgpanel">
         @Html.ActionLink("+ Hozzáadom a vállalatom", "Add", "Organization", new { }, new { @class = "buttonlikelink green" })

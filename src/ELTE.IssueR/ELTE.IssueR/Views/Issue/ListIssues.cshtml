@@ -5,6 +5,11 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@section AddToHead
+{
+    <link href="@Url.Content("~/Content/Styles/FancyFormStyle.css")" rel="stylesheet" type="text/css" />
+}
+
 <style>
     table#t01 {
         width: 100%; 
@@ -28,28 +33,45 @@
     {
         background-color: #dbdbdb;
     }
+    table#t02 {
+        width: 100%; 
+        border: none;
+        border-collapse: collapse;
+        margin-top: 2%;
+        margin-bottom: 2%;
+    }
+    .long-drowdownlist {
+        width:200px;
+    }
 </style>
 
 @if(Model.CurrentProjectId == null)
 {
     <div style="text-align: center">Nincsenek megjeleníthető projektek.</div>
 }
-else 
-{ 
-    using (@Html.BeginForm())
-    {
-        <table style="margin-bottom:2%">
-            <tr>
-                <td>Projektek:</td>
-                <td>
-                    @Html.DropDownListFor(m => m.CurrentProjectId, new SelectList(Model.Projects, "Id", "Name"), new { onchange = "this.form.submit();" })
-                </td>
-                <td>
-                    @Html.ActionLink("Feladat felvétele", "AddIssue", "Issue", new { selectedProjId = Model.CurrentProjectId }, null)
-                </td>
-            </tr>
-        </table>
-    }
+else
+{
+    <table style="width:100%; margin-bottom:1%; margin-top:1%">
+        <tr>
+            <td style="width:50%">
+                @using (@Html.BeginForm())
+                {
+                    <table>
+                        <tr>
+                            <td>Projektek:</td>
+                            <td>
+                                @Html.DropDownListFor(m => m.CurrentProjectId, new SelectList(Model.Projects, "Id", "Name"), new { onchange = "this.form.submit();", @class = "field-long long-drowdownlist" })
+                            </td>
+                        </tr>
+                    </table>
+                }
+            </td>
+            <td style="text-align:right; width:50%">
+                @Html.ActionLink("+ Feladat felvétele", "AddIssue", "Issue", new { selectedProjId = Model.CurrentProjectId }, new { @class = "buttonlikelink green" })
+                @Html.ActionLink("+ Bázis felvétele", "AddEpic", "Issue", new { selectedProjId = Model.CurrentProjectId }, new { @class = "buttonlikelink green" })
+            </td>
+        </tr>
+    </table>
 
     if (Model.CurrentIssues != null && Model.CurrentIssues.Count != 0)
     {

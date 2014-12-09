@@ -168,8 +168,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>IssueREntities.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\Issue\EpicViewModel.cs" />
     <Compile Include="Models\Issue\IssueViewModel.cs" />
-	<Compile Include="Models\Issue\IssueState.cs" />
+    <Compile Include="Models\Issue\IssueState.cs" />
     <Compile Include="Models\Logger\Logger.cs" />
     <Compile Include="Models\Message.cs">
       <DependentUpon>IssueREntities.tt</DependentUpon>
@@ -277,7 +278,8 @@
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Issue\Index.cshtml" />
+    <Content Include="Views\Issue\ListIssues.cshtml" />
+    <Content Include="Views\Issue\AddIssue.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Account\UploadProfileImage.cshtml" />
     <Content Include="Views\Organization\Add.cshtml" />
@@ -300,6 +302,7 @@
     <Content Include="Views\Project\ProjectMemberAdd.cshtml" />
     <Content Include="Views\Organization\Modify.cshtml" />
     <Content Include="Views\Organization\UploadCoverImage.cshtml" />
+    <Content Include="Views\Issue\AddEpic.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\temp_upload\" />

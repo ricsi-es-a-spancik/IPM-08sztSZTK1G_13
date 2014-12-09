@@ -190,6 +190,7 @@ namespace ELTE.IssueR.Controllers
             return View("AddIssue", issue);
         }
 
+        [HttpPost]
         public ActionResult EditIssue(IssueState issue)
         {
             if (Session["userName"] == null)
@@ -222,6 +223,49 @@ namespace ELTE.IssueR.Controllers
             _database.SaveChanges();
 
             return RedirectToAction("ListIssues", new IssueViewModel { CurrentProjectId = issue.ProjectId });
+        }
+
+        [HttpGet]
+        public ActionResult AddEpic(int? selectedProjId)
+        {
+            if (Session["userName"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            if (selectedProjId == null)
+                return RedirectToAction("ListIssues");
+
+            if (!GetProjects().Exists(prj => prj.Id == selectedProjId))
+                return RedirectToAction("ListIssues");
+
+            return View("AddEpic", new EpicViewModel{ ProjectId = selectedProjId.Value });
+        }
+
+        [HttpPost]
+        public ActionResult AddEpic(EpicViewModel epic)
+        {
+            if (Session["userName"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError("", "Az űrlap hibás adatokat tartlamaz.");
+                return View("AddEpic", epic);
+            }
+
+            if (_database.Epics.Count(e => epic.Name.Equals(e.Name)) != 0)
+            {
+                ModelState.AddModelError("", "A megadott leírással már létezik feladat!");
+                return View("AddEpic", epic);
+            }
+
+            _database.Epics.Add(new Epic { Name = epic.Name, ProjectId = epic.ProjectId });
+            _database.SaveChanges();
+
+            return RedirectToAction("ListIssues", new IssueViewModel { CurrentProjectId = epic.ProjectId });
         }
     }
 }
