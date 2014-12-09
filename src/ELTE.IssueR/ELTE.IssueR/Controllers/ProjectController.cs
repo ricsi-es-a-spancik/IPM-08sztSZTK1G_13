@@ -145,5 +145,48 @@ namespace ELTE.IssueR.Controllers
 
             return View("ProjectData", pdvm);
         }
+
+        [HttpGet]
+        public ActionResult ProjectMemberAdd(int Id)
+        {
+            List<Employee> notProjectMembers = _database.Employees.Where(e => e.ProjectId != Id).ToList();
+
+            List<User> projectMembersUsers = new List<User>();
+            foreach (Employee employee in notProjectMembers)
+            {
+                projectMembersUsers.Add(_database.Users.FirstOrDefault(u => u.Id == employee.UserId));
+            }
+
+            UserListViewModel ulvm = new UserListViewModel{
+                Users = projectMembersUsers,
+                ProjectId = Id
+            };
+
+            return View("ProjectMemberAdd", ulvm);
+        }
+
+        [HttpPost]
+        public ActionResult ProjectMemberAdd(UserListViewModel ulvm)
+        {
+            string selectedItem = Request["selectedItem"];
+
+            if (selectedItem == null)
+            {
+                return RedirectToAction("ProjectData", "Project", 1);
+            }
+
+            int id;
+            bool parsed = Int32.TryParse(selectedItem, out id);
+
+            if (!parsed)
+            {
+                return RedirectToAction("ProjectData", "Project", 1);
+            }
+            
+            Employee e = _database.Employees.FirstOrDefault(em => em.UserId == id);
+            e.ProjectId = ulvm.ProjectId;
+
+            return RedirectToAction("ProjectData", "Project", 1);
+        }
     }
 }

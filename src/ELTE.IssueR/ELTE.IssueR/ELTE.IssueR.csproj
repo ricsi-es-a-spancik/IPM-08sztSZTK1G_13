@@ -183,6 +183,7 @@
     <Compile Include="Models\Project\ProjectDataViewModel.cs" />
     <Compile Include="Models\Project\ProjectListViewModel.cs" />
     <Compile Include="Models\Project\ProjectViewModel.cs" />
+    <Compile Include="Models\Project\UserListViewModel.cs" />
     <Compile Include="Models\User.cs">
       <DependentUpon>IssueREntities.tt</DependentUpon>
     </Compile>
@@ -289,6 +290,7 @@
     <Content Include="Views\Project\ProjectDataModify.cshtml" />
     <Content Include="Views\Organization\Details.cshtml" />
     <Content Include="Views\Organization\SearchResults.cshtml" />
+    <Content Include="Views\Project\ProjectMemberAdd.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\temp_upload\" />
