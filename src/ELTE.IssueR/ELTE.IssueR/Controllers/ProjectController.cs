@@ -189,6 +189,8 @@ namespace ELTE.IssueR.Controllers
             Employee e = _database.Employees.FirstOrDefault(em => em.UserId == id);
             e.ProjectId = projectId;
 
+            _database.SaveChanges();
+
             return RedirectToAction("ProjectData", "Project", new { id = projectId });
         }
     }
