@@ -25,12 +25,12 @@
     <ul class="form-style-1">
         <li>
             <label>Felhasználónév<span class="required">*</span></label>
-            @Html.EditorFor(user => user.UserName, new { @class = "field-long" })
+            @Html.TextBoxFor(user => user.UserName, new { @class = "field-long" })
             <label class="required">@Html.ValidationMessageFor(m => m.UserName)</label>
         </li>
         <li>
             <label>Jelszó<span class="required">*</span></label>
-            @Html.EditorFor(user => user.UserPassword, new { @class = "field-long" })
+            @Html.TextBoxFor(user => user.UserPassword, new { @class = "field-long", @type = "password" })
             <label class="required">@Html.ValidationMessageFor(m => m.UserPassword)</label>
         </li>
     </ul>

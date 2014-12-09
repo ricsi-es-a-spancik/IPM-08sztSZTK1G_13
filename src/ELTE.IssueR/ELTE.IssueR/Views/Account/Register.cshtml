@@ -27,27 +27,27 @@
     <ul class="form-style-1">
         <li>
             <label>Felhasználónév (3-20 karakter)<span class="required">*</span></label>
-            @Html.EditorFor(user => user.UserName, new { @class = "field-long" })
+            @Html.TextBoxFor(user => user.UserName, new { @class = "field-long" })
             <label class="required">@Html.ValidationMessageFor(user => user.UserName)</label>
         </li>
         <li>
             <label>Név (max 50 karakter)<span class="required">*</span></label>
-            @Html.EditorFor(user => user.Name, new { @class = "field-long" })
+            @Html.TextBoxFor(user => user.Name, new { @class = "field-long" })
             <label class="required">@Html.ValidationMessageFor(user => user.Name)</label>
         </li>
         <li>
             <label>E-mail cím<span class="required">*</span></label>
-            @Html.EditorFor(user => user.Email, new { @class = "field-long" })
+            @Html.TextBoxFor(user => user.Email, new { @class = "field-long" })
             <label class="required">@Html.ValidationMessageFor(user => user.Email)</label>
         </li>
         <li>
             <label>Jelszó (5-40 karakter)<span class="required">*</span></label>
-            @Html.EditorFor(user => user.UserPassword, new { @class = "field-long" })
+            @Html.TextBoxFor(user => user.UserPassword, new { @class = "field-long", @type = "password" })
             <label class="required">@Html.ValidationMessageFor(user => user.UserPassword)</label>
         </li>
         <li>
             <label>Jelszó megismétlése<span class="required">*</span></label>
-            @Html.EditorFor(user => user.UserConfirmPassword, new { @class = "field-long" })
+            @Html.TextBoxFor(user => user.UserConfirmPassword, new { @class = "field-long", @type = "password" })
             <label class="required">@Html.ValidationMessageFor(user => user.UserConfirmPassword)</label>
         </li>
         <li>
