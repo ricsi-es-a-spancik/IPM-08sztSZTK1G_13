@@ -5,48 +5,60 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@section AddToHead
+{
+    <link href="@Url.Content("~/Content/Styles/FancyFormStyle.css")" rel="stylesheet" type="text/css" />
+}
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
-    <table class="addIssueTable">
-        <tr>
-            <td>
-                Leírás
-            </td>
-            <td>
-                @Html.EditorFor(issue => issue.Name)
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Típus
-            </td>
-            <td>
-                @Html.EditorFor(issue => issue.Type)
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Határidő
-            </td>
-            <td>
-                @Html.EditorFor(issue => issue.Deadline)
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Bázis
-            </td>
-            <td>
-                @Html.DropDownListFor(m => m.EpicId, new SelectList(Model.Epics, "Id", "Name"))
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <input type="submit" autofocus value="Felvétel" />
-            </td>
-        </tr>
-    </table>
+    @Html.ValidationSummary(true, "A feladat felvétele sikertelen volt! Ellenőrizd a bevitt adatokat!")
+
+    @Html.HiddenFor(issue => issue.ProjectId)
+    @Html.HiddenFor(issue => issue.Id)
+
+    <ul class="form-style-1">
+        <li>
+            <label>Leírás<span class="required">*</span></label>
+            @Html.TextBoxFor(issue => issue.Name, new { @class = "field-long" })
+            <label class="required">@Html.ValidationMessageFor(issue => issue.Name)</label>
+        </li>
+        <li>
+            <label>Típus<span class="required">*</span></label>
+            @Html.DropDownListFor(issue => issue.Type, new SelectList(Model.TypeEnumList), new { @class = "field-long" })
+            <label class="required">@Html.ValidationMessageFor(issue => issue.Type)</label>
+        </li>
+        @if (Model.Id == null)
+        {
+            @Html.HiddenFor(issue => issue.Status)
+        }
+        else
+        {
+            <li>
+                <label>Státusz<span class="required"></span></label>
+                @Html.DropDownListFor(issue => issue.Status, new SelectList(Model.StatusEnumList), new { @class = "field-long" })
+                <label class="required">@Html.ValidationMessageFor(issue => issue.Status)</label>
+            </li>
+        }
+        <li>
+            <label>Bázis<span class="required">*</span></label>
+            @Html.DropDownListFor(issue => issue.EpicId, new SelectList(Model.Epics, "Id", "Name"), new { @class = "field-long" })
+            <label class="required">@Html.ValidationMessageFor(issue => issue.EpicId)</label>
+        </li>
+        <li>
+            <label>Foglalkoztatott<span class="required">*</span></label>
+            @Html.DropDownListFor(issue => issue.EmployeeId, new SelectList(Model.Employees, "Id", "User.Name"), new { @class = "field-long" })
+            <label class="required">@Html.ValidationMessageFor(issue => issue.EmployeeId)</label>
+        </li>
+        <li>
+            <label>Határidő</label>
+            @Html.EditorFor(issue => issue.Deadline, new { @class = "field-long" })
+            <label class="required">@Html.ValidationMessageFor(issue => issue.Deadline)</label>
+        </li>
+    </ul>
+
+    if(Model.Id == null){<input type="submit" autofocus value="Feladat felvétele" class="buttonlikelink green" />}
+    else { <input type="submit" autofocus value="Módosít" class="buttonlikelink green" /> }
 }
        

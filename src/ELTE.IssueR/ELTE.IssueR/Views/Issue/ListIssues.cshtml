@@ -32,7 +32,7 @@
 
 @if(Model.CurrentProjectId == null)
 {
-    <div>Nincs megjeleníthető projekt.</div>
+    <div style="text-align: center">Nincsenek megjeleníthető projektek.</div>
 }
 else 
 { 
@@ -50,54 +50,55 @@ else
             </tr>
         </table>
     }
-}
 
-@if (Model.CurrentIssues != null && Model.CurrentIssues.Count != 0)
-{
-    <table id="t01">
-        @*<tr>
-            <th>Azonosító</th>
-            <th>Név</th>
-            <th>Hozzárendelt melós</th>
-            <th>Bázis azonosító</th>
-            <th>Típus</th>
-            <th>Státusz</th>
-            <th>Teljesítéshez szükséges idő</th>
-            <th>Eltöltött idő</th>
-            <th>Határidő</th>
-        </tr>*@
-        @foreach (Issue issue in Model.CurrentIssues)
-        {
-        <tr>
-            @if (issue.Id != null) {<td>@issue.Id</td>} else {<td>-</td>}
-            @if (issue.Name != null) {<td>@issue.Name</td>} else {<td>-</td>}
-            @if (issue.EmployeeId != null) {<td>@issue.EmployeeId</td>} else {<td>-</td>}
-            @if (issue.EpicId != null) {<td>@issue.EpicId</td>} else {<td>-</td>}
-            <td style="width:40px">
-                @if (issue.Type != null)
-                {
-                    if (issue.Type == 1) { <img src="/Images/issue_feature.png" title="Feature"/> }
-                    else if (issue.Type == 2) { <img src="/Images/issue_bug.png" title="Bug"/> }
-                    else { <img src="/Images/issue_refactor.png" title="Refactor"/> }
-                }
-            </td>
-            <td style="width:40px">
-                @if (issue.Status !=null)
-                {
-                    if (issue.Status == 1) { <img src="/Images/issue_todo.png" title="To do"/> }
-                    else if (issue.Status == 2) { <img src="/Images/issue_inprogress.png" title="In progress"/> }
-                    else if (issue.Status == 3) { <img src="/Images/issue_needstesting.png" title="Needs testing"/> }
-                    else { <img src="/Images/issue_done.png" title="Done"/> }
-                }
-            </td>
-            @if (issue.EstimatedTime != null) {<td>@issue.EstimatedTime</td>} else {<td>-</td>}
-            @if (issue.TimeSpent != null) {<td>@issue.TimeSpent</td>} else {<td>-</td>}
-            @if (issue.Deadline != null) {<td>@issue.Deadline</td>} else {<td>-</td>}
-        </tr>
-        }
-    </table>
-}
-else
-{
-    <div style="text-align: center">A kiválasztott projekthez nem tartoznak feladatok.</div>
+    if (Model.CurrentIssues != null && Model.CurrentIssues.Count != 0)
+    {
+        <table id="t01">
+            @*<tr>
+                <th>Azonosító</th>
+                <th>Név</th>
+                <th>Hozzárendelt melós</th>
+                <th>Bázis azonosító</th>
+                <th>Típus</th>
+                <th>Státusz</th>
+                <th>Teljesítéshez szükséges idő</th>
+                <th>Eltöltött idő</th>
+                <th>Határidő</th>
+            </tr>*@
+            @for (int i=0; i<Model.CurrentIssues.Count;++i)
+            {
+                var issue = Model.CurrentIssues[i];
+            <tr>
+                <td>@issue.Id</td>
+                <td>
+                    @Html.ActionLink(@issue.Name,"EditIssue","Issue", new {issueId = issue.Id}, null)
+                </td>
+                <td>@issue.Epic.Name</td>
+                @if (issue.Employee != null) {<td>@issue.Employee.User.Name</td>} else {<td>-</td>}
+                @if (issue.Deadline != null) {<td style="width:10%">@issue.Deadline.Value.ToShortDateString()</td>} else {<td style="width:10%">-</td>}
+                <td style="width:40px">
+                    @if (issue.Type != null)
+                    {
+                        if (issue.Type == 1) { <img src="/Images/issue_feature.png" title="Feature"/> }
+                        else if (issue.Type == 2) { <img src="/Images/issue_bug.png" title="Bug"/> }
+                        else { <img src="/Images/issue_refactor.png" title="Refactor"/> }
+                    }
+                </td>
+                <td style="width:40px">
+                    @if (issue.Status !=null)
+                    {
+                        if (issue.Status == 1) { <img src="/Images/issue_todo.png" title="To do"/> }
+                        else if (issue.Status == 2) { <img src="/Images/issue_inprogress.png" title="In progress"/> }
+                        else if (issue.Status == 3) { <img src="/Images/issue_needstesting.png" title="Needs testing"/> }
+                        else { <img src="/Images/issue_done.png" title="Done"/> }
+                    }
+                </td>
+            </tr>
+            }
+        </table>
+    }
+    else
+    {
+        <div style="text-align: center">A kiválasztott projekthez nem tartoznak feladatok.</div>
+    }
 }
