@@ -10,19 +10,19 @@ namespace ELTE.IssueR.Controllers
     public class ProjectController : BaseController
     {
         [HttpGet]
-        public ActionResult Project()
+        public ActionResult Index()
         {/*
             if (Session["userName"] == null)
             {
                 return RedirectToAction("Index", "Home");
             }*/
 
-            return View("Project");
+            return View("Index");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Project(ProjectViewModel pvm)
+        public ActionResult Index(ProjectViewModel pvm)
         {/*
             if (Session["userName"] == null)
             {
@@ -31,10 +31,11 @@ namespace ELTE.IssueR.Controllers
 
             if (!ModelState.IsValid)
             {
-                return View("Project", pvm);
+                return View("Index", pvm);
             }
 
-            User user = _database.Users.FirstOrDefault(u => u.UserName == "asd");//Session["userName"]);
+            string username = Session["userName"].ToString();
+            User user = _database.Users.Where(u => u.UserName == username).FirstOrDefault();
             Employee currentUser = _database.Employees.FirstOrDefault(e => e.UserId == user.Id);
 
             _database.Projects.Add(new Project {
@@ -47,7 +48,7 @@ namespace ELTE.IssueR.Controllers
 
             ViewBag.Information = "A projekt sikeresen létrejött.";
 
-            return RedirectToAction("Project");
+            return RedirectToAction("ProjectList", new ProjectListViewModel());
         }
 
         public ActionResult ProjectList(ProjectListViewModel plvm)
@@ -170,9 +171,11 @@ namespace ELTE.IssueR.Controllers
         {
             string selectedItem = Request["selectedItem"];
 
+            int projectId = ulvm.ProjectId;
+
             if (selectedItem == null)
             {
-                return RedirectToAction("ProjectData", "Project", 1);
+                return RedirectToAction("ProjectData", "Project", new { id = projectId });
             }
 
             int id;
@@ -180,13 +183,15 @@ namespace ELTE.IssueR.Controllers
 
             if (!parsed)
             {
-                return RedirectToAction("ProjectData", "Project", 1);
+                return RedirectToAction("ProjectData", "Project", new { id = projectId });
             }
             
             Employee e = _database.Employees.FirstOrDefault(em => em.UserId == id);
-            e.ProjectId = ulvm.ProjectId;
+            e.ProjectId = projectId;
 
-            return RedirectToAction("ProjectData", "Project", 1);
+            _database.SaveChanges();
+
+            return RedirectToAction("ProjectData", "Project", new { id = projectId });
         }
     }
 }

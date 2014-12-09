@@ -7,11 +7,13 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>ProjectMemberAdd</h2>
+<h2>Új tag felvétele a projekthez</h2>
 
 @using (Html.BeginForm())
 {
     @Html.DropDownList("selectedItem", new SelectList(Model.Users, "Id", "Name"))
+
+    @Html.HiddenFor(m => m.ProjectId)
 
     <input type="submit" value="Hozzáad" />
 }
