@@ -170,9 +170,11 @@ namespace ELTE.IssueR.Controllers
         {
             string selectedItem = Request["selectedItem"];
 
+            int projectId = ulvm.ProjectId;
+
             if (selectedItem == null)
             {
-                return RedirectToAction("ProjectData", "Project", 1);
+                return RedirectToAction("ProjectData", "Project", new { id = projectId });
             }
 
             int id;
@@ -180,13 +182,13 @@ namespace ELTE.IssueR.Controllers
 
             if (!parsed)
             {
-                return RedirectToAction("ProjectData", "Project", 1);
+                return RedirectToAction("ProjectData", "Project", new { id = projectId });
             }
             
             Employee e = _database.Employees.FirstOrDefault(em => em.UserId == id);
-            e.ProjectId = ulvm.ProjectId;
+            e.ProjectId = projectId;
 
-            return RedirectToAction("ProjectData", "Project", 1);
+            return RedirectToAction("ProjectData", "Project", new { id = projectId });
         }
     }
 }

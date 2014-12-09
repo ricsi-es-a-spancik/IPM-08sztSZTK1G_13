@@ -13,5 +13,7 @@
 {
     @Html.DropDownList("selectedItem", new SelectList(Model.Users, "Id", "Name"))
 
+    @Html.HiddenFor(m => m.ProjectId)
+
     <input type="submit" value="Hozzáad" />
 }
