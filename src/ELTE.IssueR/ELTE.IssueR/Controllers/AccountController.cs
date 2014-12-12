@@ -284,6 +284,28 @@ namespace ELTE.IssueR.Controllers
             return View("ProfileIndex");
         }
 
+        public FileResult GetProfileImage()
+        {
+            if (Session["userName"] == null)
+            {
+                return File("~/Content/NoImage.png", "image/png");
+            }
+
+            String myName = (String)Session["userName"];
+            User me = _database.Users.FirstOrDefault(x => x.UserName == myName);
+
+            UserImage img = _database.UserImages.FirstOrDefault(x => x.UserId == me.Id);
+            if(img == null)
+                return File("~/Content/NoImage.png", "image/png");
+
+            Byte[] imageContent = img.Image;
+
+            if (imageContent == null) // amennyiben nem sikerült betölteni, egy alapértelmezett képet adunk vissza
+                return File("~/Content/NoImage.png", "image/png");
+
+            return File(imageContent, "image/png");
+        }
+
         [HttpGet]
         public ActionResult AccountSettings()
         {
@@ -533,7 +555,7 @@ namespace ELTE.IssueR.Controllers
             else
             {
                 msg.HideFromTarget = true;
-                msg.IsRead = false;
+                msg.IsRead = true;
             }
 
             if (msg.HideFromSender && msg.HideFromTarget)

@@ -18,6 +18,8 @@
 
 <h1 class="accountH1">Profilom</h1>
 
+<img src="@Url.Action("GetProfileImage")" />
+
 <ul class="account">
     <li>@Html.ActionLink("Üzenetek", "Mails", null, new { @class="buttonlikelink blue" })</li>
     <li>@Html.ActionLink("Adatok módosítása", "AccountSettings", null, new { @class = "buttonlikelink blue" })</li>
