@@ -28,12 +28,12 @@ namespace ELTE.IssueR.Models
         public virtual DbSet<CoverImage> CoverImages { get; set; }
         public virtual DbSet<Document> Documents { get; set; }
         public virtual DbSet<Employee> Employees { get; set; }
-        public virtual DbSet<Epic> Epics { get; set; }
         public virtual DbSet<Issue> Issues { get; set; }
         public virtual DbSet<Message> Messages { get; set; }
         public virtual DbSet<Organization> Organizations { get; set; }
         public virtual DbSet<Project> Projects { get; set; }
-        public virtual DbSet<UserImage> UserImages { get; set; }
+        public virtual DbSet<ProjectMember> ProjectMembers { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<UserImage> UserImages { get; set; }
     }
 }

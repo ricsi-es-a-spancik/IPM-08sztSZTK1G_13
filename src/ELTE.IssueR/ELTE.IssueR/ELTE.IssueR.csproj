@@ -147,9 +147,6 @@
     <Compile Include="Models\Employee.cs">
       <DependentUpon>IssueREntities.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Epic.cs">
-      <DependentUpon>IssueREntities.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\Issue.cs">
       <DependentUpon>IssueREntities.tt</DependentUpon>
     </Compile>
@@ -181,6 +178,9 @@
     <Compile Include="Models\Organization\OrganizationDetails.cs" />
     <Compile Include="Models\Organization\OrganizationViewModel.cs" />
     <Compile Include="Models\Project.cs">
+      <DependentUpon>IssueREntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ProjectMember.cs">
       <DependentUpon>IssueREntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Project\ProjectDataViewModel.cs" />

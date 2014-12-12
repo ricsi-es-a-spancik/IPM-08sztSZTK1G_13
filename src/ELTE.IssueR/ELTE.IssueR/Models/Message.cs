@@ -14,6 +14,13 @@ namespace ELTE.IssueR.Models
     
     public partial class Message
     {
+        public Message()
+        {
+            this.IsRead = false;
+            this.HideFromSender = false;
+            this.HideFromTarget = false;
+        }
+    
         public int Id { get; set; }
         public int FromId { get; set; }
         public int ToId { get; set; }
@@ -24,6 +31,5 @@ namespace ELTE.IssueR.Models
         public bool HideFromTarget { get; set; }
     
         public virtual User User { get; set; }
-        public virtual User User1 { get; set; }
     }
 }

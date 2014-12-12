@@ -17,8 +17,8 @@ namespace ELTE.IssueR.Models
         public Organization()
         {
             this.CoverImages = new HashSet<CoverImage>();
-            this.Projects = new HashSet<Project>();
             this.Employees = new HashSet<Employee>();
+            this.Projects = new HashSet<Project>();
         }
     
         public int Id { get; set; }
@@ -30,7 +30,7 @@ namespace ELTE.IssueR.Models
         public string Description { get; set; }
     
         public virtual ICollection<CoverImage> CoverImages { get; set; }
-        public virtual ICollection<Project> Projects { get; set; }
         public virtual ICollection<Employee> Employees { get; set; }
+        public virtual ICollection<Project> Projects { get; set; }
     }
 }

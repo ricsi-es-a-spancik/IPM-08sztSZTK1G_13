@@ -17,8 +17,9 @@ namespace ELTE.IssueR.Models
         public User()
         {
             this.Employees = new HashSet<Employee>();
+            this.Issues = new HashSet<Issue>();
             this.Messages = new HashSet<Message>();
-            this.Messages1 = new HashSet<Message>();
+            this.ProjectMembers = new HashSet<ProjectMember>();
             this.UserImages = new HashSet<UserImage>();
         }
     
@@ -27,12 +28,13 @@ namespace ELTE.IssueR.Models
         public byte[] Password { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
-        public Nullable<System.DateTime> RegisterDate { get; set; }
+        public System.DateTime RegisterDate { get; set; }
         public Nullable<System.DateTime> LastLogin { get; set; }
     
         public virtual ICollection<Employee> Employees { get; set; }
+        public virtual ICollection<Issue> Issues { get; set; }
         public virtual ICollection<Message> Messages { get; set; }
-        public virtual ICollection<Message> Messages1 { get; set; }
+        public virtual ICollection<ProjectMember> ProjectMembers { get; set; }
         public virtual ICollection<UserImage> UserImages { get; set; }
     }
 }

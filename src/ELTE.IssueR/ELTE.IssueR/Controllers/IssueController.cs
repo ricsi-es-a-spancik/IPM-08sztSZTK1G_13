@@ -214,8 +214,8 @@ namespace ELTE.IssueR.Controllers
 
             Issue oldData = _database.Issues.First(i => i.Id == issue.Id);
             oldData.Name = issue.Name;
-            oldData.Type = (int)issue.Type;
-            oldData.Status = (int)issue.Status;
+            oldData.Type = Convert.ToInt16((int)issue.Type);
+            oldData.Status = Convert.ToInt16((int)issue.Status);
             oldData.EpicId = issue.EpicId.Value;
             oldData.EmployeeId = issue.EmployeeId.Value;
             oldData.Deadline = issue.Deadline;

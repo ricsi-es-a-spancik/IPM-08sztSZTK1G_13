@@ -16,15 +16,13 @@ namespace ELTE.IssueR.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public Nullable<int> Type { get; set; }
+        public short Type { get; set; }
+        public short Status { get; set; }
         public Nullable<System.DateTime> Deadline { get; set; }
-        public int EmployeeId { get; set; }
-        public int EpicId { get; set; }
-        public Nullable<int> EstimatedTime { get; set; }
-        public Nullable<int> TimeSpent { get; set; }
-        public Nullable<int> Status { get; set; }
+        public int UserId { get; set; }
+        public int ProjectId { get; set; }
     
-        public virtual Employee Employee { get; set; }
-        public virtual Epic Epic { get; set; }
+        public virtual Project Project { get; set; }
+        public virtual User User { get; set; }
     }
 }

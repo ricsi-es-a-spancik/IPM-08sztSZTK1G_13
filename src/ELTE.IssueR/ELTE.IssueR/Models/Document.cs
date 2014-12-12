@@ -16,8 +16,9 @@ namespace ELTE.IssueR.Models
     {
         public int Id { get; set; }
         public int ProjectId { get; set; }
-        public string Title { get; set; }
-        public Nullable<System.DateTime> Modified { get; set; }
+        public string Name { get; set; }
+        public string Content { get; set; }
+        public System.DateTime Modified { get; set; }
     
         public virtual Project Project { get; set; }
     }

@@ -17,8 +17,8 @@ namespace ELTE.IssueR.Models
         public Project()
         {
             this.Documents = new HashSet<Document>();
-            this.Employees = new HashSet<Employee>();
-            this.Epics = new HashSet<Epic>();
+            this.Issues = new HashSet<Issue>();
+            this.ProjectMembers = new HashSet<ProjectMember>();
         }
     
         public int Id { get; set; }
@@ -28,8 +28,8 @@ namespace ELTE.IssueR.Models
         public Nullable<System.DateTime> Deadline { get; set; }
     
         public virtual ICollection<Document> Documents { get; set; }
-        public virtual ICollection<Employee> Employees { get; set; }
-        public virtual ICollection<Epic> Epics { get; set; }
+        public virtual ICollection<Issue> Issues { get; set; }
         public virtual Organization Organization { get; set; }
+        public virtual ICollection<ProjectMember> ProjectMembers { get; set; }
     }
 }

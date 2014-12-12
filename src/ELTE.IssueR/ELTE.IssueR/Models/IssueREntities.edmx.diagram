@@ -5,28 +5,27 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="956650a8a65c401582da27754b976fde" Name="Diagram1">
-        <EntityTypeShape EntityType="ELTEModel.CoverImage" Width="1.5" PointX="3.75" PointY="13.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="ELTEModel.Document" Width="1.5" PointX="3" PointY="17.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="ELTEModel.Employee" Width="1.5" PointX="3" PointY="3.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="ELTEModel.Epic" Width="1.5" PointX="3" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="ELTEModel.Issue" Width="1.5" PointX="5.25" PointY="3.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="ELTEModel.Message" Width="1.5" PointX="3" PointY="7.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="ELTEModel.Organization" Width="1.5" PointX="1.5" PointY="14.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="ELTEModel.Project" Width="1.5" PointX="0.75" PointY="1.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="ELTEModel.UserImage" Width="1.5" PointX="3" PointY="10.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="ELTEModel.User" Width="1.5" PointX="0.75" PointY="5.125" IsExpanded="true" />
-        <AssociationConnector Association="ELTEModel.FK_CoverImages_Organizations" ManuallyRouted="false" />
-        <AssociationConnector Association="ELTEModel.FK_Documents_Projects" ManuallyRouted="false" />
-        <AssociationConnector Association="ELTEModel.FK_Employees_Projects" ManuallyRouted="false" />
-        <AssociationConnector Association="ELTEModel.FK_Employees_Users" ManuallyRouted="false" />
-        <AssociationConnector Association="ELTEModel.FK_Issues_Employees" ManuallyRouted="false" />
-        <AssociationConnector Association="ELTEModel.FK_Epics_Projects" ManuallyRouted="false" />
-        <AssociationConnector Association="ELTEModel.FK_Issues_Epics" ManuallyRouted="false" />
-        <AssociationConnector Association="ELTEModel.FK_MessagesFrom_Users" ManuallyRouted="false" />
-        <AssociationConnector Association="ELTEModel.FK_MessagesTo_Users" ManuallyRouted="false" />
-        <AssociationConnector Association="ELTEModel.FK_Projects_Organizations" ManuallyRouted="false" />
-        <AssociationConnector Association="ELTEModel.FK_UserImages_Users" ManuallyRouted="false" />
-        <AssociationConnector Association="ELTEModel.FK_Employees_Organizations" />
+        <EntityTypeShape EntityType="ELTEModel.CoverImage" Width="1.5" PointX="3.75" PointY="2.75" />
+        <EntityTypeShape EntityType="ELTEModel.Document" Width="1.5" PointX="3" PointY="12.125" />
+        <EntityTypeShape EntityType="ELTEModel.Employee" Width="1.5" PointX="3" PointY="9.25" />
+        <EntityTypeShape EntityType="ELTEModel.Issue" Width="1.5" PointX="6" PointY="8.875" />
+        <EntityTypeShape EntityType="ELTEModel.Message" Width="1.5" PointX="3" PointY="16.5" />
+        <EntityTypeShape EntityType="ELTEModel.Organization" Width="1.5" PointX="1.5" PointY="0.75" />
+        <EntityTypeShape EntityType="ELTEModel.Project" Width="1.5" PointX="0.75" PointY="4.875" />
+        <EntityTypeShape EntityType="ELTEModel.ProjectMember" Width="1.5" PointX="3" PointY="6.25" />
+        <EntityTypeShape EntityType="ELTEModel.User" Width="1.5" PointX="0.75" PointY="8.5" />
+        <EntityTypeShape EntityType="ELTEModel.UserImage" Width="1.5" PointX="3" PointY="20" />
+        <AssociationConnector Association="ELTEModel.FK_CoverImage_Organization" />
+        <AssociationConnector Association="ELTEModel.FK_Document_Project" />
+        <AssociationConnector Association="ELTEModel.FK_Employee_Organization" />
+        <AssociationConnector Association="ELTEModel.FK_Employee_User" />
+        <AssociationConnector Association="ELTEModel.FK_Issue_Project" />
+        <AssociationConnector Association="ELTEModel.FK_Issue_User" />
+        <AssociationConnector Association="ELTEModel.FK_Message_From" />
+        <AssociationConnector Association="ELTEModel.FK_Project_Organization" />
+        <AssociationConnector Association="ELTEModel.FK_ProjectMember_Project" />
+        <AssociationConnector Association="ELTEModel.FK_ProjectMember_User" />
+        <AssociationConnector Association="ELTEModel.FK_Image_User" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
