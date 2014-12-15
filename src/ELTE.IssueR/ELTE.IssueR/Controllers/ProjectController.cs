@@ -11,11 +11,11 @@ namespace ELTE.IssueR.Controllers
     {
         [HttpGet]
         public ActionResult Index()
-        {/*
+        {
             if (Session["userName"] == null)
             {
                 return RedirectToAction("Index", "Home");
-            }*/
+            }
 
             return View("Index");
         }
@@ -23,11 +23,11 @@ namespace ELTE.IssueR.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Index(ProjectViewModel pvm)
-        {/*
+        {
             if (Session["userName"] == null)
             {
                 return RedirectToAction("Index", "Home");
-            }*/
+            }
 
             if (!ModelState.IsValid)
             {
@@ -38,36 +38,43 @@ namespace ELTE.IssueR.Controllers
             User user = _database.Users.Where(u => u.UserName == username).FirstOrDefault();
             Employee currentUser = _database.Employees.FirstOrDefault(e => e.UserId == user.Id);
 
-            _database.Projects.Add(new Project {
-                OrganizationId = currentUser.OrganizationId,
-                Name = pvm.Name,
-                Description = pvm.Description,
-                Deadline = pvm.Deadline
-            });
-            _database.SaveChanges();
+            if (currentUser != null)
+            {
+                Project pr = _database.Projects.Add(new Project {
+                    OrganizationId = currentUser.OrganizationId,
+                    Name = pvm.Name,
+                    Description = pvm.Description,
+                    Deadline = pvm.Deadline
+                });
+                _database.SaveChanges();
 
-            ViewBag.Information = "A projekt sikeresen létrejött.";
+                _database.ProjectMembers.Add(new ProjectMember{
+                    UserId = user.Id,
+                    ProjectId = pr.Id
+                });
+                _database.SaveChanges();
+            }
 
             return RedirectToAction("ProjectList", new ProjectListViewModel());
         }
 
         public ActionResult ProjectList(ProjectListViewModel plvm)
-        {/*
+        {
             if (Session["userName"] == null)
             {
                 return RedirectToAction("Index", "Home");
-            }*/
+            }
 
             plvm.ProjectList = _database.Projects.ToList();
             return View("ProjectList", plvm);   
         }
 
         public ActionResult ProjectData(int id)
-        {/*
+        {
             if (Session["userName"] == null)
             {
                 return RedirectToAction("Index", "Home");
-            }*/
+            }
 
             Project p = _database.Projects.FirstOrDefault(pr => pr.Id == id);
             ProjectViewModel pvm = new ProjectViewModel{
@@ -94,11 +101,11 @@ namespace ELTE.IssueR.Controllers
 
         [HttpGet]
         public ActionResult ProjectDataModify(int id)
-        {/*
+        {
             if (Session["userName"] == null)
             {
                 return RedirectToAction("Index", "Home");
-            }*/
+            }
             
             Project pr = _database.Projects.FirstOrDefault(p => p.Id == id);
 
@@ -117,17 +124,20 @@ namespace ELTE.IssueR.Controllers
 
         [HttpPost]
         public ActionResult ProjectDataModify(ProjectDataViewModel pdvm)
-        {/*
+        {
             if (Session["userName"] == null)
             {
                 return RedirectToAction("Index", "Home");
-            }*/
+            }
 
             Project p = _database.Projects.FirstOrDefault(pr => pr.Id == pdvm.Id);
 
             p.Name = pdvm.Project.Name;
             p.Description = pdvm.Project.Description;
-            p.Deadline = pdvm.Project.Deadline;
+            if (pdvm.Project.Deadline != null)
+            {
+                p.Deadline = pdvm.Project.Deadline;
+            }
 
             if (pdvm.ProjectMembers == null)
             {
@@ -150,7 +160,19 @@ namespace ELTE.IssueR.Controllers
         [HttpGet]
         public ActionResult ProjectMemberAdd(int Id)
         {
+            if (Session["userName"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             List<ProjectMember> notProjectMembers = _database.ProjectMembers.Where(pm => pm.ProjectId != Id).ToList();
+            List<ProjectMember> projectMembers = _database.ProjectMembers.Where(pm => pm.ProjectId == Id).ToList();
+
+            foreach (ProjectMember pm in projectMembers) //erase members that part of this project (but part of other projects)
+            {
+                ProjectMember member = notProjectMembers.FirstOrDefault(p => p.UserId == pm.UserId);
+                notProjectMembers.Remove(member);
+            }
 
             List<User> projectMembersUsers = new List<User>();
             foreach (ProjectMember pmember in notProjectMembers)
@@ -187,8 +209,18 @@ namespace ELTE.IssueR.Controllers
             }
             
             ProjectMember e = _database.ProjectMembers.FirstOrDefault(pm => pm.UserId == id);
-            e.ProjectId = projectId;
-
+            if (e == null) //employee not member of any projects
+            {
+                _database.ProjectMembers.Add(new ProjectMember{
+                    UserId = id,
+                    ProjectId = projectId
+                });
+            }
+            else
+            {
+                e.ProjectId = projectId;
+            }
+            
             _database.SaveChanges();
 
             return RedirectToAction("ProjectData", "Project", new { id = projectId });

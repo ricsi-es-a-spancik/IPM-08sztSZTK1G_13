@@ -10,6 +10,11 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@section AddToHead
+{
+    <link href="@Url.Content("~/Content/Styles/FancyFormStyle.css")" rel="stylesheet" type="text/css" />
+}
+
 <h2>Új projekt létrehozása</h2>
 
 @using (Html.BeginForm())
@@ -40,7 +45,7 @@
         </tr>
         <tr>
             <td>
-                <input type="submit" value="Létrehozás" class="registerSubmit" />
+                <input type="submit" value="Létrehozás" class="buttonlikelink green" />
             </td>
         </tr>
     </table>

@@ -7,6 +7,11 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@section AddToHead
+{
+    <link href="@Url.Content("~/Content/Styles/FancyFormStyle.css")" rel="stylesheet" type="text/css" />
+}
+
 <h2>Projekt adatok módosíttása</h2>
 
 @using (Html.BeginForm())
@@ -37,7 +42,7 @@
         </tr>
         <tr>
             <td>
-                <input type="submit" value="Módosít"/>
+                <input type="submit" value="Módosít" class="buttonlikelink green"/>
             </td>
         </tr>
     </table>

@@ -7,6 +7,11 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@section AddToHead
+{
+    <link href="@Url.Content("~/Content/Styles/FancyFormStyle.css")" rel="stylesheet" type="text/css" />
+}
+
 <h2>Projekt adatok</h2>
 
 <table>
@@ -24,11 +29,12 @@
     </tr>
 </table>
 
+<p><b>Projekt tagok</b></p>
 @foreach (User user in @Model.ProjectMembers)
 {
     <p>@user.Name</p>
 }
 
-@Html.ActionLink("Módosít", "ProjectDataModify", "Project", new { @Model.Id }, null)
+@Html.ActionLink("Módosít", "ProjectDataModify", "Project", new { @Model.Id }, new { @class = "buttonlikelink green" })
 
-@Html.ActionLink("Projekttag hozzáadás", "ProjectMemberAdd", "Project", new { @Model.Id }, null)
+@Html.ActionLink("Projekttag hozzáadás", "ProjectMemberAdd", "Project", new { @Model.Id }, new { @class = "buttonlikelink green" })

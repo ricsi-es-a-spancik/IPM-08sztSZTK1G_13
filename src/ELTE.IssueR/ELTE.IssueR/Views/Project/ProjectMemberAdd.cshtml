@@ -7,13 +7,26 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@section AddToHead
+{
+    <link href="@Url.Content("~/Content/Styles/FancyFormStyle.css")" rel="stylesheet" type="text/css" />
+}
+
 <h2>Új tag felvétele a projekthez</h2>
 
-@using (Html.BeginForm())
+@if (Model.Users.Any())
 {
-    @Html.DropDownList("selectedItem", new SelectList(Model.Users, "Id", "Name"))
+    using (Html.BeginForm())
+    {
+        @Html.DropDownList("selectedItem", new SelectList(Model.Users, "Id", "Name"))
 
-    @Html.HiddenFor(m => m.ProjectId)
+        @Html.HiddenFor(m => m.ProjectId)
 
-    <input type="submit" value="Hozzáad" />
+        <input type="submit" value="Hozzáad" class="buttonlikelink green"/>
+    }
 }
+else
+{
+    <p>Jelenleg nincs szabad munkatárs.</p>
+}
+
