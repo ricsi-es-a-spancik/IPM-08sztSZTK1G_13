@@ -1,4 +1,4 @@
-﻿@model ELTE.IssueR.Models.IssueState
+﻿@model ELTE.IssueR.Models.IssueViewModel
 
 @{
     ViewBag.Title = "View";
@@ -19,6 +19,12 @@
     @Html.HiddenFor(issue => issue.Id)
 
     <ul class="form-style-1">
+        @*<li>
+            <label>Azonosító</label>
+            @Html.DisplayTextFor(issue => issue.Id)
+            @Html.TextBoxFor(issue => issue.Name, new { @class = "field-long" })
+            <label class="required">@Html.ValidationMessageFor(issue => issue.Name)</label>
+        </li>*@
         <li>
             <label>Leírás<span class="required">*</span></label>
             @Html.TextBoxFor(issue => issue.Name, new { @class = "field-long" })
@@ -42,14 +48,9 @@
             </li>
         }
         <li>
-            <label>Bázis<span class="required">*</span></label>
-            @Html.DropDownListFor(issue => issue.EpicId, new SelectList(Model.Epics, "Id", "Name"), new { @class = "field-long" })
-            <label class="required">@Html.ValidationMessageFor(issue => issue.EpicId)</label>
-        </li>
-        <li>
             <label>Foglalkoztatott<span class="required">*</span></label>
-            @Html.DropDownListFor(issue => issue.EmployeeId, new SelectList(Model.Employees, "Id", "User.Name"), new { @class = "field-long" })
-            <label class="required">@Html.ValidationMessageFor(issue => issue.EmployeeId)</label>
+            @Html.DropDownListFor(issue => issue.UserId, new SelectList(Model.Users, "Id", "Name"), new { @class = "field-long" })
+            <label class="required">@Html.ValidationMessageFor(issue => issue.UserId)</label>
         </li>
         <li>
             <label>Határidő</label>

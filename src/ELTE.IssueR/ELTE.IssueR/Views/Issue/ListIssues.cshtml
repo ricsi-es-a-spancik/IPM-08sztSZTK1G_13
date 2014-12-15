@@ -1,5 +1,5 @@
 ﻿@using ELTE.IssueR.Models
-@model IssueViewModel
+@model IssueListingViewModel
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -23,7 +23,9 @@
     {
         color: white;
         background-color: #0e74af;
-        padding: 10px;
+        padding: 6px;
+        border:solid;
+        border-bottom:none;
     }
     table#t01 tr:nth-child(even)
     {
@@ -45,8 +47,9 @@
     }
 </style>
 
-@if(Model.CurrentProjectId == null)
+@if(Model.ProjectId == null)
 {
+    <p></p>
     <div style="text-align: center">Nincsenek megjeleníthető projektek.</div>
 }
 else
@@ -60,15 +63,14 @@ else
                         <tr>
                             <td>Projektek:</td>
                             <td>
-                                @Html.DropDownListFor(m => m.CurrentProjectId, new SelectList(Model.Projects, "Id", "Name"), new { onchange = "this.form.submit();", @class = "field-long long-drowdownlist" })
+                                @Html.DropDownListFor(m => m.ProjectId, new SelectList(Model.Projects, "Id", "Name"), new { onchange = "this.form.submit();", @class = "field-long long-drowdownlist" })
                             </td>
                         </tr>
                     </table>
                 }
             </td>
             <td style="text-align:right; width:50%">
-                @Html.ActionLink("+ Feladat felvétele", "AddIssue", "Issue", new { selectedProjId = Model.CurrentProjectId }, new { @class = "buttonlikelink green" })
-                @Html.ActionLink("+ Bázis felvétele", "AddEpic", "Issue", new { selectedProjId = Model.CurrentProjectId }, new { @class = "buttonlikelink green" })
+                @Html.ActionLink("+ Feladat felvétele", "AddIssue", "Issue", new { selectedProjId = Model.ProjectId }, new { @class = "buttonlikelink green" })
             </td>
         </tr>
     </table>
@@ -76,17 +78,14 @@ else
     if (Model.CurrentIssues != null && Model.CurrentIssues.Count != 0)
     {
         <table id="t01">
-            @*<tr>
-                <th>Azonosító</th>
-                <th>Név</th>
-                <th>Hozzárendelt melós</th>
-                <th>Bázis azonosító</th>
+            <tr>
+                <th style="width:5%">Azonosító</th>
+                <th style="width:45%">Leírás</th>
+                <th style ="width:20%">Foglalkoztatott</th>
+                <th>Határidő</th>
                 <th>Típus</th>
                 <th>Státusz</th>
-                <th>Teljesítéshez szükséges idő</th>
-                <th>Eltöltött idő</th>
-                <th>Határidő</th>
-            </tr>*@
+            </tr>
             @for (int i=0; i<Model.CurrentIssues.Count;++i)
             {
                 var issue = Model.CurrentIssues[i];
@@ -95,8 +94,7 @@ else
                 <td>
                     @Html.ActionLink(@issue.Name,"EditIssue","Issue", new {issueId = issue.Id}, null)
                 </td>
-                <td>@issue.Epic.Name</td>
-                @if (issue.Employee != null) {<td>@issue.Employee.User.Name</td>} else {<td>-</td>}
+                @if (issue.User != null) {<td>@issue.User.Name</td>} else {<td>-</td>}
                 @if (issue.Deadline != null) {<td style="width:10%">@issue.Deadline.Value.ToShortDateString()</td>} else {<td style="width:10%">-</td>}
                 <td style="width:40px">
                     @if (issue.Type != null)

@@ -12,74 +12,43 @@ namespace ELTE.IssueR.Controllers
         private List<Project> GetProjects()
         {
             string username = (string)Session["userName"];
-            User user = _database.Users.First(u => u.UserName.Equals(username));
-            if (user.Employees.Count == 0)
-                return new List<Project>();
-            else
-            {
-                int orgId = user.Employees.First().OrganizationId;
-                return _database.Projects.Where(prj => prj.OrganizationId == orgId).ToList();
-            }
-        }
 
-        private List<Epic> GetEpics(int? projectId)
-        {
-            if (projectId != null)
-                return _database.Epics.Where(epic => epic.ProjectId == projectId).ToList();
-            else
-                return new List<Epic>();
-        }
-
-        private List<Issue> GetIssues(int? epicId)
-        {
-            if (epicId != null)
-                return _database.Issues.Where(issue => issue.EpicId == epicId).ToList();
-            else
-                return new List<Issue>();
-        }
-
-        private List<Issue> GetIssues(List<Epic> epics)
-        {
-            List<Issue> ret = new List<Issue>();
-            foreach (Epic epic in epics)
-            {
-                ret.AddRange(GetIssues(epic.Id));
-            }
+            List<Project> ret = new List<Project>();
+            foreach(ProjectMember projMem in _database.Users.First(u => u.UserName.Equals(username)).ProjectMembers)
+                ret.Add(projMem.Project);
 
             return ret;
         }
 
-        private List<Employee> GetEmployees(int? projectId)
+        private List<Issue> GetIssues(int projectId)
         {
-            if (projectId == null)
-                return new List<Employee>();
-            else
+            return _database.Issues.Where(issue => issue.ProjectId == projectId).ToList();
+        }
+
+        private List<User> GetProjectMembers(int projectId)
+        {
+            return _database.ProjectMembers.Where(conn => conn.ProjectId == projectId).Select(conn => conn.User).ToList();
+        }
+
+        private void UpdateListingState(IssueListingViewModel listing)
+        {
+            listing.Projects = GetProjects();
+
+            if (listing.ProjectId == null && listing.Projects.Count != 0)
+                listing.ProjectId = listing.Projects[0].Id;
+
+            if(listing.ProjectId != null)
+                listing.CurrentIssues = GetIssues(listing.ProjectId.Value);
+        }
+
+        private void UpdateAddingState(IssueViewModel issue)
+        {
+            if (issue.ProjectId != null)
             {
-                int organizationId = _database.Projects.FirstOrDefault(prj => prj.Id == projectId).OrganizationId;
-                return _database.Employees.Where(emp => emp.OrganizationId == organizationId).ToList();
+                issue.Users = GetProjectMembers(issue.ProjectId.Value);
+                if (issue.UserId == null && issue.Users.Count != 0)
+                    issue.UserId = issue.Users[0].Id;
             }
-        }
-
-        private void UpdateListingState(IssueViewModel newModel)
-        {
-            newModel.Projects = GetProjects();
-
-            if (newModel.CurrentProjectId == null && newModel.Projects.Count != 0)
-                newModel.CurrentProjectId = newModel.Projects[0].Id;
-
-            newModel.CurrentEpics = GetEpics(newModel.CurrentProjectId);
-            newModel.CurrentIssues = GetIssues(newModel.CurrentEpics);
-        }
-
-        private void UpdateAddingState(IssueState issue)
-        {
-            issue.Epics = GetEpics(issue.ProjectId);
-            if (issue.EpicId == null && issue.Epics.Count != 0)
-                issue.EpicId = issue.Epics[0].Id;
-
-            issue.Employees = GetEmployees(issue.ProjectId);
-            if (issue.EmployeeId == null && issue.Employees.Count != 0)
-                issue.EmployeeId = issue.Employees[0].Id;
         }
 
         public ActionResult Index()
@@ -100,22 +69,22 @@ namespace ELTE.IssueR.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            IssueViewModel newModel = new IssueViewModel();
-            UpdateListingState(newModel);
+            IssueListingViewModel listing = new IssueListingViewModel();
+            UpdateListingState(listing);
 
-            return View("ListIssues", newModel);
+            return View("ListIssues", listing);
         }
 
         [HttpPost]
-        public ActionResult ListIssues(IssueViewModel newModel)
+        public ActionResult ListIssues(IssueListingViewModel listing)
         {
             if (Session["userName"] == null)
             {
                 return RedirectToAction("Index", "Home");
             }
 
-            UpdateListingState(newModel);
-            return View("ListIssues", newModel);
+            UpdateListingState(listing);
+            return View("ListIssues", listing);
         }
 
         [HttpGet]
@@ -126,13 +95,10 @@ namespace ELTE.IssueR.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            if (selectedProjId == null)
+            if (selectedProjId == null || !GetProjects().Exists(prj => prj.Id == selectedProjId))
                 return RedirectToAction("ListIssues");
 
-            if (!GetProjects().Exists(prj => prj.Id == selectedProjId))
-                return RedirectToAction("ListIssues");
-
-            IssueState issue = new IssueState();
+            IssueViewModel issue = new IssueViewModel();
             issue.ProjectId = selectedProjId;
             UpdateAddingState(issue);
 
@@ -140,7 +106,7 @@ namespace ELTE.IssueR.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddIssue(IssueState issue)
+        public ActionResult AddIssue(IssueViewModel issue)
         {
             if (Session["userName"] == null)
             {
@@ -155,7 +121,7 @@ namespace ELTE.IssueR.Controllers
                 return View("AddIssue", issue);
             }
 
-            if (_database.Issues.Count(i => issue.Name.Equals(i.Name)) != 0)
+            if (_database.Issues.Count(i => issue.ProjectId == i.ProjectId && issue.Name.Equals(i.Name)) != 0)
             {
                 ModelState.AddModelError("", "A megadott leírással már létezik feladat!");
                 return View("AddIssue", issue);
@@ -164,16 +130,16 @@ namespace ELTE.IssueR.Controllers
             _database.Issues.Add(new Issue
             {
                 Name = issue.Name,
-                Type = (int)issue.Type,
-                Status = (int)IssueState.StatusEnum.ToDo,
+                Type = Convert.ToInt16(issue.Type),
+                Status = Convert.ToInt16(IssueViewModel.StatusEnum.ToDo),
                 Deadline = issue.Deadline,
-                EpicId = (int)issue.EpicId,
-                EmployeeId = (int)issue.EmployeeId
+                UserId = issue.UserId.Value,
+                ProjectId = issue.ProjectId.Value
             });
 
             _database.SaveChanges();
 
-            return RedirectToAction("ListIssues", new IssueViewModel { CurrentProjectId = issue.ProjectId });
+            return RedirectToAction("ListIssues", new IssueListingViewModel { ProjectId = issue.ProjectId });
         }
 
         [HttpGet]
@@ -184,14 +150,14 @@ namespace ELTE.IssueR.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            IssueState issue = new IssueState(_database.Issues.First(i => i.Id == issueId));
+            IssueViewModel issue = new IssueViewModel(_database.Issues.First(i => i.Id == issueId));
             
             UpdateAddingState(issue);
             return View("AddIssue", issue);
         }
 
         [HttpPost]
-        public ActionResult EditIssue(IssueState issue)
+        public ActionResult EditIssue(IssueViewModel issue)
         {
             if (Session["userName"] == null)
             {
@@ -206,7 +172,7 @@ namespace ELTE.IssueR.Controllers
                 return View("AddIssue", issue);
             }
 
-            if (_database.Issues.Count(i => issue.Name.Equals(i.Name) && issue.Id != i.Id) != 0)
+            if (_database.Issues.Count(i => issue.ProjectId == i.ProjectId && issue.Name.Equals(i.Name) && issue.Id != i.Id) != 0)
             {
                 ModelState.AddModelError("", "A megadott leírással már létezik feladat!");
                 return View("AddIssue", issue);
@@ -216,56 +182,13 @@ namespace ELTE.IssueR.Controllers
             oldData.Name = issue.Name;
             oldData.Type = Convert.ToInt16((int)issue.Type);
             oldData.Status = Convert.ToInt16((int)issue.Status);
-            oldData.EpicId = issue.EpicId.Value;
-            oldData.EmployeeId = issue.EmployeeId.Value;
-            oldData.Deadline = issue.Deadline;
+            oldData.UserId = issue.UserId.Value;
+            if(issue.Deadline != null)
+                oldData.Deadline = issue.Deadline;
 
             _database.SaveChanges();
 
-            return RedirectToAction("ListIssues", new IssueViewModel { CurrentProjectId = issue.ProjectId });
-        }
-
-        [HttpGet]
-        public ActionResult AddEpic(int? selectedProjId)
-        {
-            if (Session["userName"] == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
-            if (selectedProjId == null)
-                return RedirectToAction("ListIssues");
-
-            if (!GetProjects().Exists(prj => prj.Id == selectedProjId))
-                return RedirectToAction("ListIssues");
-
-            return View("AddEpic", new EpicViewModel{ ProjectId = selectedProjId.Value });
-        }
-
-        [HttpPost]
-        public ActionResult AddEpic(EpicViewModel epic)
-        {
-            if (Session["userName"] == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
-            if (!ModelState.IsValid)
-            {
-                ModelState.AddModelError("", "Az űrlap hibás adatokat tartlamaz.");
-                return View("AddEpic", epic);
-            }
-
-            if (_database.Epics.Count(e => epic.Name.Equals(e.Name)) != 0)
-            {
-                ModelState.AddModelError("", "A megadott leírással már létezik feladat!");
-                return View("AddEpic", epic);
-            }
-
-            _database.Epics.Add(new Epic { Name = epic.Name, ProjectId = epic.ProjectId });
-            _database.SaveChanges();
-
-            return RedirectToAction("ListIssues", new IssueViewModel { CurrentProjectId = epic.ProjectId });
+            return RedirectToAction("ListIssues", new IssueListingViewModel { ProjectId = issue.ProjectId });
         }
     }
 }
