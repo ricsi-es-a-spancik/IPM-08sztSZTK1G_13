@@ -75,12 +75,12 @@ namespace ELTE.IssueR.Controllers
                 Description = p.Description,
                 Deadline = (DateTime)p.Deadline
             };
-            List<Employee> projectMembers = _database.Employees.Where(e => e.ProjectId == p.Id).ToList();
+            List<ProjectMember> projectMembers = _database.ProjectMembers.Where(pe => pe.ProjectId == p.Id).ToList();
 
             List<User> projectMembersUsers = new List<User>();
-            foreach (Employee employee in projectMembers)
+            foreach (ProjectMember pmember in projectMembers)
             {
-                projectMembersUsers.Add(_database.Users.FirstOrDefault(u => u.Id == employee.UserId));
+                projectMembersUsers.Add(_database.Users.FirstOrDefault(u => u.Id == pmember.UserId));
             }
 
             ProjectDataViewModel pdvm = new ProjectDataViewModel{
@@ -131,12 +131,12 @@ namespace ELTE.IssueR.Controllers
 
             if (pdvm.ProjectMembers == null)
             {
-                List<Employee> projectMembers = _database.Employees.Where(e => e.ProjectId == p.Id).ToList();
+                List<ProjectMember> projectMembers = _database.ProjectMembers.Where(pm => pm.ProjectId == p.Id).ToList();
 
                 List<User> projectMembersUsers = new List<User>();
-                foreach (Employee employee in projectMembers)
+                foreach (ProjectMember pmember in projectMembers)
                 {
-                    projectMembersUsers.Add(_database.Users.FirstOrDefault(u => u.Id == employee.UserId));
+                    projectMembersUsers.Add(_database.Users.FirstOrDefault(u => u.Id == pmember.UserId));
                 }
 
                 pdvm.ProjectMembers = projectMembersUsers;
@@ -150,12 +150,12 @@ namespace ELTE.IssueR.Controllers
         [HttpGet]
         public ActionResult ProjectMemberAdd(int Id)
         {
-            List<Employee> notProjectMembers = _database.Employees.Where(e => e.ProjectId != Id).ToList();
+            List<ProjectMember> notProjectMembers = _database.ProjectMembers.Where(pm => pm.ProjectId != Id).ToList();
 
             List<User> projectMembersUsers = new List<User>();
-            foreach (Employee employee in notProjectMembers)
+            foreach (ProjectMember pmember in notProjectMembers)
             {
-                projectMembersUsers.Add(_database.Users.FirstOrDefault(u => u.Id == employee.UserId));
+                projectMembersUsers.Add(_database.Users.FirstOrDefault(u => u.Id == pmember.UserId));
             }
 
             UserListViewModel ulvm = new UserListViewModel{
@@ -186,7 +186,7 @@ namespace ELTE.IssueR.Controllers
                 return RedirectToAction("ProjectData", "Project", new { id = projectId });
             }
             
-            Employee e = _database.Employees.FirstOrDefault(em => em.UserId == id);
+            ProjectMember e = _database.ProjectMembers.FirstOrDefault(pm => pm.UserId == id);
             e.ProjectId = projectId;
 
             _database.SaveChanges();
