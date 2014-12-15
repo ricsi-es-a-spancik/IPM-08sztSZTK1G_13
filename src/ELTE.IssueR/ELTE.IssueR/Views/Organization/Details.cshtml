@@ -17,6 +17,15 @@
     <div class="menubar">
         @if(Session["userName"] != null)
         {
+            if (Html.Action("IsOrgMember", "Organization", new { orgId = Model.Org.Id }).ToString() == "false")
+            {
+                @Html.ActionLink("Csatlakozás", "AddOrgMember", "Organization", new { orgId = Model.Org.Id }, new { @class = "buttonlikelink green" })
+            }
+            else
+            {
+                <span class="buttonlikelink green">Csatlakozott</span>
+            }
+            
             @Html.ActionLink("Borítókép feltöltése", "UploadCoverImage", "Organization", new { orgId = Model.Org.Id }, new { @class = "buttonlikelink blue" })
         }
     </div>

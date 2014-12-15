@@ -49,7 +49,7 @@ namespace ELTE.IssueR.Controllers
 
             // alapítás éve helyes?
             var currentYear = System.DateTime.Today.Year;
-            if(orgViewModel.FoundationYear < 0 || orgViewModel.FoundationYear > currentYear)
+            if (orgViewModel.FoundationYear < 0 || orgViewModel.FoundationYear > currentYear)
             {
                 ModelState.AddModelError("", String.Format("Az alapítás éve nem lehet kisebb, mint 0, vagy nagyobb, mint a {0}!", currentYear));
                 return View("Add", orgViewModel);
@@ -81,7 +81,7 @@ namespace ELTE.IssueR.Controllers
 
         public ActionResult Search(string orgName)
         {
-            if(orgName == string.Empty)
+            if (orgName == string.Empty)
             {
                 ViewBag.SearchWithEmptyString = true;
                 return View("SearchResults");
@@ -146,7 +146,7 @@ namespace ELTE.IssueR.Controllers
 
                     _database.SaveChanges();
                 }
-                catch 
+                catch
                 {
                     ViewBag.ProcessError = "A kép feltöltése során hiba történt!";
                     return View("UploadCoverImage", orgId);
@@ -168,7 +168,7 @@ namespace ELTE.IssueR.Controllers
         {
             IEnumerable<CoverImage> images = _database.Organizations.Where(org => org.Id == orgId).Select(org => org.CoverImages).FirstOrDefault();
 
-            if(images.Count() == 0)
+            if (images.Count() == 0)
             {
                 return File("/Images/blank_cover.jpg", "image/jpg");
             }
@@ -189,5 +189,62 @@ namespace ELTE.IssueR.Controllers
                 }
             }
         }
-	}
+
+        public ActionResult AddOrgMember(int orgId)
+        {
+            if (Session["userName"] != null)
+            {
+                string username = Session["userName"].ToString();
+
+                var userId = _database.Users.First(user => user.UserName == username).Id;
+                var org = _database.Organizations.Find(orgId);
+
+                if (userId != null && org != null)
+                {
+                    _database.Employees.Add(new Employee
+                    {
+                        UserId = userId,
+                        OrganizationId = orgId,
+                        Status = 1
+                    });
+                    _database.SaveChanges();
+
+                    TempData["Information"] = "Csatlakoztál a vállalathoz.";
+                    return RedirectToAction("Details", new { orgId = orgId });
+                }
+                else
+                {
+                    TempData["Information"] = "Sikertelen csatlakozás.";
+                    return RedirectToAction("Details", new { orgId = orgId });
+                }
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+        }
+
+        public HtmlString IsOrgMember(int orgId)
+        {
+            if (Session["userName"] != null)
+            {
+                string username = Session["userName"].ToString();
+                var userId = _database.Users.First(user => user.UserName == username).Id;
+                var emp = _database.Employees.Find(userId, orgId);
+
+                if (emp != null)
+                {
+                    return new HtmlString("true");
+                }
+                else
+                {
+                    return new HtmlString("false");
+                }
+            }
+            else
+            {
+                return new HtmlString("");
+            }
+        }
+    }
 }
