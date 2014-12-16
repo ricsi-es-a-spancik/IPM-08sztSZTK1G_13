@@ -174,6 +174,16 @@ namespace ELTE.IssueR.Controllers
             List<ProjectMember> projectMembers = _database.ProjectMembers.Where(pm => pm.ProjectId == Id).ToList();
             List<Employee> organizationMembers = _database.Employees.Where(e => e.OrganizationId == orgId).ToList();
 
+            //erase currentuser
+            foreach (Employee e in organizationMembers)
+            {
+                if (e.UserId == currentUser.Id)
+                {
+                    organizationMembers.Remove(e);
+                    break;
+                }
+            }
+
             foreach (ProjectMember pm in projectMembers) //erase members that part of this project (but part of other projects)
             {
                 ProjectMember member = notCurrentProjectMembers.FirstOrDefault(p => p.UserId == pm.UserId);
