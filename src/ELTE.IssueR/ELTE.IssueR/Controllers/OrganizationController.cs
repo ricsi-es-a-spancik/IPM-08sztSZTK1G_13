@@ -56,7 +56,7 @@ namespace ELTE.IssueR.Controllers
             }
 
             // vállalat hozzáadása az adatbázishoz
-            _database.Organizations.Add(new Organization
+            int orgId = _database.Organizations.Add(new Organization
             {
                 Name = orgViewModel.Name,
                 FoundationYear = orgViewModel.FoundationYear,
@@ -64,6 +64,16 @@ namespace ELTE.IssueR.Controllers
                 City = orgViewModel.City,
                 Activity = orgViewModel.Activity,
                 Description = orgViewModel.Description
+            }).Id;
+
+            // jelenlegi felhasználó hozzáadása a létrehozott vállalathoz
+            string userName = Session["userName"].ToString();
+            int userId = _database.Users.First(user => user.UserName.Equals(userName)).Id;
+            _database.Employees.Add(new Employee
+            {
+                UserId = userId,
+                OrganizationId = orgId,
+                Status = 1
             });
 
             _database.SaveChanges();
