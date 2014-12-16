@@ -27,7 +27,11 @@ namespace ELTE.IssueR.Controllers
             }
             else
             {
-                return View("Add");
+                string userName = Session["userName"].ToString();
+                if (_database.Users.First(user => user.UserName.Equals(userName)).Employees.Count != 0)
+                    return RedirectToAction("Index", "Home");
+                else
+                    return View("Add");
             }
         }
 
@@ -209,7 +213,7 @@ namespace ELTE.IssueR.Controllers
                 var userId = _database.Users.First(user => user.UserName == username).Id;
                 var org = _database.Organizations.Find(orgId);
 
-                if (userId != null && org != null)
+                if (userId != null && org != null && _database.Users.First(user => user.UserName.Equals(username)).Employees.Count == 0)
                 {
                     _database.Employees.Add(new Employee
                     {
