@@ -168,14 +168,24 @@ namespace ELTE.IssueR.Controllers
             string userName = Session["userName"].ToString();
             User currentUser = _database.Users.FirstOrDefault(u => u.UserName == userName);
 
-            int orgId = _database.Employees.FirstOrDefault(e => e.UserId == currentUser.Id).OrganizationId;
+            int orgId = _database.Projects.FirstOrDefault(p => p.Id == Id).OrganizationId;
 
-            List<ProjectMember> notCurrentProjectMembers = _database.ProjectMembers.Where(pm => pm.ProjectId != Id).ToList();
-            List<ProjectMember> projectMembers = _database.ProjectMembers.Where(pm => pm.ProjectId == Id).ToList();
-            List<Employee> organizationMembers = _database.Employees.Where(e => e.OrganizationId == orgId).ToList();
+            List<User> currentProjectMembers =
+                _database.ProjectMembers.Where(pm => pm.ProjectId == Id).Select(pm => pm.User).ToList();
+
+            List<User> currentOrgEmp = 
+                _database.Employees.Where(e => e.OrganizationId == orgId).Select(e => e.User).ToList();
+
+            currentOrgEmp.RemoveAll(u => currentProjectMembers.Contains(u));
+            List<User> inter = currentOrgEmp;
+
+            inter.Remove(currentUser);
+
+            //List<ProjectMember> projectMembers = _database.ProjectMembers.Where(pm => pm.ProjectId == Id).ToList();
+            //List<Employee> organizationMembers = _database.Employees.Where(e => e.OrganizationId == orgId).ToList();
 
             //erase currentuser
-            foreach (Employee e in organizationMembers)
+            /*foreach (Employee e in organizationMembers)
             {
                 if (e.UserId == currentUser.Id)
                 {
@@ -204,10 +214,10 @@ namespace ELTE.IssueR.Controllers
                 {
                     projectMembersUsers.Add(_database.Users.FirstOrDefault(u => u.Id == e.UserId));
                 }
-            }
+            }*/
 
             UserListViewModel ulvm = new UserListViewModel{
-                Users = projectMembersUsers,
+                Users = inter,
                 ProjectId = Id
             };
 

@@ -210,10 +210,10 @@ namespace ELTE.IssueR.Controllers
             {
                 string username = Session["userName"].ToString();
 
-                var userId = _database.Users.First(user => user.UserName == username).Id;
+                int userId = _database.Users.First(user => user.UserName == username).Id;
                 var org = _database.Organizations.Find(orgId);
 
-                if (userId != null && org != null && _database.Users.First(user => user.UserName.Equals(username)).Employees.Count == 0)
+                if (org != null && _database.Users.First(user => user.UserName.Equals(username)).Employees.Count == 0)
                 {
                     _database.Employees.Add(new Employee
                     {
