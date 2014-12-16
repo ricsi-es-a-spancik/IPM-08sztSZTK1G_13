@@ -165,19 +165,35 @@ namespace ELTE.IssueR.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            List<ProjectMember> notProjectMembers = _database.ProjectMembers.Where(pm => pm.ProjectId != Id).ToList();
+            string userName = Session["userName"].ToString();
+            User currentUser = _database.Users.FirstOrDefault(u => u.UserName == userName);
+
+            int orgId = _database.Employees.FirstOrDefault(e => e.UserId == currentUser.Id).OrganizationId;
+
+            List<ProjectMember> notCurrentProjectMembers = _database.ProjectMembers.Where(pm => pm.ProjectId != Id).ToList();
             List<ProjectMember> projectMembers = _database.ProjectMembers.Where(pm => pm.ProjectId == Id).ToList();
+            List<Employee> organizationMembers = _database.Employees.Where(e => e.OrganizationId == orgId).ToList();
 
             foreach (ProjectMember pm in projectMembers) //erase members that part of this project (but part of other projects)
             {
-                ProjectMember member = notProjectMembers.FirstOrDefault(p => p.UserId == pm.UserId);
-                notProjectMembers.Remove(member);
+                ProjectMember member = notCurrentProjectMembers.FirstOrDefault(p => p.UserId == pm.UserId);
+                notCurrentProjectMembers.Remove(member);
             }
 
             List<User> projectMembersUsers = new List<User>();
-            foreach (ProjectMember pmember in notProjectMembers)
+            foreach (ProjectMember pmember in notCurrentProjectMembers)
             {
                 projectMembersUsers.Add(_database.Users.FirstOrDefault(u => u.Id == pmember.UserId));
+            }
+
+            //members without project
+            foreach (Employee e in organizationMembers)
+            {
+                ProjectMember pm = _database.ProjectMembers.FirstOrDefault(p => p.UserId == e.UserId);
+                if (pm == null) //not part of any projects
+                {
+                    projectMembersUsers.Add(_database.Users.FirstOrDefault(u => u.Id == e.UserId));
+                }
             }
 
             UserListViewModel ulvm = new UserListViewModel{
