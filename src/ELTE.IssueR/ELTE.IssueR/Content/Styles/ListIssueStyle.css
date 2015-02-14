@@ -1,0 +1,36 @@
+﻿table#t01 {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    border: none;
+    border-collapse: collapse;
+}
+
+table#t01 th {
+    color: white;
+    background-color: #0e74af;
+    padding: 6px;
+    border: solid;
+    border-bottom: none;
+}
+
+table#t01 tr:nth-child(even) {
+    background-color: #eee;
+}
+
+table#t01 tr:nth-child(odd) {
+    background-color: #dbdbdb;
+}
+
+table#t02 {
+    width: 100%;
+    border: none;
+    border-collapse: collapse;
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+
+.long-dropdownlist {
+    width: 200px;
+}

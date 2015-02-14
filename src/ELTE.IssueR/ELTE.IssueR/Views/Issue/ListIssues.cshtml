@@ -8,44 +8,9 @@
 @section AddToHead
 {
     <link href="@Url.Content("~/Content/Styles/FancyFormStyle.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/Styles/ListIssueStyle.css")" rel="stylesheet" type="text/css" />
 }
 
-<style>
-    table#t01 {
-        width: 100%; 
-        margin-left: auto;
-        margin-right: auto;
-        text-align: center;
-        border: none;
-        border-collapse: collapse;
-    }
-    table#t01 th 
-    {
-        color: white;
-        background-color: #0e74af;
-        padding: 6px;
-        border:solid;
-        border-bottom:none;
-    }
-    table#t01 tr:nth-child(even)
-    {
-        background-color: #eee;
-    }
-    table#t01 tr:nth-child(odd) 
-    {
-        background-color: #dbdbdb;
-    }
-    table#t02 {
-        width: 100%; 
-        border: none;
-        border-collapse: collapse;
-        margin-top: 2%;
-        margin-bottom: 2%;
-    }
-    .long-drowdownlist {
-        width:200px;
-    }
-</style>
 
 @if(Model.ProjectId == null)
 {
@@ -63,7 +28,7 @@ else
                         <tr>
                             <td>Projektek:</td>
                             <td>
-                                @Html.DropDownListFor(m => m.ProjectId, new SelectList(Model.Projects, "Id", "Name"), new { onchange = "this.form.submit();", @class = "field-long long-drowdownlist" })
+                                @Html.DropDownListFor(m => m.ProjectId, new SelectList(Model.Projects, "Id", "Name"), new { onchange = "this.form.submit();", @class = "field-long long-dropdownlist" })
                             </td>
                         </tr>
                     </table>
