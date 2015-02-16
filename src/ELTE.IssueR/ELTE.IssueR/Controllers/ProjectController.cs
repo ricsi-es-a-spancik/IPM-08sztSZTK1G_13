@@ -244,18 +244,10 @@ namespace ELTE.IssueR.Controllers
                 return RedirectToAction("ProjectData", "Project", new { id = projectId });
             }
             
-            ProjectMember e = _database.ProjectMembers.FirstOrDefault(pm => pm.UserId == id);
-            if (e == null) //employee not member of any projects
-            {
-                _database.ProjectMembers.Add(new ProjectMember{
+            _database.ProjectMembers.Add(new ProjectMember{
                     UserId = id,
                     ProjectId = projectId
-                });
-            }
-            else
-            {
-                e.ProjectId = projectId;
-            }
+            });
             
             _database.SaveChanges();
 
