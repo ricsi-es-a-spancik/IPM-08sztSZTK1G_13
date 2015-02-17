@@ -7,53 +7,87 @@
 <head>
     <meta charset="utf-8" />
     <title>@ViewBag.Title - IssueR</title>
-    <link href="~/Content/Style.css" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/Styles/LayoutStyle.css")" rel="stylesheet" type="text/css" />
     @if (IsSectionDefined("AddToHead"))
     {
         @RenderSection("AddToHead", required: false)
     }
 </head>
 <body>
-    <header>
-        <div class="statusBar">
-            @if (Session["userName"] == null)
-            {
-                <ul>
-                    <li>
-                        @Html.ActionLink("Bejelentkezés", "Login", "Account")
-                    </li>
-                    <li>
-                        @Html.ActionLink("Regisztráció", "Register", "Account")
-                    </li>
-                </ul>
-            }
-            else
-            {
-                <ul>
-                    <li class="welcome">
-                        Üdvözlünk, @Session["userName"]!
-                    </li>
-                    <li>
-                        @Html.ActionLink("Profilom", "ProfileIndex", "Account")
-                    </li>
-                    <li>
-                        @Html.ActionLink("Kijelentkezés", "Logout", "Account")
-                    </li>
-                </ul>
-            }
+    <div id="bodywrapper">
+
+        <div id="header">
+
+            <table id="headerlayouttable">
+                <tr>
+                    <td id="logobox">
+                        <a href="@Url.Action("Index","Home")">
+                            <img src="@Url.Content("/Images/issuerlogo.jpg")" />
+                        </a>
+                    </td>
+                    <td id="searchbox">
+                        @using (@Html.BeginForm("Search", "Organization", FormMethod.Get))
+                        {
+                            <input id="searchfield" type="text" placeholder="vállalat neve..." name="orgName" />
+                            <input type="submit" class="accountbutton" value="Keresés" />
+                        }
+                    </td>
+                    <td id="accountbox">
+                        @if (Session["userName"] == null)
+                        {
+                            <table>
+                                <tr>
+                                    <td>
+                                        @Html.ActionLink("Bejelentkezés", "Login", "Account", new { }, new { @class = "buttonlikelink blue" })
+                                    </td>
+                                    <td>
+                                        @Html.ActionLink("Regisztráció", "Register", "Account", new { }, new { @class = "buttonlikelink blue" })
+                                    </td>
+                                </tr>
+                            </table>
+
+                        }
+                        else
+                        {
+                            <table>
+                                <tr>
+                                    <td>
+                                        
+                                            <a href="@Url.Action("MailsReceive", "Account")">
+                                                @if (@Html.Action("NewMails", "Account").ToString() != "0")
+                                                {
+                                                    <img src="@Url.Content("/Images/newmail.jpg")" />
+                                                }
+                                                else
+                                                {
+                                                    <img src="@Url.Content("/Images/mail.jpg")" />
+                                                }
+                                            </a>
+                                    </td>
+                                    <td>
+                                        @Html.ActionLink(Session["userName"].ToString(), "ProfileIndex", "Account", new { }, new { @class = "buttonlikelink blue" })
+                                    </td>
+                                    <td>
+                                        @Html.ActionLink("Kijelentkezés", "Logout", "Account", new { }, new { @class = "buttonlikelink blue" })
+                                    </td>
+                                </tr>
+                            </table>
+                        }
+
+                    </td>
+                </tr>
+            </table>
         </div>
-        <menu>
-            <ul>
-                <li>@Html.ActionLink("Kezdőlap", "Index", "Home")</li>
-            </ul>
-</menu>
-    </header>
-    <main>
-        @RenderBody()
-    </main>
-    <footer>
-        <p>&copy; @DateTime.Now.Year - IssueR</p>
-        <p><i>Ricsi-és-a-spancik</i></p>
-    </footer>
+
+        <div id="contentwrapper">   
+            @RenderBody()
+        </div>
+
+        <div id="footer">
+            <p>&copy; @DateTime.Now.Year - IssueR</p>
+            <p><i>Ricsi-és-a-spancik</i></p>
+        </div>
+    </div>
+
 </body>
 </html>

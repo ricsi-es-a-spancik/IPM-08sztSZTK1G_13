@@ -1,0 +1,60 @@
+﻿@using ELTE.IssueR.Models.Account;
+
+@model NewMessageViewModel
+
+@section AddToHead
+{
+    <link href="@Url.Content("~/Content/Styles/AccountStyle.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/Styles/FancyFormStyle.css")" rel="stylesheet" type="text/css" />
+}
+
+@{
+    ViewBag.Title = "Üzenet írása";
+}
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (ViewBag.Information != null)
+{
+    <p>ViewBag.Information</p>
+}
+
+<h1 class="accountH1">Üzenet írása</h1>
+@Html.ActionLink("Vissza", "Mails", null, new { @class = "buttonlikelink blue" } )
+
+@if(Model == null)
+{
+    <p>Hiba történt, ezért nincs megjeleníthető adat.</p>
+}
+else
+{
+    using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "A levelet nem sikerült elküldeni!")
+
+        <ul class="form-style-1">
+            <li>
+                <label>Címzett: <i>@Html.Action("IdToName", new { p_id = Model.ToId })</i></label>
+            </li>
+
+            <li>
+                <label>Téma<span class="required">*</span></label>
+                @Html.TextBoxFor(m => m.Subject, new { @class = "field-long" })
+                <label class="required">@Html.ValidationMessageFor(m => m.Subject)</label>
+            </li>
+
+            <li>
+                <label>Üzenet tartalma<span class="required">*</span></label>
+                @Html.TextAreaFor(m => m.Content, new { @cols = 70, @rows = 25 })
+                <label class="required">@Html.ValidationMessageFor(m => m.Content)</label>
+            </li>
+        </ul>
+
+    <input type="submit" value="Elküld" class="buttonlikelink green" />
+    }
+}
+
+

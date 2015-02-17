@@ -1,0 +1,39 @@
+﻿@using ELTE.IssueR.Models;
+
+@model Message
+
+@section AddToHead
+{
+    <link href="@Url.Content("~/Content/Styles/AccountStyle.css")" rel="stylesheet" type="text/css" />
+}
+
+@{
+    ViewBag.Title = "Üzenet törlése";
+}
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (ViewBag.Information != null)
+{
+    <p>ViewBag.Information</p>
+}
+
+<h1>Ellenőrzés</h1>
+<table>
+    <tr>
+        <td colspan="2">
+            <p>Biztosan ki akarod törölni <i>@Model.Subject (Küldő: @Html.Action("IdToName", new { p_id = Model.FromId }), Címzett: @Html.Action("IdToName", new { p_id = Model.FromId }))</i> üzenetet a listádból?</p>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @Html.ActionLink("Igen", "DeleteMailConfirm", new { p_id = Model.Id })
+        </td>
+        <td>
+            @Html.ActionLink("Nem", "Mails")
+        </td>
+    </tr>
+</table>
+

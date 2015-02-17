@@ -1,2 +1,54 @@
-﻿body {
+﻿<style type="text/css" >
+
+h1.accountH1 {
+    color: #1A55BC;
+}
+
+.account {
+    margin: 10px;
+    max-width: 400px;
+    padding: 20px 12px 10px 20px;
+    font: 13px "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+
+.account li {
+    padding: 0px;
+    padding-bottom: 10px;
+    display: block;
+    list-style: none;
+    margin: 10px 0 0 0;
+}
+
+table.accountTable {
+    margin: 10px;
+    padding: 20px 12px 10px 20px;
+    outline: 2px solid #1A55BC;
+    font: 13px "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+
+table.accountTable td {
+    min-width: 100px;
+    padding: 5px;
+}
+
+table.accountTable td:first-of-type {
+    min-width: 10px;
+}
+
+table.accountTable tr {
+    padding: 20px 5px 20px 5px;
+}
+
+table.accountTable tr:nth-of-type(2n+1) {
+    background-color: #BDBDBD;
+}
+
+table.accountTable tr:first-of-type {
+    margin: 0px;
+    padding: 0px;
+    background-color: #81BEF7;
+}
+
+table.accountTable tr.new {
+    background-color: #00FF00;
 }
