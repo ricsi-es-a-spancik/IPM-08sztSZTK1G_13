@@ -1,0 +1,124 @@
+﻿@using ELTE.IssueR.Models
+@model IssueListingViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section AddToHead
+{
+    <link href="@Url.Content("~/Content/Styles/FancyFormStyle.css")" rel="stylesheet" type="text/css" />
+}
+
+<style>
+    table#t01 {
+        width: 100%; 
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+        border: none;
+        border-collapse: collapse;
+    }
+    table#t01 th 
+    {
+        color: white;
+        background-color: #0e74af;
+        padding: 6px;
+        border:solid;
+        border-bottom:none;
+    }
+    table#t01 tr:nth-child(even)
+    {
+        background-color: #eee;
+    }
+    table#t01 tr:nth-child(odd) 
+    {
+        background-color: #dbdbdb;
+    }
+    table#t02 {
+        width: 100%; 
+        border: none;
+        border-collapse: collapse;
+        margin-top: 2%;
+        margin-bottom: 2%;
+    }
+    .long-drowdownlist {
+        width:200px;
+    }
+</style>
+
+@if(Model.ProjectId == null)
+{
+    <p></p>
+    <div style="text-align: center">Nincsenek megjeleníthető projektek.</div>
+}
+else
+{
+    <table style="width:100%; margin-bottom:1%; margin-top:1%">
+        <tr>
+            <td style="width:50%">
+                @using (@Html.BeginForm())
+                {
+                    <table>
+                        <tr>
+                            <td>Projektek:</td>
+                            <td>
+                                @Html.DropDownListFor(m => m.ProjectId, new SelectList(Model.Projects, "Id", "Name"), new { onchange = "this.form.submit();", @class = "field-long long-drowdownlist" })
+                            </td>
+                        </tr>
+                    </table>
+                }
+            </td>
+            <td style="text-align:right; width:50%">
+                @Html.ActionLink("+ Feladat felvétele", "AddIssue", "Issue", new { selectedProjId = Model.ProjectId }, new { @class = "buttonlikelink green" })
+            </td>
+        </tr>
+    </table>
+
+    if (Model.CurrentIssues != null && Model.CurrentIssues.Count != 0)
+    {
+        <table id="t01">
+            <tr>
+                <th style="width:5%">Azonosító</th>
+                <th style="width:45%">Leírás</th>
+                <th style ="width:20%">Foglalkoztatott</th>
+                <th>Határidő</th>
+                <th>Típus</th>
+                <th>Státusz</th>
+            </tr>
+            @for (int i=0; i<Model.CurrentIssues.Count;++i)
+            {
+                var issue = Model.CurrentIssues[i];
+            <tr>
+                <td>@issue.Id</td>
+                <td>
+                    @Html.ActionLink(@issue.Name,"EditIssue","Issue", new {issueId = issue.Id}, null)
+                </td>
+                @if (issue.User != null) {<td>@issue.User.Name</td>} else {<td>-</td>}
+                @if (issue.Deadline != null) {<td style="width:10%">@issue.Deadline.Value.ToShortDateString()</td>} else {<td style="width:10%">-</td>}
+                <td style="width:40px">
+                    @if (issue.Type != null)
+                    {
+                        if (issue.Type == 1) { <img src="/Images/issue_feature.png" title="Feature"/> }
+                        else if (issue.Type == 2) { <img src="/Images/issue_bug.png" title="Bug"/> }
+                        else { <img src="/Images/issue_refactor.png" title="Refactor"/> }
+                    }
+                </td>
+                <td style="width:40px">
+                    @if (issue.Status !=null)
+                    {
+                        if (issue.Status == 1) { <img src="/Images/issue_todo.png" title="To do"/> }
+                        else if (issue.Status == 2) { <img src="/Images/issue_inprogress.png" title="In progress"/> }
+                        else if (issue.Status == 3) { <img src="/Images/issue_needstesting.png" title="Needs testing"/> }
+                        else { <img src="/Images/issue_done.png" title="Done"/> }
+                    }
+                </td>
+            </tr>
+            }
+        </table>
+    }
+    else
+    {
+        <div style="text-align: center">A kiválasztott projekthez nem tartoznak feladatok.</div>
+    }
+}

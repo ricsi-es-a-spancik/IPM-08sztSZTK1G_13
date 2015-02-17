@@ -1,0 +1,54 @@
+﻿@using ELTE.IssueR.Models
+
+@model ProjectViewModel
+
+@{
+    ViewBag.Title = "Projekt adatok";
+}
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section AddToHead
+{
+    <link href="@Url.Content("~/Content/Styles/FancyFormStyle.css")" rel="stylesheet" type="text/css" />
+}
+
+<h2>Új projekt létrehozása</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <table>
+        <tr>
+            <td>Név:</td>
+            <td>
+                @Html.EditorFor(project => project.Name)
+                @Html.ValidationMessageFor(project => project.Name) 
+            </td>
+        </tr>
+        <tr>
+            <td>Leírás:</td>
+            <td>
+                @Html.EditorFor(project => project.Description)
+                @Html.ValidationMessageFor(project => project.Description)
+            </td>
+        </tr>
+        <tr>
+            <td>Határidő:</td>
+            <td>
+                @Html.EditorFor(project => project.Deadline)
+                @Html.ValidationMessageFor(project => project.Deadline)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="submit" value="Létrehozás" class="buttonlikelink green" />
+            </td>
+        </tr>
+    </table>
+}
+
+<p>@ViewBag.Information</p>

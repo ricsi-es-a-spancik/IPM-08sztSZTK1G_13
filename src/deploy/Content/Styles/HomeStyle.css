@@ -1,0 +1,33 @@
+﻿.organization_table td {
+    vertical-align: top;
+}
+
+.organization_table .wrapper {
+    width: 300px;
+    margin-bottom: 30px;
+    margin-right: 30px;
+    border: 1px solid #0e74af;
+}
+
+.organization_table .wrapper p {
+    text-align: left;
+}
+
+.organization_table .name_label {
+    font-weight: bold;
+    font-size: larger;
+    margin: 10px 0px 10px 10px;
+}
+
+.organization_table .location_label {
+    margin: 0px 0px 10px 10px;
+}
+
+.organization_table .details {
+    text-align: right;
+    margin-bottom: 10px;
+}
+
+.organization_table .cover_small img {
+    width: 300px;
+}

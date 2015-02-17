@@ -1,0 +1,65 @@
+﻿@model ELTE.IssueR.Models.IssueViewModel
+
+@{
+    ViewBag.Title = "View";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section AddToHead
+{
+    <link href="@Url.Content("~/Content/Styles/FancyFormStyle.css")" rel="stylesheet" type="text/css" />
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "A feladat felvétele sikertelen volt! Ellenőrizd a bevitt adatokat!")
+
+    @Html.HiddenFor(issue => issue.ProjectId)
+    @Html.HiddenFor(issue => issue.Id)
+
+    <ul class="form-style-1">
+        @*<li>
+            <label>Azonosító</label>
+            @Html.DisplayTextFor(issue => issue.Id)
+            @Html.TextBoxFor(issue => issue.Name, new { @class = "field-long" })
+            <label class="required">@Html.ValidationMessageFor(issue => issue.Name)</label>
+        </li>*@
+        <li>
+            <label>Leírás<span class="required">*</span></label>
+            @Html.TextBoxFor(issue => issue.Name, new { @class = "field-long" })
+            <label class="required">@Html.ValidationMessageFor(issue => issue.Name)</label>
+        </li>
+        <li>
+            <label>Típus<span class="required">*</span></label>
+            @Html.DropDownListFor(issue => issue.Type, new SelectList(Model.TypeEnumList), new { @class = "field-long" })
+            <label class="required">@Html.ValidationMessageFor(issue => issue.Type)</label>
+        </li>
+        @if (Model.Id == null)
+        {
+            @Html.HiddenFor(issue => issue.Status)
+        }
+        else
+        {
+            <li>
+                <label>Státusz<span class="required"></span></label>
+                @Html.DropDownListFor(issue => issue.Status, new SelectList(Model.StatusEnumList), new { @class = "field-long" })
+                <label class="required">@Html.ValidationMessageFor(issue => issue.Status)</label>
+            </li>
+        }
+        <li>
+            <label>Foglalkoztatott<span class="required">*</span></label>
+            @Html.DropDownListFor(issue => issue.UserId, new SelectList(Model.Users, "Id", "Name"), new { @class = "field-long" })
+            <label class="required">@Html.ValidationMessageFor(issue => issue.UserId)</label>
+        </li>
+        <li>
+            <label>Határidő</label>
+            @Html.EditorFor(issue => issue.Deadline, new { @class = "field-long" })
+            <label class="required">@Html.ValidationMessageFor(issue => issue.Deadline)</label>
+        </li>
+    </ul>
+
+    if(Model.Id == null){<input type="submit" autofocus value="Feladat felvétele" class="buttonlikelink green" />}
+    else { <input type="submit" autofocus value="Módosít" class="buttonlikelink green" /> }
+}
+       

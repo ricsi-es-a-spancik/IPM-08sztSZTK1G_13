@@ -210,6 +210,7 @@
     <Content Include="Content\Styles\HomeStyle.css" />
     <Content Include="Content\Styles\LayoutStyle.css" />
     <Content Include="Content\Styles\OrganizationStyle.css" />
+    <Content Include="Content\Styles\ListIssueStyle.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />

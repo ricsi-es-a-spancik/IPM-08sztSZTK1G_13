@@ -1,0 +1,60 @@
+﻿@using ELTE.IssueR.Models
+
+@model OrganizationViewModel
+
+@{
+    ViewBag.Title = "Új vállalat";
+}
+
+@section AddToHead
+{
+    <link href="@Url.Content("~/Content/Styles/FancyFormStyle.css")" rel="stylesheet" type="text/css" />
+}
+
+<h2>Új vállalat felvétele</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "A vállalat regisztrációja sikertelen volt. Ellenőrizd a bevitt adatokat!")
+
+    <ul class="form-style-1">
+        <li>
+            <label>Név<span class="required">*</span></label>
+            @Html.TextBoxFor(org => org.Name, new { @class = "field-long" })
+            <label class="required">@Html.ValidationMessageFor(org => org.Name)</label>
+        </li>
+
+        <li>
+            <label>Alapítás éve<span class="required">*</span></label>
+            @Html.TextBoxFor(org => org.FoundationYear, new { @class = "field-long", @type = "number" })
+            <label class="required">@Html.ValidationMessageFor(org => org.FoundationYear)</label>
+        </li>
+
+        <li>
+            <label>Ország<span class="required">*</span></label>
+            @Html.TextBoxFor(org => org.Country, new { @class = "field-long" })
+            <label class="required">@Html.ValidationMessageFor(org => org.Country)</label>
+        </li>
+
+        <li>
+            <label>Város<span class="required">*</span></label>
+            @Html.TextBoxFor(org => org.City, new { @class = "field-long" })
+            <label class="required">@Html.ValidationMessageFor(org => org.City)</label>
+        </li>
+
+        <li>
+            <label>Tevékenység</label>
+            @Html.TextBoxFor(org => org.Activity, new { @class = "field-long" })
+            <label class="required">@Html.ValidationMessageFor(org => org.Activity)</label>
+        </li>
+
+        <li>
+            <label>Bemutatkozás<span class="required">*</span></label>
+            @Html.TextAreaFor(org => org.Description, new { @class = "field-long field-textarea" })
+            <label class="required">@Html.ValidationMessageFor(org => org.Description)</label>
+        </li>
+    </ul>
+
+    <input type="submit" autofocus value="Felvétel" class="buttonlikelink green" />
+}

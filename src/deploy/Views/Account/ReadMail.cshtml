@@ -1,0 +1,42 @@
+﻿@using ELTE.IssueR.Models;
+
+@model Message
+
+@section AddToHead
+{
+    <link href="@Url.Content("~/Content/Styles/AccountStyle.css")" rel="stylesheet" type="text/css" />
+}
+
+@{
+    ViewBag.Title = "Üzenet olvasása";
+}
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (ViewBag.Information != null)
+{
+    <p>ViewBag.Information</p>
+}
+
+<h1 class="accountH1">Üzenet olvasása</h1>
+@Html.ActionLink("Vissza", "Mails")
+
+@if(Model == null)
+{
+    <p>Hiba történt, ezért nincs megjeleníthető adat.</p>
+}
+else
+{
+    <div class="mailBox">
+        <div class="mailLine">Küldő: @Html.Action("IdToName", new { p_id = Model.FromId })</div>
+        <div class="mailLine">Címzett: @Html.Action("IdToName", new { p_id = Model.ToId })</div>
+        <div class="mailLine">Téma: @Model.Subject</div>
+        <div class="mailLine">Üzenet tartalma:</div>
+        <div class="mailArea">@Model.Content</div>
+        <div class="mailReply">@Html.ActionLink("Válasz", "NewMailTo", new { p_id = ((Model.FromId == Convert.ToInt32(Html.Action("MyId").ToString())) ? Model.ToId : Model.FromId) })</div>
+    </div>
+}
+
+

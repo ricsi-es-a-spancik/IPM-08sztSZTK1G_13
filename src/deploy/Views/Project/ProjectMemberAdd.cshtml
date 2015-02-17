@@ -1,0 +1,32 @@
+﻿@using ELTE.IssueR.Models
+
+@model UserListViewModel
+
+@{
+    ViewBag.Title = "ProjectMemberAdd";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section AddToHead
+{
+    <link href="@Url.Content("~/Content/Styles/FancyFormStyle.css")" rel="stylesheet" type="text/css" />
+}
+
+<h2>Új tag felvétele a projekthez</h2>
+
+@if (Model.Users.Any())
+{
+    using (Html.BeginForm())
+    {
+        @Html.DropDownList("selectedItem", new SelectList(Model.Users, "Id", "Name"))
+
+        @Html.HiddenFor(m => m.ProjectId)
+
+        <input type="submit" value="Hozzáad" class="buttonlikelink green"/>
+    }
+}
+else
+{
+    <p>Jelenleg nincs szabad munkatárs.</p>
+}
+

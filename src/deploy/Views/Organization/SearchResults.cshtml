@@ -1,0 +1,23 @@
+﻿@using ELTE.IssueR.Models
+
+@model List<Organization>
+
+    @section AddToHead
+    {
+        <link href="@Url.Content("~/Content/Styles/HomeStyle.css")" rel="stylesheet" type="text/css" />
+    }
+
+    @{
+        ViewBag.Title = "SearchResults";
+    }
+
+    <h2>A keresés eredménye</h2>
+
+    @if (ViewBag.SearchWithEmptyString != null)
+    {
+        <p>Kérjük, adj meg egy keresőszót a fenti mezőben.</p>
+    }
+    else
+    {
+        @Html.Partial("Partial_OrganizationTable", Model)
+    }
