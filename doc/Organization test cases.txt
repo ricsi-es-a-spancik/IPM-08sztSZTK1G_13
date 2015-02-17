@@ -1,0 +1,40 @@
+Forgatókönyvek
+
+Given: A fõoldal vagy a keresési találatok oldalán található vállalatok listája nem üres.
+When: A felhasználó valamely vállalat Részletek gombjára kattint.
+Then: Betöltõdik a vállalat profilja, amelyen látható:
+- a vállalat borítóképe, amely a névjegyen volt kicsiben
+- a vállalat neve, székhelye
+- leírása
+- a vállalat publikus projektjeinek listája
+- a projektekhez való csatlakozás gombja.
+
+Given: Egy vállalat profilja aktív.
+And: A felhasználó nincs bejelentkezve.
+And: A Csatlakozok gomb aktív.
+When: A felhasználó a Csatlakozok gombra kattint.
+Then: Átírányításra kerül a Bejelentkezési oldalra.
+
+Given: Egy vállalat profilja aktív.
+And: A felhasználó be van jelentkezve.
+And: A felhasználó még nem tagja a vállalatnak.
+When: A felhasználó a Csatlakozok gombra kattint.
+Then: Felvételre kerül a vállalathoz.
+And: Visszairányítógik a vállalat profiljához.
+And: A Csatlakozok gomb helyett a Csatlakozott gomb jelenik meg, amely inaktív.
+
+Given: Egy vállalat profilja aktív.
+And: A felhaszáló be van jelentkezve.
+When: Egy projekt Csatlakzás gombjára kattint, amelynek még nem tagja.
+Then: Felvételre kerül a projekthez.
+And: Visszairányítódik a vállalat profiljához.
+And: A projekthez való Csatlakozás gomb helyett a Csatlakozott gomb jelenik meg, amely inaktív.
+
+Given: Egy vállalat profilra aktív.
+And: A felhasználó be van jelentkezve.
+When: -
+Then: A borítókép alatt megjelenik egy Módosítás gomb, amely aktív.
+
+Given: A Módosítás gomb aktív.
+When: A felhasználó rákattint.
+Then: Átirányítódik a vállalat menedzsment oldalára, ahol az adatok módosíthatóak (borítókép, leírás, stb).

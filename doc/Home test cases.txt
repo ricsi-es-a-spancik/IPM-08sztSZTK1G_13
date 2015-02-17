@@ -1,0 +1,38 @@
+Forgatókönyvek
+
+Given: A fõoldal aktív.
+When: -
+Then: Legfeljebb 9 vállalat névjegye látszódik, a Részletek gomb aktív.
+
+Given: A fõoldal aktív, a felhasználó nincs bejelentkezve.
+When: -
+Then: A menüsorban a Bejelentkezés és Regisztráció gombok látszanak. Rákattintva az AccountController megfelelõ akciói futnak le.
+
+Given: A fõoldal aktív, a felhasználó be van jelentkezve.
+When: -
+Then: A menüsorban a Kijelentkezés, és a felhasználó azonosítójával ellátott gombok jelennek meg. Rákattintva az AccountController megfelelõ akciói futnak le.
+
+Given: A fõoldalon használt kerettel ellátott oldal aktív (amely a menüsort tartalmazza).
+When: A felhasználó a menüsorban található logóra kattint.
+Then: A fõoldal betöltõdik.
+
+Given: A fõoldalon használt kerettel ellátott oldal aktív.
+When: A felhasználó üres keresési szöveggel keres a menüsorban lévõ vállalati böngészõben.
+Then: A találati oldalon hibaüzenet jelenik meg.
+
+Given: A fõoldalon használt kerettel ellátott oldal aktív.
+When: A felhasználó nem üres keresési szöveggel indít keresést.
+Then: A találati oldalon listázódnak azon vállalatok névjegyei, amelyek nevei tartalmazzák a keresési szöveget. A névjegyek elrendezése megegyezik a fõoldalon lévõkkel.
+
+Given: A fõoldal aktív.
+And: A felhasználó be van jelentkezve.
+When: -
+Then: Megjelenik egy Felveszem a vállalatom gomb, amely aktív.
+
+Given: A Felveszem a vállalatom gomb aktív.
+When: A felhasználó rákattint.
+Then: Betöltõdik a vállalat regisztrációjának az oldala, ahol megadható:
+- a vállalat neve
+- székhelye
+- profilja
+- leírása.
