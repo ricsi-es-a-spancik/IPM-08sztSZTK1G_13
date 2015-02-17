@@ -1,0 +1,35 @@
+﻿@model int
+
+@section AddToHead
+{
+    <link href="@Url.Content("~/Content/Styles/FancyFormStyle.css")" rel="stylesheet" type="text/css" />
+}
+
+@{
+    ViewBag.Title = "UploadCoverImage";
+}
+
+<h1>Borítókép feltöltése</h1>
+
+@if(ViewBag.ImageError != null)
+{
+ <p>@ViewBag.ImageError</p>    
+}
+
+@if(ViewBag.ProcessError != null)
+{
+    <p>@ViewBag.ProcessError</p>
+}
+
+@using (Html.BeginForm("UploadCoverImage", "Organization", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <ul class="form-style-1">
+        <li>
+            <label>Kép<span class="required">*</span></label>
+            <input type="file" name="file" accept="image/jpg" id="file" class="buttonlikelink blue" required />
+            <input type="hidden" name="orgId" value="@Model" />
+        </li>
+    </ul>
+
+    <input type="submit" value="Feltöltés" class="buttonlikelink green" />
+}

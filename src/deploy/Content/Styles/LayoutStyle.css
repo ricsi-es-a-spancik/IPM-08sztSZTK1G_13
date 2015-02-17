@@ -1,0 +1,84 @@
+﻿body {
+    width: 100%;
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
+}
+
+#header {
+    width: 100%;
+    background-color: #0e74af;
+    margin: 0px auto 0px auto;
+}
+
+#header table {
+    height: 40px;
+    border-spacing: 0px;
+    border-style: none;
+    border-collapse: collapse;
+}
+
+#header #headerlayouttable {
+    width: 100%;
+}
+
+#header #headerlayouttable #logobox {
+    vertical-align: middle;
+}
+
+#header #headerlayouttable #searchbox {
+    padding-left: 25px;
+    width: 100%;
+}
+
+#header #headerlayouttable #searchbox #searchfield {
+    font-size: medium;
+    width: 250px;
+}
+
+#header #headerlayouttable #accountbox {
+    vertical-align: middle;
+}
+
+#header #headerlayouttable #accountbox image {
+    margin-right: 10px
+}
+
+#bodywrapper {
+    width: 100%;
+}
+
+#contentwrapper {
+    width: 1000px;
+    margin: auto;
+    min-height: 100vh;
+}
+
+#footer {
+    width: 100%;
+    height: 100px;
+    margin: 0px auto 0px auto;
+    background-color: #dbdbdb;
+}
+
+.buttonlikelink {
+    color: white;
+    font-family: 'Arial Unicode MS';
+    text-decoration: none;
+    border: none;
+    white-space: nowrap;
+    padding: 5px;
+    margin-right: 5px;
+}
+
+.blue {
+    background-color: #519ac5;
+}
+
+.green {
+    background-color: #53d30c;
+}
+
+#neworgpanel {
+    text-align: right;
+}
+

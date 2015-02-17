@@ -1,7 +1,30 @@
-﻿
-@{
-    ViewBag.Title = "Index";
-}
+﻿@using ELTE.IssueR.Models;
 
-<h2>Babinéni CSŐŐŐ!</h2>
+@model List<Organization>
 
+    @{
+        ViewBag.Title = "Index";
+    }
+
+    @section AddToHead
+    {
+        <link href="@Url.Content("~/Content/Styles/HomeStyle.css")" rel="stylesheet" type="text/css" />
+    }
+
+    @{
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+    <p></p>
+    @if(Session["userName"] != null)
+    { 
+        <p>@Html.ActionLink("Feladatok", "Index", "Issue", new { }, new { @class = "buttonlikelink blue" })</p>
+    }
+
+    <div id="neworgpanel">
+        @Html.ActionLink("+ Hozzáadom a vállalatom", "Add", "Organization", new { }, new { @class = "buttonlikelink green" })
+    </div>
+
+    <p></p>
+
+    @Html.Partial("Partial_OrganizationTable", Model)
