@@ -1,0 +1,40 @@
+﻿@using ELTE.IssueR.Models.Wiki;
+
+@model WikiViewModel
+
+@section AddToHead
+{
+    <link href="@Url.Content("~/Content/Styles/WikiStyle.css")" rel="stylesheet" type="text/css" />
+}
+
+@{
+    ViewBag.Title = "Wiki - " + @Model.Section;
+}
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (ViewBag.Information != null)
+{
+    <p>ViewBag.Information</p>
+}
+
+<h1>Wiki oldal - @Model.Section</h1>
+
+
+<nav>
+    @foreach(KeyValuePair<String, Int32> title in Model.Nav)
+    {
+        <p>@Html.ActionLink(title.Key, "ViewDocument", new { id = title.Value }, new { @class = "buttonlikelink blue" })</p>
+    }
+</nav>
+
+<div>
+    <h1>@Model.Body.Title</h1>
+    <em>@Model.Body.Author, @Model.Body.Modified</em>
+
+    <div>
+        @Model.Body.Content
+    </div>
+</div>
