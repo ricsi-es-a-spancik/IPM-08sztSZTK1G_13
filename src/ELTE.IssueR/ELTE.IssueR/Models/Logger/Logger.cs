@@ -8,6 +8,9 @@ namespace ELTE.IssueR.Models.Logger
     public enum LogType
     {
         Account,
+        Organization,
+        Project,
+        Issue,
         Bug,
         Critical
     }
