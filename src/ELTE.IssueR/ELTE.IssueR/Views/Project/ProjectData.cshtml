@@ -12,32 +12,41 @@
     <link href="@Url.Content("~/Content/Styles/FancyFormStyle.css")" rel="stylesheet" type="text/css" />
 }
 
-<h2>Projekt adatok</h2>
+<p></p>
 
-<table>
+<table border="1" style="border: solid; border-color: #0e74af">
     <tr>
-        <td>Név:</td>
-        <td>@Model.Project.Name</td>
+        <td colspan="2" style="text-align: center; font-size: x-large; background-color:#81BEF7">Projekt adatai</td>
     </tr>
     <tr>
-        <td>Leírás:</td>
-        <td>@Model.Project.Description</td>
+        <td style="width:80%; text-align:center; font-size:large"><b>@Model.Project.Name</b></td>
+        <td style="width:20%; text-align:right; font-size:large">@Model.Project.Deadline</td>
     </tr>
     <tr>
-        <td>Határidő:</td>
-        <td>@Model.Project.Deadline</td>
+        <td colspan="2" style="font-size:medium">
+            @Model.Project.Description
+        </td>
     </tr>
+    <tr>
+        <td colspan="2" style="text-align: center; font-size: x-large; background-color: #81BEF7; ">Tagok</td>
+    </tr>
+
+    @foreach (User user in @Model.ProjectMembers)
+    {
+        <tr style="column-fill:auto">
+            <td>@user.Name</td>
+            <td style="border:none">
+                @Html.ActionLink("Eltávolít", "ProjectMemberRemove", "Project",
+                             new { removeableUserId = @user.Id, projectId = @Model.Id },
+                             new { @class = "buttonlikelink green" })
+            </td>
+        </tr>
+    }
+
 </table>
 
-<p><b>Projekt tagok</b></p>
-@foreach (User user in @Model.ProjectMembers)
-{
-    <p>@user.Name</p> 
-    @Html.ActionLink("Eltávolít", "ProjectMemberRemove", "Project", 
-                     new { removeableUserId = @user.Id, projectId =  @Model.Id },
-                     new { @class = "buttonlikelink green" })
-}
+<p></p>
 
-@Html.ActionLink("Módosít", "ProjectDataModify", "Project", new { @Model.Id }, new { @class = "buttonlikelink green" })
+@Html.ActionLink("Adatok módosíta", "ProjectDataModify", "Project", new { @Model.Id }, new { @class = "buttonlikelink green" })
 
 @Html.ActionLink("Projekttag hozzáadás", "ProjectMemberAdd", "Project", new { @Model.Id }, new { @class = "buttonlikelink green" })
