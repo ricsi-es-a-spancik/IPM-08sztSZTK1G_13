@@ -32,7 +32,10 @@
 <p><b>Projekt tagok</b></p>
 @foreach (User user in @Model.ProjectMembers)
 {
-    <p>@user.Name</p>
+    <p>@user.Name</p> 
+    @Html.ActionLink("Eltávolít", "ProjectMemberRemove", "Project", 
+                     new { removeableUserId = @user.Id, projectId =  @Model.Id },
+                     new { @class = "buttonlikelink green" })
 }
 
 @Html.ActionLink("Módosít", "ProjectDataModify", "Project", new { @Model.Id }, new { @class = "buttonlikelink green" })

@@ -253,5 +253,15 @@ namespace ELTE.IssueR.Controllers
 
             return RedirectToAction("ProjectData", "Project", new { id = projectId });
         }
+
+        public ActionResult ProjectMemberRemove(int removeableUserId, int projectId)
+        {
+            ProjectMember pm = _database.ProjectMembers.First(x => x.ProjectId == projectId && 
+                                                                   x.UserId == removeableUserId);
+            _database.ProjectMembers.Remove(pm);
+            _database.SaveChanges();
+
+            return RedirectToAction("ProjectData", "Project", new { id = projectId});
+        }
     }
 }
