@@ -30,49 +30,51 @@ namespace ELTE.IssueR.Controllers
             return _database.ProjectMembers.Where(conn => conn.ProjectId == projectId).Select(conn => conn.User).ToList();
         }
 
-        private void UpdateListingState(IssueListingViewModel listing)
+        private void UpdateState(IssueListingViewModel model)
         {
-            listing.Projects = GetProjects();
+            ViewBag.Projects = GetProjects();
 
-            if (listing.ProjectId == null && listing.Projects.Count != 0)
-                listing.ProjectId = listing.Projects[0].Id;
+            if (model.SelectedProjectId == null && ViewBag.Projects.Count != 0)
+                model.SelectedProjectId = ViewBag.Projects[0].Id;
 
-            if(listing.ProjectId != null)
-                listing.CurrentIssues = GetIssues(listing.ProjectId.Value);
-        }
+            if (model.SelectedProjectId != null)
+                ViewBag.Issues = GetIssues(model.SelectedProjectId.Value);
 
-        private void UpdateAddingState(IssueViewModel issue)
-        {
-            if (issue.ProjectId != null)
+            if (model.Issue == null)
+                model.Issue = new IssueViewModel { ProjectId = model.SelectedProjectId };
+
+            if (model.Issue.ProjectId != null)
             {
-                issue.Users = GetProjectMembers(issue.ProjectId.Value);
-                if (issue.UserId == null && issue.Users.Count != 0)
-                    issue.UserId = issue.Users[0].Id;
+                model.Issue.Users = GetProjectMembers(model.Issue.ProjectId.Value);
+                if (model.Issue.UserId == null && model.Issue.Users.Count != 0)
+                    model.Issue.UserId = model.Issue.Users[0].Id;
             }
         }
 
+        [HttpGet]
         public ActionResult Index()
         {
-            if (Session["userName"] == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
             return RedirectToAction("ListIssues");
         }
 
         [HttpGet]
-        public ActionResult ListIssues()
+        public ActionResult ListIssues(int? selectedPrjId)
         {
             if (Session["userName"] == null)
             {
                 return RedirectToAction("Index", "Home");
             }
+            else 
+            {
+                IssueListingViewModel listing = new IssueListingViewModel();
+                if (selectedPrjId.HasValue)
+                {
+                    listing.SelectedProjectId = selectedPrjId;
+                }
 
-            IssueListingViewModel listing = new IssueListingViewModel();
-            UpdateListingState(listing);
-
-            return View("ListIssues", listing);
+                UpdateState(listing);
+                return View("ListIssues", listing);
+            }
         }
 
         [HttpPost]
@@ -82,49 +84,35 @@ namespace ELTE.IssueR.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
-
-            UpdateListingState(listing);
-            return View("ListIssues", listing);
-        }
-
-        [HttpGet]
-        public ActionResult AddIssue(int? selectedProjId)
-        {
-            if (Session["userName"] == null)
+            else
             {
-                return RedirectToAction("Index", "Home");
+                UpdateState(listing);
+                return View("ListIssues", listing);
             }
-
-            if (selectedProjId == null || !GetProjects().Exists(prj => prj.Id == selectedProjId))
-                return RedirectToAction("ListIssues");
-
-            IssueViewModel issue = new IssueViewModel();
-            issue.ProjectId = selectedProjId;
-            UpdateAddingState(issue);
-
-            return View("AddIssue", issue);
         }
 
         [HttpPost]
-        public ActionResult AddIssue(IssueViewModel issue)
+        public ActionResult CreateIssue(IssueViewModel issue)
         {
             if (Session["userName"] == null)
             {
                 return RedirectToAction("Index", "Home");
             }
 
-            UpdateAddingState(issue);
-            
             if (!ModelState.IsValid)
             {
                 ModelState.AddModelError("", "Az űrlap hibás adatokat tartlamaz.");
-                return View("AddIssue", issue);
+                IssueListingViewModel vm = new IssueListingViewModel{Issue = issue, SelectedProjectId = issue.ProjectId};
+                UpdateState(vm);
+                return View("ListIssues", vm);
             }
 
             if (_database.Issues.Count(i => issue.ProjectId == i.ProjectId && issue.Name.Equals(i.Name)) != 0)
             {
                 ModelState.AddModelError("", "A megadott leírással már létezik feladat!");
-                return View("AddIssue", issue);
+                IssueListingViewModel vm = new IssueListingViewModel { Issue = issue, SelectedProjectId = issue.ProjectId };
+                UpdateState(vm);
+                return View("ListIssues", vm);
             }
 
             _database.Issues.Add(new Issue
@@ -139,56 +127,29 @@ namespace ELTE.IssueR.Controllers
 
             _database.SaveChanges();
 
-            return RedirectToAction("ListIssues", new IssueListingViewModel { ProjectId = issue.ProjectId });
+            return RedirectToAction("ListIssues", new { selectedPrjId = issue.ProjectId });
         }
 
         [HttpGet]
-        public ActionResult EditIssue(int? issueId)
+        public ActionResult RemoveIssue(int? projectId, int? issueId)
         {
             if (Session["userName"] == null)
             {
                 return RedirectToAction("Index", "Home");
             }
 
-            IssueViewModel issue = new IssueViewModel(_database.Issues.First(i => i.Id == issueId));
-            
-            UpdateAddingState(issue);
-            return View("AddIssue", issue);
-        }
-
-        [HttpPost]
-        public ActionResult EditIssue(IssueViewModel issue)
-        {
-            if (Session["userName"] == null)
+            if(!projectId.HasValue || !issueId.HasValue)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index");
             }
-
-            UpdateAddingState(issue);
-
-            if (!ModelState.IsValid)
+            else
             {
-                ModelState.AddModelError("", "Az űrlap hibás adatokat tartlamaz.");
-                return View("AddIssue", issue);
+                Issue issueToRemove = _database.Issues.First(issue => issue.Id == issueId);
+                _database.Issues.Remove(issueToRemove);
+                _database.SaveChanges();
+
+                return RedirectToAction("ListIssues", new { selectedPrjId = projectId });
             }
-
-            if (_database.Issues.Count(i => issue.ProjectId == i.ProjectId && issue.Name.Equals(i.Name) && issue.Id != i.Id) != 0)
-            {
-                ModelState.AddModelError("", "A megadott leírással már létezik feladat!");
-                return View("AddIssue", issue);
-            }
-
-            Issue oldData = _database.Issues.First(i => i.Id == issue.Id);
-            oldData.Name = issue.Name;
-            oldData.Type = Convert.ToInt16((int)issue.Type);
-            oldData.Status = Convert.ToInt16((int)issue.Status);
-            oldData.UserId = issue.UserId.Value;
-            if(issue.Deadline != null)
-                oldData.Deadline = issue.Deadline;
-
-            _database.SaveChanges();
-
-            return RedirectToAction("ListIssues", new IssueListingViewModel { ProjectId = issue.ProjectId });
         }
     }
 }

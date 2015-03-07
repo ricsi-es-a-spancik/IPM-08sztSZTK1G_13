@@ -11,7 +11,7 @@ namespace ELTE.IssueR.Models
         public int? Id { get; set; }
 
         [Required(ErrorMessage = "A feladat leírásának megadása kötelező.")]
-        [StringLength(200, ErrorMessage = "A feladat leírása maximum 200 karakter lehet.")]
+        [StringLength(20, ErrorMessage = "A feladat leírása maximum 20 karakter lehet.")]
         public string Name { get; set; }
 
         [Required(ErrorMessage = "A típus megadása kötelező")]
@@ -27,7 +27,6 @@ namespace ELTE.IssueR.Models
 
         [Required(ErrorMessage = "Foglalkoztatott megadása kötelező")]
         public Nullable<int> UserId { get; set; }
-
 
         public List<User> Users { get; set; }
 

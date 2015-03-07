@@ -7,10 +7,9 @@ namespace ELTE.IssueR.Models
 {
     public class IssueListingViewModel
     {
-        public int? ProjectId { get; set; }
+        //az aktuálisan kiválasztott projekt
+        public int? SelectedProjectId { get; set; }
 
-        public List<Project> Projects { get; set; }
-
-        public List<Issue> CurrentIssues { get; set; }
+        public IssueViewModel Issue{ get; set; }
     }
 }
