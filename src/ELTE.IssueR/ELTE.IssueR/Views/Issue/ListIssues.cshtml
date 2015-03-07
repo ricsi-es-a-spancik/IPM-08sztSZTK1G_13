@@ -9,81 +9,141 @@
 {
     <link href="@Url.Content("~/Content/Styles/FancyFormStyle.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/Content/Styles/ListIssueStyle.css")" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
 }
 
+<p></p>
 
-@if(Model.ProjectId == null)
+@if (Model.SelectedProjectId == null)
 {
-    <p></p>
     <div style="text-align: center">Nincsenek megjeleníthető projektek.</div>
 }
 else
 {
-    <table style="width:100%; margin-bottom:1%; margin-top:1%">
+    <table id="extTable">
         <tr>
-            <td style="width:50%">
-                @using (@Html.BeginForm())
-                {
-                    <table>
-                        <tr>
-                            <td>Projektek:</td>
-                            <td>
-                                @Html.DropDownListFor(m => m.ProjectId, new SelectList(Model.Projects, "Id", "Name"), new { onchange = "this.form.submit();", @class = "field-long long-dropdownlist" })
-                            </td>
-                        </tr>
-                    </table>
-                }
+            <td id="projectTitleTd">
+                <h3 id="projectTitle">Projektek</h3>
             </td>
-            <td style="text-align:right; width:50%">
-                @Html.ActionLink("+ Feladat felvétele", "AddIssue", "Issue", new { selectedProjId = Model.ProjectId }, new { @class = "buttonlikelink green" })
+            <td>
+                <table id="serviceTable">
+                    <tr>
+                        <td></td>
+                        <td class="fitToContnent" style="text-align:right">
+                            <button type="button" class="buttonlikelink green fs14" data-toggle="modal" data-target="#addIssueModal">
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                Feladat felvétele
+                            </button>
+
+                            <div class="modal" id="addIssueModal" tabindex="-1" role="dialog" aria-labelledby="addIssueModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" id="addIssueModalLabel">Feladat hozzáadása</h4>
+                                        </div>
+                                        @using (Html.BeginForm("CreateIssue", "Issue", FormMethod.Post))
+                                        { 
+                                        <div class="modal-body">
+                                            @Html.Partial("CreateIssue", Model.Issue)
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="buttonlikelink blue fs14" data-dismiss="modal">Mégsem</button>
+                                            <button type="submit" class="buttonlikelink green fs14">Mentés</button>
+                                        </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td id="projectListTd">
+                <div class="btn-group-vertical" id="projectList" data-toggle="buttons">
+                    @for (int i = 0; i < ViewBag.Projects.Count; ++i)
+                    {
+                        Project prj = ViewBag.Projects[i];
+                        if (prj.Id == Model.SelectedProjectId)
+                        {
+                            <label class="btn btn-default active">
+                                <input type="radio" name="options" autocomplete="off" checked> @prj.Name.Chop(10)
+                            </label>
+                        }
+                        else
+                        {
+                            <label class="btn btn-default ">
+                                <input type="radio" name="options" autocomplete="off" onchange="location.href='@Url.Action("ListIssues", "Issue", new { selectedPrjId = prj.Id })'" /> @prj.Name.Chop(10)
+                            </label>
+                        }
+                    }
+                </div>
+                <p></p>
+            </td>
+
+            <td id="issueListTd">
+                @if (ViewBag.Issues == null || ViewBag.Issues.Count == 0)
+                {
+                    <div style="text-align: center">A kiválasztott projekthez nem tartoznak feladatok.</div>
+                }
+                else
+                {
+                    <div id="issueListDiv">
+                        <table class="table table-striped table-hover table-bordered alignRight">
+                            <tr>
+                                <th class="fitToContnent">#</th>
+                                <th class="fitToContnent">Megnevezés</th>
+                                <th class="fitToContnent">Státusz</th>
+                                <th></th>
+                            </tr>
+                            @for (int i = 0; i < ViewBag.Issues.Count; ++i)
+                            {
+                                Issue issue = ViewBag.Issues[i];
+                                <tr class="issueListRow">
+                                    <td class="fitToContnent">@issue.Id</td>
+                                    <td class="fitToContnent">@issue.Name</td>
+                                    <td class="fitToContnent">@issue.Status</td>
+                                    <td style="text-align:right">
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-default dropdown-toggle glyphButton" data-toggle="dropdown" aria-expanded="false">
+                                                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                                <li><a href="#">
+                                                    Feladat módosítása
+                                                </a></li>
+                                                <li class="divider"></li>
+                                            </ul>
+                                        </div>
+                                        <button type="button" class="btn btn-default glyphButton" title="Hozzászólások">
+                                            <span class=" glyphicon glyphicon-comment" aria-hidden="true"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-default glyphButton" title="Fájlok">
+                                            <span class=" glyphicon glyphicon-file" aria-hidden="true"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-default glyphButton glyphButtonRemove" title="Törlés" onclick="location.href='@Url.Action("RemoveIssue", new { projectId = Model.SelectedProjectId, issueId = issue.Id })'">
+                                            <span class=" glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                }
             </td>
         </tr>
     </table>
-
-    if (Model.CurrentIssues != null && Model.CurrentIssues.Count != 0)
-    {
-        <table id="t01">
-            <tr>
-                <th style="width:5%">Azonosító</th>
-                <th style="width:45%">Leírás</th>
-                <th style ="width:20%">Foglalkoztatott</th>
-                <th>Határidő</th>
-                <th>Típus</th>
-                <th>Státusz</th>
-            </tr>
-            @for (int i=0; i<Model.CurrentIssues.Count;++i)
-            {
-                var issue = Model.CurrentIssues[i];
-            <tr>
-                <td>@issue.Id</td>
-                <td>
-                    @Html.ActionLink(@issue.Name,"EditIssue","Issue", new {issueId = issue.Id}, null)
-                </td>
-                @if (issue.User != null) {<td>@issue.User.Name</td>} else {<td>-</td>}
-                @if (issue.Deadline != null) {<td style="width:10%">@issue.Deadline.Value.ToShortDateString()</td>} else {<td style="width:10%">-</td>}
-                <td style="width:40px">
-                    @if (issue.Type != null)
-                    {
-                        if (issue.Type == 1) { <img src="/Images/issue_feature.png" title="Feature"/> }
-                        else if (issue.Type == 2) { <img src="/Images/issue_bug.png" title="Bug"/> }
-                        else { <img src="/Images/issue_refactor.png" title="Refactor"/> }
-                    }
-                </td>
-                <td style="width:40px">
-                    @if (issue.Status !=null)
-                    {
-                        if (issue.Status == 1) { <img src="/Images/issue_todo.png" title="To do"/> }
-                        else if (issue.Status == 2) { <img src="/Images/issue_inprogress.png" title="In progress"/> }
-                        else if (issue.Status == 3) { <img src="/Images/issue_needstesting.png" title="Needs testing"/> }
-                        else { <img src="/Images/issue_done.png" title="Done"/> }
-                    }
-                </td>
-            </tr>
-            }
-        </table>
-    }
-    else
-    {
-        <div style="text-align: center">A kiválasztott projekthez nem tartoznak feladatok.</div>
-    }
 }
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+@if (!ViewData.ModelState.IsValid)
+{
+    <script>
+        $(function () {
+            $("#addIssueModal").modal("show");
+        });
+    </script>
+}
+<script src="~/Scripts/bootstrap.min.js"></script>
