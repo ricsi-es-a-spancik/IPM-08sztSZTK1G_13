@@ -167,6 +167,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>IssueREntities.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\Issue\CommentsViewModel.cs" />
     <Compile Include="Models\Issue\IssueListingViewModel.cs" />
     <Compile Include="Models\Issue\IssueViewModel.cs" />
     <Compile Include="Models\Logger\Logger.cs" />
@@ -211,6 +212,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\NoImage.png" />
     <Content Include="Content\Styles\AccountStyle.css" />
+    <Content Include="Content\Styles\CommentStyle.css" />
     <Content Include="Content\Styles\FancyFormStyle.css" />
     <Content Include="Content\Styles\HomeStyle.css" />
     <Content Include="Content\Styles\LayoutStyle.css" />
@@ -310,6 +312,7 @@
     <Content Include="Views\Wiki\Index.cshtml" />
     <Content Include="Views\Wiki\ViewDocument.cshtml" />
     <Content Include="Views\Issue\CreateIssue.cshtml" />
+    <Content Include="Views\Issue\Comments.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\temp_upload\" />

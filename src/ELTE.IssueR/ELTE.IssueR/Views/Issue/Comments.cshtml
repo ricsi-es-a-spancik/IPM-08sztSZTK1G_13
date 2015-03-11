@@ -1,0 +1,44 @@
+﻿@model ELTE.IssueR.Models.CommentsViewModel
+
+@{
+    ViewBag.Title = "Comments";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    <link href="@Url.Content("~/Content/Styles/CommentStyle.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/Styles/FancyFormStyle.css")" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+}
+
+<button class="btn buttonlikelink blue" style="margin-top:10px; margin-bottom:10px" onclick="location.href='@Url.Action("ListIssues", new { selectedPrjId = ViewBag.CurrentProjectId })'">
+    <span class="glyphicon glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></span>
+    Vissza
+</button>
+
+<div class="detailBox">
+    <div class="titleBox">
+        <label>XY Feladathoz tartozó hozzászólások</label>
+    </div>
+    <div class="actionBox">
+        <ul class="commentList">
+            @foreach (String comment in ViewBag.Comments)
+            {
+                <li>
+                    <div class="commenterImage">
+                        <img src="http://lorempixel.com/50/50/people/9" />
+                    </div>
+                    <div class="commentText">
+                        <p class="">@comment</p> <span class="date sub-text">on March 5th, 2014</span>
+
+                    </div>
+                </li>
+            }
+        </ul>
+        <form class="form-inline" role="form">
+            <div class="form-group">
+                <input class="form-control" type="text" placeholder="Hozzászólás" />
+            </div>
+            <div class="form-group">
+                <button class="btn buttonlikelink green">Küldés</button>
+            </div>
+        </form>
+    </div>
+</div>  

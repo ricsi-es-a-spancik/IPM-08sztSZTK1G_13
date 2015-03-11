@@ -30,7 +30,7 @@ else
                     <tr>
                         <td></td>
                         <td class="fitToContnent" style="text-align:right">
-                            <button type="button" class="buttonlikelink green fs14" data-toggle="modal" data-target="#addIssueModal">
+                            <button type="button" class="btn buttonlikelink green fs14" data-toggle="modal" data-target="#addIssueModal">
                                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                                 Feladat felvétele
                             </button>
@@ -117,7 +117,7 @@ else
                                                 <li class="divider"></li>
                                             </ul>
                                         </div>
-                                        <button type="button" class="btn btn-default glyphButton" title="Hozzászólások">
+                                        <button type="button" class="btn btn-default glyphButton" title="Hozzászólások" onclick="location.href='@Url.Action("Comments", new { issueId = issue.Id })'">
                                             <span class=" glyphicon glyphicon-comment" aria-hidden="true"></span>
                                         </button>
                                         <button type="button" class="btn btn-default glyphButton" title="Fájlok">
