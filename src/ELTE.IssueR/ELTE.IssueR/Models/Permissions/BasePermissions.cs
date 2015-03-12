@@ -120,7 +120,7 @@ namespace ELTE.IssueR.Models.Permissions
 
         #region Statics
 
-        public static implicit operator Int16(Permission p)
+        public static implicit operator Int32(Permission p)
         {
             return p._perm;
         }
