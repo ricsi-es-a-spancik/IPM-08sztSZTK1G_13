@@ -26,7 +26,7 @@ namespace ELTE.IssueR.Models
         public Nullable<int> ProjectId { get; set; }
 
         [Required(ErrorMessage = "Foglalkoztatott megadása kötelező")]
-        public Nullable<int> UserId { get; set; }
+        public string UserId { get; set; }
 
 
         public List<User> Users { get; set; }
