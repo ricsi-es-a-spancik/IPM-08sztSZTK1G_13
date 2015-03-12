@@ -133,7 +133,7 @@ namespace ELTE.IssueR.Controllers
                 Type = Convert.ToInt16(issue.Type),
                 Status = Convert.ToInt16(IssueViewModel.StatusEnum.ToDo),
                 Deadline = issue.Deadline,
-                UserId = issue.UserId.Value,
+                UserId = issue.UserId,
                 ProjectId = issue.ProjectId.Value
             });
 
@@ -182,7 +182,7 @@ namespace ELTE.IssueR.Controllers
             oldData.Name = issue.Name;
             oldData.Type = Convert.ToInt16((int)issue.Type);
             oldData.Status = Convert.ToInt16((int)issue.Status);
-            oldData.UserId = issue.UserId.Value;
+            oldData.UserId = issue.UserId;
             if(issue.Deadline != null)
                 oldData.Deadline = issue.Deadline;
 

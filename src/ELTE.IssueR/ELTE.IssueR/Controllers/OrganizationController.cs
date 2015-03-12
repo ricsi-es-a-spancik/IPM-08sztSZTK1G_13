@@ -72,7 +72,7 @@ namespace ELTE.IssueR.Controllers
 
             // jelenlegi felhasználó hozzáadása a létrehozott vállalathoz
             string userName = Session["userName"].ToString();
-            int userId = _database.Users.First(user => user.UserName.Equals(userName)).Id;
+            string userId = _database.Users.First(user => user.UserName.Equals(userName)).Id;
             _database.Employees.Add(new Employee
             {
                 UserId = userId,
@@ -210,7 +210,7 @@ namespace ELTE.IssueR.Controllers
             {
                 string username = Session["userName"].ToString();
 
-                int userId = _database.Users.First(user => user.UserName == username).Id;
+                string userId = _database.Users.First(user => user.UserName == username).Id;
                 var org = _database.Organizations.Find(orgId);
 
                 if (org != null && _database.Users.First(user => user.UserName.Equals(username)).Employees.Count == 0)
