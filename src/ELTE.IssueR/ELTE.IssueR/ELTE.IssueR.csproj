@@ -176,6 +176,9 @@
     <Compile Include="Models\Organization.cs">
       <DependentUpon>IssueREntities.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Organization\EditMemberPermViewModel.cs" />
+    <Compile Include="Models\Organization\EditMembersViewModel.cs" />
+    <Compile Include="Models\Organization\NewEmployeeViewModel.cs" />
     <Compile Include="Models\Organization\OrganizationDetails.cs" />
     <Compile Include="Models\Organization\OrganizationViewModel.cs" />
     <Compile Include="Models\Permissions\BasePermissions.cs" />
@@ -310,6 +313,9 @@
     <Content Include="Views\Wiki\Index.cshtml" />
     <Content Include="Views\Wiki\ViewDocument.cshtml" />
     <Content Include="Views\Issue\CreateIssue.cshtml" />
+    <Content Include="Views\Organization\AddMember.cshtml" />
+    <Content Include="Views\Organization\EditMember.cshtml" />
+    <Content Include="Views\Organization\EditMemberPermissions.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\temp_upload\" />

@@ -77,7 +77,7 @@ namespace ELTE.IssueR.Controllers
             {
                 UserId = userId,
                 OrganizationId = orgId,
-                Status = 1
+                Status = Models.Permissions.BasicPermissions.Administrator
             });
 
             _database.SaveChanges();
@@ -204,6 +204,143 @@ namespace ELTE.IssueR.Controllers
             }
         }
 
+        [HttpGet]
+        public ActionResult AddMember(Int32 orgId)
+        {
+            if (Session["userName"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            NewEmployeeViewModel model = new NewEmployeeViewModel(orgId);
+
+            return View("AddMember", model);
+        }
+
+        [HttpPost]
+        public ActionResult AddMember(Int32 orgId, NewEmployeeViewModel model)
+        {
+            model.OrganizationId = orgId;
+            // az adatok hibás formátumban kerültek megadásra
+            if (!ModelState.IsValid)
+            {
+                return View("AddMember", model);
+            }
+
+            // nem létezik a felhasználó
+            if (!_database.Users.Any(u => u.UserName == model.NewEmployeeUserName))
+            {
+                ModelState.AddModelError("", "A megadott néven nem szerepel felhasználó!");
+                return View("AddMember", model);
+            }
+
+            // már tagja az orgnak
+            Int32 uid = _database.Users.First(u => u.UserName == model.NewEmployeeUserName).Id;
+            if (_database.Employees.Any(e => e.UserId == uid && e.OrganizationId == model.OrganizationId))
+            {
+                ModelState.AddModelError("", "A megadott felhasználó már a Szervezet tagja!");
+                return View("AddMember", model);
+            }
+
+            // dolgozó hozzáadása az adatbázishoz
+            _database.Employees.Add(new Employee
+            {
+                UserId = uid,
+                OrganizationId = model.OrganizationId,
+                Status = Models.Permissions.BasicPermissions.Worker
+            });
+            _database.SaveChanges();
+
+            Log(Models.Logger.LogType.Organization, "Member added to ORG_ID: " + model.OrganizationId + ", USER_ID: " + uid);
+            TempData["Information"] = "Sikeres felvétel.";
+            return RedirectToAction("Details", new { orgId = model.OrganizationId });
+        }
+
+        public ActionResult EditMember(Int32 orgId)
+        {
+            if (Session["userName"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            List<EditableEmployees> ee = new List<EditableEmployees>();
+            foreach(Employee e in _database.Employees.Where(e => e.OrganizationId == orgId))
+            {
+                EditableEmployees temp = new EditableEmployees 
+                { 
+                    Id = e.UserId,
+                    Username = e.User.UserName,
+                    Perm = e.Status
+                };
+                ee.Add(temp);
+            }
+            EditMembersViewModel model = new EditMembersViewModel
+            {
+                OrganizationId = orgId,
+                Users = ee
+            };
+
+            return View("EditMember", model);
+        }
+
+        public ActionResult EditMemberPermissions(Int32 orgId, Int32 userId)
+        {
+            if (Session["userName"] == null)
+                return RedirectToAction("Index", "Home");
+
+            Employee e = _database.Employees.First(emp => emp.OrganizationId == orgId && emp.UserId == userId);
+            List<Models.Permissions.BasePermission> ps = Enum.GetValues(typeof(Models.Permissions.BasePermission)).Cast<Models.Permissions.BasePermission>().ToList();
+
+            return View("EditMemberPermissions", new EditMemberPermViewModel { Employee = e, AvailablePermissions = ps});
+        }
+
+        public ActionResult AddPermission(Int32 orgId, Int32 userId, Models.Permissions.BasePermission perm)
+        {
+            if (Session["userName"] == null)
+                return RedirectToAction("Index", "Home");
+
+            Employee e = _database.Employees.First(emp => emp.OrganizationId == orgId && emp.UserId == userId);
+            Models.Permissions.Permission p = ((Models.Permissions.Permission)e.Status);
+            p.AddPermission(perm);
+            e.Status = p;
+            _database.SaveChanges();
+
+            return RedirectToAction("EditMemberPermissions", new { orgId = orgId, userId = userId });
+        }
+
+        public ActionResult RemovePermission(Int32 orgId, Int32 userId, Models.Permissions.BasePermission perm)
+        {
+            if (Session["userName"] == null)
+                return RedirectToAction("Index", "Home");
+
+            Employee e = _database.Employees.First(emp => emp.OrganizationId == orgId && emp.UserId == userId);
+            Models.Permissions.Permission p = ((Models.Permissions.Permission)e.Status);
+            p.RemovePermission(perm);
+            e.Status = p;
+            _database.SaveChanges();
+
+            return RedirectToAction("EditMemberPermissions", new { orgId = orgId, userId = userId });
+        }
+
+        public ActionResult RemoveMember(Int32 orgId, Int32 userId)
+        {
+            //Ellenőrizni, hogy valóban jogosult jutott-e ide
+            if (Session["userName"] == null)
+                return RedirectToAction("Index", "Home");
+            
+            String thisUserName = Session["userName"].ToString();
+            Models.Permissions.Permission p = _database.Users.First(u => u.UserName == thisUserName).Employees.Where(e => e.OrganizationId == orgId).First().Status;
+            if(!p.HasPermission(Models.Permissions.BasePermission.RemoveMember))
+                return RedirectToAction("Index", "Home");
+
+            //Kitörölni a dolgozót
+            Employee emp = _database.Employees.First(e => e.OrganizationId == orgId && e.UserId == userId);
+            _database.Employees.Remove(emp);
+            _database.SaveChanges();
+
+            return RedirectToAction("EditMember", new { orgId = orgId });
+        }
+
         public ActionResult AddOrgMember(int orgId)
         {
             if (Session["userName"] != null)
@@ -219,7 +356,7 @@ namespace ELTE.IssueR.Controllers
                     {
                         UserId = userId,
                         OrganizationId = orgId,
-                        Status = 1
+                        Status = Models.Permissions.BasicPermissions.Worker
                     });
                     _database.SaveChanges();
 
@@ -235,6 +372,46 @@ namespace ELTE.IssueR.Controllers
             else
             {
                 return RedirectToAction("Index", "Home");
+            }
+        }
+
+        public HtmlString GetPermission(Int32 orgId)
+        {
+            if (Session["userName"] == null)
+            {
+                return new HtmlString(Models.Permissions.BasicPermissions.New.ToString());
+            }
+
+            String username = Session["userName"].ToString();
+            Int32 userId = _database.Users.First(user => user.UserName == username).Id;
+            Employee emp = _database.Employees.Find(userId, orgId);
+            if(emp != null)
+            {
+                return new HtmlString(((Models.Permissions.Permission)emp.Status).ToString());
+            }
+            else
+            {
+                return new HtmlString(Models.Permissions.BasicPermissions.New.ToString());
+            }
+        }
+
+        public HtmlString HasPermission(Int32 orgId, Models.Permissions.BasePermission perm)
+        {
+            if (Session["userName"] == null)
+            {
+                return new HtmlString(false.ToString());
+            }
+
+            String username = Session["userName"].ToString();
+            Int32 userId = _database.Users.First(user => user.UserName == username).Id;
+            Employee emp = _database.Employees.Find(userId, orgId);
+            if (emp != null)
+            {
+                return new HtmlString(((Models.Permissions.Permission)emp.Status).HasPermission(perm).ToString());
+            }
+            else
+            {
+                return new HtmlString(false.ToString());
             }
         }
 
