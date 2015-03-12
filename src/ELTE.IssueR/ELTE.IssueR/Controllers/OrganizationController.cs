@@ -235,7 +235,7 @@ namespace ELTE.IssueR.Controllers
             }
 
             // már tagja az orgnak
-            Int32 uid = _database.Users.First(u => u.UserName == model.NewEmployeeUserName).Id;
+            string uid = _database.Users.First(u => u.UserName == model.NewEmployeeUserName).Id;
             if (_database.Employees.Any(e => e.UserId == uid && e.OrganizationId == model.OrganizationId))
             {
                 ModelState.AddModelError("", "A megadott felhasználó már a Szervezet tagja!");
@@ -283,7 +283,7 @@ namespace ELTE.IssueR.Controllers
             return View("EditMember", model);
         }
 
-        public ActionResult EditMemberPermissions(Int32 orgId, Int32 userId)
+        public ActionResult EditMemberPermissions(Int32 orgId, string userId)
         {
             if (Session["userName"] == null)
                 return RedirectToAction("Index", "Home");
@@ -294,7 +294,7 @@ namespace ELTE.IssueR.Controllers
             return View("EditMemberPermissions", new EditMemberPermViewModel { Employee = e, AvailablePermissions = ps});
         }
 
-        public ActionResult AddPermission(Int32 orgId, Int32 userId, Models.Permissions.BasePermission perm)
+        public ActionResult AddPermission(Int32 orgId, string userId, Models.Permissions.BasePermission perm)
         {
             if (Session["userName"] == null)
                 return RedirectToAction("Index", "Home");
@@ -308,7 +308,7 @@ namespace ELTE.IssueR.Controllers
             return RedirectToAction("EditMemberPermissions", new { orgId = orgId, userId = userId });
         }
 
-        public ActionResult RemovePermission(Int32 orgId, Int32 userId, Models.Permissions.BasePermission perm)
+        public ActionResult RemovePermission(Int32 orgId, string userId, Models.Permissions.BasePermission perm)
         {
             if (Session["userName"] == null)
                 return RedirectToAction("Index", "Home");
@@ -322,7 +322,7 @@ namespace ELTE.IssueR.Controllers
             return RedirectToAction("EditMemberPermissions", new { orgId = orgId, userId = userId });
         }
 
-        public ActionResult RemoveMember(Int32 orgId, Int32 userId)
+        public ActionResult RemoveMember(Int32 orgId, string userId)
         {
             //Ellenőrizni, hogy valóban jogosult jutott-e ide
             if (Session["userName"] == null)
@@ -383,7 +383,7 @@ namespace ELTE.IssueR.Controllers
             }
 
             String username = Session["userName"].ToString();
-            Int32 userId = _database.Users.First(user => user.UserName == username).Id;
+            string userId = _database.Users.First(user => user.UserName == username).Id;
             Employee emp = _database.Employees.Find(userId, orgId);
             if(emp != null)
             {
@@ -403,7 +403,7 @@ namespace ELTE.IssueR.Controllers
             }
 
             String username = Session["userName"].ToString();
-            Int32 userId = _database.Users.First(user => user.UserName == username).Id;
+            string userId = _database.Users.First(user => user.UserName == username).Id;
             Employee emp = _database.Employees.Find(userId, orgId);
             if (emp != null)
             {

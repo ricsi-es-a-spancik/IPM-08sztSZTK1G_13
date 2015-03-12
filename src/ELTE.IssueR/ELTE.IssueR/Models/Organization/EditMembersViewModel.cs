@@ -8,7 +8,7 @@ namespace ELTE.IssueR.Models
 {
     public class EditableEmployees
     {
-        public Int32 Id { get; set; }
+        public string Id { get; set; }
         public String Username { get; set; }
         public Permissions.Permission Perm { get; set; }
     }
