@@ -236,16 +236,16 @@ namespace ELTE.IssueR.Controllers
                 return RedirectToAction("ProjectData", "Project", new { id = projectId });
             }
 
-            int id;
+            /*int id;
             bool parsed = Int32.TryParse(selectedItem, out id);
 
             if (!parsed)
             {
                 return RedirectToAction("ProjectData", "Project", new { id = projectId });
-            }
+            }*/
             
             _database.ProjectMembers.Add(new ProjectMember{
-                    UserId = id,
+                    UserId = selectedItem,
                     ProjectId = projectId
             });
             
@@ -254,7 +254,7 @@ namespace ELTE.IssueR.Controllers
             return RedirectToAction("ProjectData", "Project", new { id = projectId });
         }
 
-        public ActionResult ProjectMemberRemove(int removeableUserId, int projectId)
+        public ActionResult ProjectMemberRemove(string removeableUserId, int projectId)
         {
             ProjectMember pm = _database.ProjectMembers.First(x => x.ProjectId == projectId && 
                                                                    x.UserId == removeableUserId);

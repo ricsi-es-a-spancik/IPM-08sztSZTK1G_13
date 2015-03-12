@@ -11,6 +11,7 @@ namespace ELTE.IssueR.Controllers
     {
         //
         // GET: /Home/
+        [AllowAnonymous]
         public ActionResult Index()
         {
             // Select a few organizations to show

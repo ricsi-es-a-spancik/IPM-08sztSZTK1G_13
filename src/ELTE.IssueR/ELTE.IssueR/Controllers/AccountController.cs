@@ -9,39 +9,18 @@ using Recaptcha.Web;
 using Recaptcha.Web.Mvc;
 using ELTE.IssueR.Models;
 using ELTE.IssueR.Models.Account;
+using System.Threading.Tasks;
+using Microsoft.Owin.Security;
+using Microsoft.AspNet.Identity;
 
 namespace ELTE.IssueR.Controllers
 {
-    public class AccountController : BaseController
+    public partial class AccountController : BaseController
     {
 
         #region General
 
-        private byte[] Salt(byte[] name, byte[] pw)
-        {
-            byte[] result = pw;
-
-            for (Int32 i = 0; i < pw.Length; i = i + 3)
-            {
-                result[i] = name[i % name.Length];
-
-                if (i % 5 == 0)
-                    --i;
-                if (i % 7 == 0)
-                    --i;
-            }
-
-            byte[] reverse = result.Reverse().ToArray();
-
-            for (Int32 i = 0; i < result.Length; ++i)
-            {
-                result[i] += reverse[i];
-            }
-
-            return result;
-        }
-
-        public HtmlString IdToName(Int32 p_id)
+        public HtmlString IdToName(string p_id)
         {
             if (Session["userName"] == null)
             {
@@ -104,7 +83,7 @@ namespace ELTE.IssueR.Controllers
         /// <param name="user">A felhasználó adatai.</param>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(UserViewModel user)
+        public async Task<ActionResult> Login(UserViewModel user)
         {
             if (!ModelState.IsValid)
             {
@@ -113,7 +92,7 @@ namespace ELTE.IssueR.Controllers
                 return View("Login", user);
             }
 
-            User registered = _database.Users.FirstOrDefault(x => x.UserName == user.UserName);
+            User registered = await userManager.FindAsync(user.UserName, user.UserPassword);
 
             if (registered == null)
             {
@@ -122,28 +101,14 @@ namespace ELTE.IssueR.Controllers
                 return View("Login", user);
             }
 
-            // ellenőrizzük a jelszót (ehhez a kapott jelszót hash-elem és sózom)
-            Byte[] passwordBytes = null;
-            using (SHA256CryptoServiceProvider provider = new SHA256CryptoServiceProvider())
-            {
-                passwordBytes = Salt(Encoding.UTF8.GetBytes(user.UserName), provider.ComputeHash(Encoding.UTF8.GetBytes(user.UserPassword)));
-            }
-
-            if (!passwordBytes.SequenceEqual(registered.Password))
-            {
-                //Nem egyezik meg a jelszó
-                ModelState.AddModelError("", "Hibás felhasználónév, vagy jelszó.");
-                return View("Login", user);
-            }
+            // beléptetés
+            var userIdentity = await userManager.CreateIdentityAsync(registered, DefaultAuthenticationTypes.ApplicationCookie);
+            HttpContext.GetOwinContext().Authentication.SignIn(new AuthenticationProperties { IsPersistent = user.RememberMe }, userIdentity);
 
             //Utolsó belépés frissítése
             registered.LastLogin = DateTime.Now;
 
             _database.SaveChanges();
-
-            //Session adatok letárolása
-            Session["userName"] = registered.UserName;
-            Session.Timeout = 20; // max. 20 percig él a munkamenet
 
             //Application adatok letárolása
             if (HttpContext.Application["usersList"] == null)
@@ -182,7 +147,7 @@ namespace ELTE.IssueR.Controllers
         /// <param name="customer">Regisztrációs adatok.</param>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Register(NewUserViewModel registering)
+        public async Task<ActionResult> Register(NewUserViewModel registering)
         {
             //Formai követelmények ellenőrzése
             if (!ModelState.IsValid)
@@ -205,30 +170,30 @@ namespace ELTE.IssueR.Controllers
             }
 
             // Létezik-e már a megadott felhasználó név
-            if (_database.Users.Count(c => c.UserName == registering.UserName) != 0)
+            var user = await userManager.FindAsync(registering.UserName, registering.UserPassword);
+
+            if (user != null)
             {
                 ModelState.AddModelError("UserName", "A megadott felhasználónév már létezik.");
                 return View("Register", registering);
             }
 
-            // Kódoljuk a jelszót
-            Byte[] passwordBytes = null;
-            using (SHA256CryptoServiceProvider provider = new SHA256CryptoServiceProvider())
-            {
-                passwordBytes = Salt(Encoding.UTF8.GetBytes(registering.UserName), provider.ComputeHash(Encoding.UTF8.GetBytes(registering.UserPassword)));
-            }
-
             // elmentjük a felhasználó adatait
-            _database.Users.Add(new User
+            user = new User
             {
                 UserName = registering.UserName,
                 Email = registering.Email,
-                Password = passwordBytes,
                 Name = registering.Name,
                 RegisterDate = DateTime.Now,
                 LastLogin = null
-            });
-            _database.SaveChanges();
+            };
+
+            var result = await userManager.CreateAsync(user, registering.UserPassword);
+
+            if(!result.Succeeded)
+            {
+                AddErrors(result);
+            }
 
             ViewBag.Information = "A regisztráció sikeres volt. Kérjük, jelentkezzen be.";
 
@@ -250,29 +215,18 @@ namespace ELTE.IssueR.Controllers
         /// <summary>
         /// Kijelentkezés.
         /// </summary>
+        [Authorize]
         public ActionResult Logout()
         {
-            if (Session["userName"] != null)
-            {
-                String usrname = (String)Session["userName"];
-                Session.Remove("userName");
-
-                if (HttpContext.Application["usersList"] != null)
-                    ((List<String>)HttpContext.Application["usersList"]).Remove(usrname);
-
-                Log(ELTE.IssueR.Models.Logger.LogType.Account, "User " + usrname + " has logged out.");
-            }
-            else
-            {
-                Log(ELTE.IssueR.Models.Logger.LogType.Bug, "User has logged out without being logged in.");
-            }
-
+            AuthenticationManager.SignOut();
+            Log(ELTE.IssueR.Models.Logger.LogType.Account, "User " + User.Identity.Name + " has logged out.");
             return RedirectToAction("Index", "Home"); // átirányítjuk a főoldalra
         }
 
         #endregion
 
         #region Profile
+
 
         public ActionResult ProfileIndex()
         {
@@ -350,13 +304,9 @@ namespace ELTE.IssueR.Controllers
             if (model.UserPassword != null && model.UserPassword != "")
             {
                 // kódoljuk a jelszót
-                Byte[] passwordBytes = null;
-                using (SHA256CryptoServiceProvider provider = new SHA256CryptoServiceProvider())
-                {
-                    passwordBytes = Salt(Encoding.UTF8.GetBytes(me.UserName), provider.ComputeHash(Encoding.UTF8.GetBytes(model.UserPassword)));
-                }
-                me.Password = passwordBytes;
+                var hasher = new PasswordHasher();
 
+                me.PasswordHash = hasher.HashPassword(model.UserPassword);
                 ViewBag.Information += " Jelszó megváltozott.";
             }
 
@@ -445,6 +395,7 @@ namespace ELTE.IssueR.Controllers
 
         #region Messages
 
+        [Authorize]
         public ActionResult Mails()
         {
             if (Session["userName"] == null)
@@ -577,7 +528,7 @@ namespace ELTE.IssueR.Controllers
             }
 
             String myName = (String)Session["userName"];
-            List<Int32> ids = _database.Users.Where(x => x.UserName != myName).Select(x => x.Id).ToList();
+            List<string> ids = _database.Users.Where(x => x.UserName != myName).Select(x => x.Id).ToList();
 
             return View("NewMailList", ids);
         }
@@ -597,7 +548,7 @@ namespace ELTE.IssueR.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult NewMailTo(NewMessageViewModel model, Int32 p_id)
+        public ActionResult NewMailTo(NewMessageViewModel model, string p_id)
         {
             if (Session["userName"] == null)
             {
@@ -630,7 +581,5 @@ namespace ELTE.IssueR.Controllers
         }
 
         #endregion
-
-
     }
 }
