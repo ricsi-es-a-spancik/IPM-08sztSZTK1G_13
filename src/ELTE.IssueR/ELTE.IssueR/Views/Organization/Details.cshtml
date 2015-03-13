@@ -17,16 +17,25 @@
     <div class="menubar">
         @if(Session["userName"] != null)
         {
-            if (Html.Action("IsOrgMember", "Organization", new { orgId = Model.Org.Id }).ToString() == "false")
+            if (Html.Action("HasPermission", "Organization", new { orgId = Model.Org.Id, perm = ELTE.IssueR.Models.Permissions.BasePermission.AddMember }).ToString() == true.ToString())
+            //if(Html.Action("IsOrgMember", "Organization", new { orgId = Model.Org.Id }).ToString() == "false")
             {
-                @Html.ActionLink("Csatlakozás", "AddOrgMember", "Organization", new { orgId = Model.Org.Id }, new { @class = "buttonlikelink green" })
+                @Html.ActionLink("Dolgozó felvétele", "AddMember", "Organization", new { orgId = Model.Org.Id }, new { @class = "buttonlikelink green" });
+                //@Html.ActionLink("Csatlakozás", "AddOrgMember", "Organization", new { orgId = Model.Org.Id }, new { @class = "buttonlikelink green" })
             }
-            else
+            /*else
             {
                 <span class="buttonlikelink green">Csatlakozott</span>
+            }*/
+            if (Html.Action("HasPermission", "Organization", new { orgId = Model.Org.Id, perm = ELTE.IssueR.Models.Permissions.BasePermission.EditMember }).ToString() == true.ToString())
+            {
+                @Html.ActionLink("Dolgozók kezelése", "EditMember", "Organization", new { orgId = Model.Org.Id }, new { @class = "buttonlikelink green" });
             }
-            
-            @Html.ActionLink("Borítókép feltöltése", "UploadCoverImage", "Organization", new { orgId = Model.Org.Id }, new { @class = "buttonlikelink blue" })
+
+            if (Html.Action("HasPermission", "Organization", new { orgId = Model.Org.Id, perm = ELTE.IssueR.Models.Permissions.BasePermission.EditContent }).ToString() == true.ToString())
+            {
+                @Html.ActionLink("Borítókép feltöltése", "UploadCoverImage", "Organization", new { orgId = Model.Org.Id }, new { @class = "buttonlikelink blue" })
+            }
         }
     </div>
 
@@ -57,7 +66,7 @@
 
     <h2>Projektek</h2>
 
-    @if(Session["userName"] != null)
+    @if (Html.Action("HasPermission", "Organization", new { orgId = Model.Org.Id, perm = ELTE.IssueR.Models.Permissions.BasePermission.AddContent }).ToString() == true.ToString())
     {
         <div class="join">
             @Html.ActionLink("+ Új projekt indítása", "Index", "Project", new { }, new { @class = "buttonlikelink green" })

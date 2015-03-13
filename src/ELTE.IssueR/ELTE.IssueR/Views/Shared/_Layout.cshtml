@@ -8,6 +8,8 @@
     <meta charset="utf-8" />
     <title>@ViewBag.Title - IssueR</title>
     <link href="@Url.Content("~/Content/Styles/LayoutStyle.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/Styles/FancyFormStyle.css")" rel="stylesheet" type="text/css"/>
+
     @if (IsSectionDefined("AddToHead"))
     {
         @RenderSection("AddToHead", required: false)
@@ -33,7 +35,7 @@
                         }
                     </td>
                     <td id="accountbox">
-                        @if (Session["userName"] == null)
+                        @if (!User.Identity.IsAuthenticated)
                         {
                             <table>
                                 <tr>
@@ -45,7 +47,6 @@
                                     </td>
                                 </tr>
                             </table>
-
                         }
                         else
                         {
@@ -65,7 +66,7 @@
                                             </a>
                                     </td>
                                     <td>
-                                        @Html.ActionLink(Session["userName"].ToString(), "ProfileIndex", "Account", new { }, new { @class = "buttonlikelink blue" })
+                                        @*@Html.ActionLink(Session["userName"].ToString(), "ProfileIndex", "Account", new { }, new { @class = "buttonlikelink blue" })*@
                                     </td>
                                     <td>
                                         @Html.ActionLink("Kijelentkezés", "Logout", "Account", new { }, new { @class = "buttonlikelink blue" })
@@ -73,7 +74,6 @@
                                 </tr>
                             </table>
                         }
-
                     </td>
                 </tr>
             </table>

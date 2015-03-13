@@ -5,43 +5,60 @@ using System.Web;
 
 namespace ELTE.IssueR.Models.Permissions
 {
+    [Flags]
     public enum BasePermission
     {
-        AddMember = 1,
-        EditMember = 2,
-        RemoveMember = 4,
-        AddContent = 8,
-        EditContent = 16,
-        RemoveContent = 32
+        Normal = 0x0000,
+        AddMember = 0x0001,
+        EditMember = 0x0002,
+        RemoveMember = 0x0004,
+        AddContent = 0x0008,
+        EditContent = 0x0016,
+        RemoveContent = 0x0032
     }
 
     public static class BasicPermissions
     {
-        public static Permission Administrator()
+        public static Permission Administrator
         {
-            return new Permission(BasePermission.AddMember, BasePermission.EditMember, BasePermission.RemoveMember,
-                BasePermission.AddContent, BasePermission.EditContent, BasePermission.RemoveContent);
+            get
+            {
+                return new Permission(BasePermission.AddMember, BasePermission.EditMember, BasePermission.RemoveMember,
+                    BasePermission.AddContent, BasePermission.EditContent, BasePermission.RemoveContent);
+            }
         }
 
-        public static Permission HumanResource()
+        public static Permission HumanResource
         {
-            return new Permission(BasePermission.AddMember, BasePermission.EditMember, BasePermission.RemoveMember);
+            get
+            {
+                return new Permission(BasePermission.AddMember, BasePermission.EditMember, BasePermission.RemoveMember);
+            }
         }
 
-        public static Permission Leader()
+        public static Permission Leader
         {
-            return new Permission(BasePermission.EditMember, 
-                BasePermission.AddContent, BasePermission.EditContent, BasePermission.RemoveContent);
+            get
+            {
+                return new Permission(BasePermission.EditMember, 
+                    BasePermission.AddContent, BasePermission.EditContent, BasePermission.RemoveContent);
+            }
         }
 
-        public static Permission Worker()
+        public static Permission Worker
         {
-            return new Permission(BasePermission.AddContent, BasePermission.EditContent);
+            get
+            {
+                return new Permission(BasePermission.AddContent, BasePermission.EditContent);
+            }
         }
 
-        public static Permission New()
+        public static Permission New
         {
-            return new Permission();
+            get
+            {
+                return new Permission();
+            }
         }
     }
 
@@ -50,12 +67,12 @@ namespace ELTE.IssueR.Models.Permissions
 
         #region Variables
 
-        private Int32 _perm;
-        public Int32 Code
+        private BasePermission _perm;
+        public Int16 Code
         {
             get
             {
-                return _perm;
+                return Convert.ToInt16(_perm);
             }
         }
 
@@ -70,10 +87,10 @@ namespace ELTE.IssueR.Models.Permissions
 
         public Permission(params BasePermission[] ps)
         {
-            _perm = 0;
+            _perm = BasePermission.Normal;
             foreach(BasePermission bp in ps)
             {
-                _perm += (Int32)bp;
+                _perm |= bp;
             }
         }
 
@@ -87,20 +104,13 @@ namespace ELTE.IssueR.Models.Permissions
             {
                 List<BasePermission> result = new List<BasePermission>();
 
-                Int32[] vals = (Int32[])Enum.GetValues(typeof(BasePermission));
-                Int32 temp = _perm;
-                Int32 i = 0;
-                while(temp > 0)
+                String[] names = Enum.GetNames(typeof(BasePermission));
+                foreach(String s in names)
                 {
-                    if (temp % vals[i] == 0)
-                    {
-                        temp -= vals[i];
-                        result.Add((BasePermission)vals[i]);
-                    }
-
-                    ++i;
+                    BasePermission temp = (BasePermission)Enum.Parse(typeof(BasePermission), s);
+                    if(_perm.HasFlag(temp))
+                        result.Add(temp);
                 }
-
 
                 return result;
             }
@@ -108,21 +118,59 @@ namespace ELTE.IssueR.Models.Permissions
 
         public void AddPermission(BasePermission p)
         {
-            _perm += (Int32)p;
+            _perm |= p;
         }
 
         public void RemovePermission(BasePermission p)
         {
-            _perm -= (Int32)p;
+            _perm &= p;
+        }
+
+        public Boolean HasPermission(BasePermission p)
+        {
+            return _perm.HasFlag(p);
+        }
+
+        public override String ToString()
+        {
+            return Available.ConvertAll(p => DisplayName(p)).Aggregate((p1, p2) => p1 + ", " + p2);
         }
 
         #endregion
 
         #region Statics
 
+        public static String DisplayName(BasePermission p)
+        {
+            switch(p)
+            {
+                case BasePermission.Normal:
+                    return "";
+                case BasePermission.AddMember:
+                    return "Tagok felvétele";
+                case BasePermission.EditMember:
+                    return "Tagok kezelése";
+                case BasePermission.RemoveMember:
+                    return "Tagok eltávolítása";
+                case BasePermission.AddContent:
+                    return "Tartalom létrehozása";
+                case BasePermission.EditContent:
+                    return "Tartalom kezelése";
+                case BasePermission.RemoveContent:
+                    return "Tartalom eltávolítása";
+                default:
+                    return "";
+            }
+        }
+
         public static implicit operator Int16(Permission p)
         {
-            return p._perm;
+            return p.Code;
+        }
+
+        public static implicit operator Permission(Int16 i)
+        {
+            return new Permission{ _perm = (BasePermission)i };
         }
 
         #endregion

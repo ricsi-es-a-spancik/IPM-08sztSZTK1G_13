@@ -8,7 +8,7 @@ namespace ELTE.IssueR.Models.Account
 {
     public class AccountSettingsViewModel
     {
-        public Int32 Id { get; set; }
+        public string Id { get; set; }
 
         [EmailAddress(ErrorMessage = "Az e-mail cím nem megfelelő formátumú.")]
         [DataType(DataType.EmailAddress)]

@@ -33,7 +33,15 @@
             @Html.TextBoxFor(user => user.UserPassword, new { @class = "field-long", @type = "password" })
             <label class="required">@Html.ValidationMessageFor(m => m.UserPassword)</label>
         </li>
+        <li>
+            <label>Emlékezz rám</label>
+            @Html.CheckBoxFor(user => user.RememberMe)
+        </li>
     </ul>
 
     <input type="submit" autofocus value="Bejelentkezés" class="buttonlikelink green" />
 }
+
+<hr />
+
+@Html.Partial("_ExternalLoginsListPartial", new ELTE.IssueR.Models.Account.ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl})

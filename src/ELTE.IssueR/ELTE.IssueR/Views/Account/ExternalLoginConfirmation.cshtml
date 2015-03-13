@@ -1,0 +1,44 @@
+﻿@model ELTE.IssueR.Models.Account.ExternalLoginConfirmationViewModel
+@{
+    ViewBag.Title = "Regisztráció megerősítése";
+}
+<h2>@ViewBag.Title.</h2>
+<h3>Profilod véglegesítése @ViewBag.LoginProvider adataiddal.</h3>
+
+
+
+@using (Html.BeginForm("ExternalLoginConfirmation", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <p class="text-info">
+        Sikeresen regisztráltál <strong>@ViewBag.LoginProvider</strong> azonosítóddal.
+        Kérjük töltsd ki a hiányzó mezőket!
+    </p>
+    
+    if(Model.PictureUrl != null)
+    {
+        <img src="@Model.PictureUrl" />
+    }
+    
+    <p></p>
+    
+    <ul class="form-style-1">
+        <li>
+            <label>Teljes név</label>
+            @Html.TextBoxFor(m => m.Name, new { @class = "field-long" })
+            <label class="required">@Html.ValidationMessageFor(m => m.Name)</label>
+        </li>
+        <li>
+            <label>Email cím</label>
+            @Html.TextBoxFor(m => m.Email, new { @class = "field-long" })
+            <label class="required">@Html.ValidationMessageFor(m => m.Email)</label>
+        </li>
+    </ul>
+
+    @Html.HiddenFor(m => m.PictureUrl)
+    
+    <input type="submit" autofocus class="buttonlikelink green" value="Regisztráció" />
+}

@@ -20,5 +20,10 @@ namespace ELTE.IssueR.Models.Account
         [Required(ErrorMessage = "A jelszó megadása kötelező.")]
         [DataType(DataType.Password)]
         public String UserPassword { get; set; }
+
+        /// <summary>
+        /// Emlékezés a felhasználóra.
+        /// </summary>
+        public bool RememberMe { get; set; }
     }
 }

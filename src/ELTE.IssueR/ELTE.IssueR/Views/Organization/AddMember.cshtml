@@ -1,0 +1,30 @@
+﻿@using ELTE.IssueR.Models
+
+@model NewEmployeeViewModel
+
+@{
+    ViewBag.Title = "Dolgozó felvétele";
+}
+
+@section AddToHead
+{
+    <link href="@Url.Content("~/Content/Styles/FancyFormStyle.css")" rel="stylesheet" type="text/css" />
+}
+
+<h2>Új dolgozó felvétele</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "Az új dolgozó felvétele sikertelen volt. Ellenőrizd a bevitt adatokat!")
+
+    <ul class="form-style-1">
+        <li>
+            <label>Név<span class="required">*</span></label>
+            @Html.TextBoxFor(model => model.NewEmployeeUserName, new { @class = "field-long" })
+            <label class="required">@Html.ValidationMessageFor(model => model.NewEmployeeUserName)</label>
+        </li>
+    </ul>
+
+    <input type="submit" autofocus value="Felvétel" class="buttonlikelink green" />
+}
