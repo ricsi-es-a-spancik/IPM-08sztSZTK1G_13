@@ -9,96 +9,35 @@ namespace ELTE.IssueR.Controllers
 {
     public class IssueController : BaseController
     {
-        private List<Project> GetProjects()
-        {
-            string username = (string)Session["userName"];
-
-            List<Project> ret = new List<Project>();
-            foreach(ProjectMember projMem in _database.Users.First(u => u.UserName.Equals(username)).ProjectMembers)
-                ret.Add(projMem.Project);
-
-            return ret;
-        }
-
-        private List<Issue> GetIssues(int projectId)
-        {
-            return _database.Issues.Where(issue => issue.ProjectId == projectId).ToList();
-        }
-
-        private List<User> GetProjectMembers(int projectId)
-        {
-            return _database.ProjectMembers.Where(conn => conn.ProjectId == projectId).Select(conn => conn.User).ToList();
-        }
-
-        private void UpdateIssueListing(IssueListingViewModel model)
-        {
-            ViewBag.Projects = GetProjects();
-
-            if (model.SelectedProjectId == null && ViewBag.Projects.Count != 0)
-                model.SelectedProjectId = ViewBag.Projects[0].Id;
-
-            if (model.SelectedProjectId != null)
-                ViewBag.Issues = GetIssues(model.SelectedProjectId.Value);
-        }
-
-        private void UpdateIssue(IssueViewModel issue)
-        {
-            if (issue.ProjectId.HasValue)
-            {
-                issue.Users = GetProjectMembers(issue.ProjectId.Value);
-                if (issue.UserId == null && issue.Users.Count != 0)
-                    issue.UserId = issue.Users[0].Id;
-            }
-        }
-
-        [HttpGet]
+        [HttpGet, Authorize]
         public ActionResult Index()
         {
             return RedirectToAction("ListIssues");
         }
 
-        [HttpGet]
+        [HttpGet, Authorize]
         public ActionResult ListIssues(int? selectedPrjId)
         {
-            if (Session["userName"] == null)
+            IssueListingViewModel listing = new IssueListingViewModel();
+            if (selectedPrjId.HasValue)
             {
-                return RedirectToAction("Index", "Home");
+                listing.SelectedProjectId = selectedPrjId;
             }
-            else 
-            {
-                IssueListingViewModel listing = new IssueListingViewModel();
-                if (selectedPrjId.HasValue)
-                {
-                    listing.SelectedProjectId = selectedPrjId;
-                }
 
-                UpdateIssueListing(listing);
-                return View("ListIssues", listing);
-            }
+            UpdateIssueListing(listing);
+            return View("ListIssues", listing);
         }
 
-        [HttpPost]
+        [HttpPost, Authorize]
         public ActionResult ListIssues(IssueListingViewModel listing)
         {
-            if (Session["userName"] == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-            else
-            {
-                UpdateIssueListing(listing);
-                return View("ListIssues", listing);
-            }
+            UpdateIssueListing(listing);
+            return View("ListIssues", listing);
         }
 
-        [HttpGet]
+        [HttpGet, Authorize]
         public ActionResult CreateIssue(int? projId)
         {
-            if (Session["userName"] == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-            
             if(!_database.Projects.Any(p => p.Id == projId))
             {
                 return RedirectToAction("Index");
@@ -108,27 +47,31 @@ namespace ELTE.IssueR.Controllers
                 IssueViewModel issue = new IssueViewModel();
                 issue.ProjectId = projId;
                 UpdateIssue(issue);
+
+                SetViewBagStatusSelectionList();
+                SetViewBagTypeSelectionList();
+
                 return View("CreateIssue", issue);
             }
         }
 
-        [HttpPost]
+        [HttpPost, Authorize]
         public ActionResult CreateIssue(IssueViewModel issue)
         {
-            if (Session["userName"] == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-            else if (!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 ModelState.AddModelError("", "Az űrlap hibás adatokat tartlamaz.");
                 UpdateIssue(issue);
+                SetViewBagStatusSelectionList();
+                SetViewBagTypeSelectionList();
                 return View("CreateIssue", issue);
             }
             else if (_database.Issues.Count(i => issue.ProjectId == i.ProjectId && issue.Name.Equals(i.Name)) != 0)
             {
                 ModelState.AddModelError("", "A megadott leírással már létezik feladat!");
                 UpdateIssue(issue);
+                SetViewBagStatusSelectionList();
+                SetViewBagTypeSelectionList();
                 return View("CreateIssue", issue);
             }
             else
@@ -138,8 +81,8 @@ namespace ELTE.IssueR.Controllers
                     _database.Issues.Add(new Issue
                     {
                         Name = issue.Name,
-                        Type = Convert.ToInt16(issue.Type),
-                        Status = Convert.ToInt16(IssueViewModel.StatusEnum.ToDo),
+                        Type = IssueType.Bug,//Convert.ToInt16(issue.Type),
+                        Status = IssueStatus.Done,//Convert.ToInt16(IssueViewModel.StatusEnum.ToDo),
                         Deadline = issue.Deadline,
                         UserId = issue.UserId,
                         ProjectId = issue.ProjectId.Value
@@ -156,13 +99,9 @@ namespace ELTE.IssueR.Controllers
             }
         }
 
+        [HttpGet, Authorize]
         public ActionResult EditIssue(int? issueId)
         {
-            if (Session["userName"] == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
             Issue issue = _database.Issues.First(i => i.Id == issueId);
 
             if (issue == null)
@@ -177,14 +116,10 @@ namespace ELTE.IssueR.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPost, Authorize]
         public ActionResult EditIssue(IssueViewModel issue)
         {
-            if (Session["userName"] == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-            else if (!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 ModelState.AddModelError("", "Az űrlap hibás adatokat tartlamaz.");
                 UpdateIssue(issue);
@@ -211,8 +146,8 @@ namespace ELTE.IssueR.Controllers
                 _database.Issues.Add(new Issue
                 {
                     Name = issue.Name,
-                    Type = Convert.ToInt16(issue.Type),
-                    Status = Convert.ToInt16(IssueViewModel.StatusEnum.ToDo),
+                    Type = IssueType.Bug,//Convert.ToInt16(issue.Type),
+                    Status = IssueStatus.Done,//Convert.ToInt16(IssueViewModel.StatusEnum.ToDo),
                     Deadline = issue.Deadline,
                     UserId = issue.UserId,
                     ProjectId = issue.ProjectId.Value
@@ -226,14 +161,9 @@ namespace ELTE.IssueR.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet, Authorize]
         public ActionResult RemoveIssue(int? projectId, int? issueId)
         {
-            if (Session["userName"] == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
             if(!projectId.HasValue || !issueId.HasValue)
             {
                 return RedirectToAction("Index");
@@ -248,10 +178,10 @@ namespace ELTE.IssueR.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet, Authorize]
         public ActionResult Comments(int? issueId)
         {
-            if (Session["userName"] == null)
+            if (User.Identity.Name == null)
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -279,6 +209,100 @@ namespace ELTE.IssueR.Controllers
             {
                 return RedirectToAction("Index");
             }
+        }
+
+        private IEnumerable<SelectListItem> statusSelectionList = null;
+        private IEnumerable<SelectListItem> typeSelectionList = null;
+
+        /// <summary>
+        /// </summary>
+        /// <returns>The projects which are associated with the current user.</returns>
+        private List<Project> GetProjects()
+        {
+            string userId = User.Identity.Name;
+
+            List<Project> ret = _database.Users.First(u => u.UserName.Equals(userId)).ProjectMembers.Aggregate(
+                new List<Project>(), (list, pmem) => { list.Add(pmem.Project); return list; });
+
+            return ret;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="projectId">The currently selected project's id.</param>
+        /// <returns>The issues which are associated with the given project.</returns>
+        private List<Issue> GetIssues(int projectId)
+        {
+            return _database.Issues.Where(issue => issue.ProjectId == projectId).ToList();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="projectId">The currently selected project's id.</param>
+        /// <returns>The users which are associated with the given project.</returns>
+        private List<User> GetProjectMembers(int projectId)
+        {
+            return _database.ProjectMembers.Where(conn => conn.ProjectId == projectId).Select(conn => conn.User).ToList();
+        }
+
+        private void UpdateIssueListing(IssueListingViewModel model)
+        {
+            ViewBag.Projects = GetProjects();
+
+            if (model.SelectedProjectId == null && ViewBag.Projects.Count != 0)
+                model.SelectedProjectId = ViewBag.Projects[0].Id;
+
+            if (model.SelectedProjectId != null)
+                ViewBag.Issues = GetIssues(model.SelectedProjectId.Value);
+        }
+
+        private void UpdateIssue(IssueViewModel issue)
+        {
+            if (issue.ProjectId.HasValue)
+            {
+                issue.Users = GetProjectMembers(issue.ProjectId.Value);
+                if (issue.UserId == null && issue.Users.Count != 0)
+                    issue.UserId = issue.Users[0].Id;
+            }
+        }
+
+        private void SetViewBagStatusSelectionList()
+        {
+            if (statusSelectionList == null)
+                statusSelectionList = SetViewBagSelectionList(IssueStatus.To_do);
+
+            ViewBag.StatusSelectionList = statusSelectionList;
+        }
+
+        private void SetViewBagTypeSelectionList()
+        {
+            if(typeSelectionList == null)
+                typeSelectionList = SetViewBagSelectionList(IssueType.Feature);
+
+            ViewBag.TypeSelectionList = typeSelectionList;
+        }
+
+        private IEnumerable<SelectListItem> SetViewBagSelectionList<TEnum>(TEnum selectedValue) where TEnum : struct, IConvertible
+        {
+            if (!typeof(TEnum).IsEnum)
+            {
+                throw new ArgumentException("T must be an enumerated type");
+            }
+
+            //return new SelectList(Enum.GetValues(typeof(TEnum)).Cast<TEnum>());
+            
+            IEnumerable<TEnum> values = Enum.GetValues(typeof(TEnum)).Cast<TEnum>();
+
+            IEnumerable<SelectListItem> items =
+                from value in values
+                select new SelectListItem
+                {
+                    Text = value.ToString().Replace('_', ' '),
+                    Value = value.ToString(),
+                    Selected = value.Equals(selectedValue)
+                };
+
+            return items;
         }
     }
 }
