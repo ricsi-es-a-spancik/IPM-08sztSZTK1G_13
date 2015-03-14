@@ -92,7 +92,7 @@ namespace ELTE.IssueR.Controllers
             else
             {
                 SetViewBagSelectionLists(issue.ProjectId);
-                return View("EditIssue", issue);
+                return View("CreateIssue", issue);
             }
         }
 
@@ -107,8 +107,9 @@ namespace ELTE.IssueR.Controllers
             }
             else
             {
+                System.Diagnostics.Debug.WriteLine(issue.Id);
                 Issue issueInDb = _database.Issues.First(i => i.Id == issue.Id);
-
+                System.Diagnostics.Debug.WriteLine(issueInDb.Id);
                 if(issueInDb == null)
                 {
                     ModelState.AddModelError("", "A módosítani kívánt feladat nem található az adatbázisban!");
@@ -118,13 +119,13 @@ namespace ELTE.IssueR.Controllers
                 {
                     try
                     {
-                        issueInDb = issue;
+                        _database.Entry(issueInDb).CurrentValues.SetValues(issue);
                         _database.SaveChanges();
                     }
                     catch
                     {
                         ModelState.AddModelError("", "A feladat mentése sikertelen! Próbálja újra!");
-                        return RedirectToAction("ListIssues", new { selectedPrjId = issue.ProjectId });
+                        return View("CreateIssue", issue);
                     }
                     return RedirectToAction("ListIssues", new { selectedPrjId = issue.ProjectId });
                 }

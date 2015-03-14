@@ -90,7 +90,7 @@ else
                                                 <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                                                <li><a href="#">
+                                                <li><a href="EditIssue?issueId=@issue.Id">
                                                     Feladat módosítása
                                                 </a></li>
                                                 <li class="divider"></li>
@@ -117,12 +117,5 @@ else
 }
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-@if (!ViewData.ModelState.IsValid)
-{
-    <script>
-        $(function () {
-            $("#addIssueModal").modal("show");
-        });
-    </script>
-}
+
 <script src="~/Scripts/bootstrap.min.js"></script>

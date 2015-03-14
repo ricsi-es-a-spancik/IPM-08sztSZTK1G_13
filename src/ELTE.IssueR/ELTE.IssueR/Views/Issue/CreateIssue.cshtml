@@ -28,7 +28,7 @@
     <div id="form1">
         <form>
             <div class="form-group">
-                <label>Leírás<span class="required">*</span></label>
+                <label>Megnevezés<span class="required">*</span></label>
                 @Html.TextBoxFor(issue => issue.Name, new { @class = "form-control" })
                 <label class="required">@Html.ValidationMessageFor(issue => issue.Name)</label>
             </div>
@@ -48,6 +48,11 @@
                 <label class="required">@Html.ValidationMessageFor(issue => issue.UserId)</label>
             </div>
             <div class="form-group">
+                <label>Leírás</label>
+                @Html.TextAreaFor(issue => issue.Description, new { @class = "form-control" })
+                <label class="required">@Html.ValidationMessageFor(issue => issue.Description)</label>
+            </div>
+            <div class="form-group">
                 <label>Határidő</label>
                 @Html.EditorFor(issue => issue.Deadline, new { @class = "form-control" })
                 <label class="required">@Html.ValidationMessageFor(issue => issue.Deadline)</label>
@@ -56,4 +61,6 @@
         </form>
     </div>
 }
+
+
 
