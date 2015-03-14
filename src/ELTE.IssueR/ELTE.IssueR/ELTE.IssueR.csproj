@@ -215,6 +215,7 @@
     <Content Include="Content\Styles\CommentStyle.css" />
     <Content Include="Content\Styles\FancyFormStyle.css" />
     <Content Include="Content\Styles\HomeStyle.css" />
+    <Content Include="Content\Styles\IssueStyle.css" />
     <Content Include="Content\Styles\LayoutStyle.css" />
     <Content Include="Content\Styles\OrganizationStyle.css" />
     <Content Include="Content\Styles\ListIssueStyle.css" />

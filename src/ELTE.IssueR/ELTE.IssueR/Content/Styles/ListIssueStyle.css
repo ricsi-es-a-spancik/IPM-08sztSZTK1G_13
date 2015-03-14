@@ -74,23 +74,3 @@ h4#addIssueModalLabel {
 .btn.btn-default.glyphButton.glyphButtonRemove {
     padding-left:10px;
 }
-
-/*table#t01 tr:nth-child(even) {
-    background-color: #eee;
-}
-
-table#t01 tr:nth-child(odd) {
-    background-color: #dbdbdb;
-}
-
-table#t02 {
-    width: 100%;
-    border: none;
-    border-collapse: collapse;
-    margin-top: 2%;
-    margin-bottom: 2%;
-}
-
-.long-dropdownlist {
-    width: 200px;
-}*/

@@ -1,0 +1,20 @@
+﻿div#form1 {
+    max-width:50%; 
+    margin-left:auto; 
+    margin-right:auto;
+}
+
+button#save {
+    font-size:16px;
+    padding-left:2%;
+    padding-right:2%;
+    float:right;
+}
+
+button#back {
+    margin-top:10px; 
+    margin-bottom:10px;
+    font-size:16px;
+    padding-left:2%;
+    padding-right:2%;
+}

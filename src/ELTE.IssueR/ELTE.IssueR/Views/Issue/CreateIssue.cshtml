@@ -1,49 +1,59 @@
 ﻿@using ELTE.IssueR.Models
 @model IssueViewModel
 
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
 @section AddToHead
 {
     <link href="@Url.Content("~/Content/Styles/FancyFormStyle.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/Styles/IssueStyle.css")" rel="stylesheet" type="text/css" />
 }
 
-@Html.AntiForgeryToken()
-@Html.ValidationSummary(true, "A feladat felvétele sikertelen volt! Ellenőrizd a bevitt adatokat!")
+<button id="back" class="btn buttonlikelink blue" onclick="location.href='@Url.Action("ListIssues", new { selectedPrjId = Model.ProjectId })'">
+    <span class="glyphicon glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></span>
+    Vissza
+</button>
 
-@Html.HiddenFor(issue => issue.ProjectId)
-@Html.HiddenFor(issue => issue.Id)
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @*@Html.ValidationSummary(true, "A feladat felvétele sikertelen volt! Ellenőrizd a bevitt adatokat!")*@
 
-<ul class="form-style-1" style="text-align:left">
-    <li>
-        <label>Leírás<span class="required">*</span></label>
-        @Html.TextBoxFor(issue => issue.Name, new { @class = "field-long" })
-        <label class="required">@Html.ValidationMessageFor(issue => issue.Name)</label>
-    </li>
-    <li>
-        <label>Típus<span class="required">*</span></label>
-        @Html.DropDownListFor(issue => issue.Type, new SelectList(Model.TypeEnumList), new { @class = "field-long" })
-        <label class="required">@Html.ValidationMessageFor(issue => issue.Type)</label>
-    </li>
-    @if (Model.Id == null)
-    {
-        @Html.HiddenFor(issue => issue.Status)
-    }
-    else
-    {
-        <li>
-            <label>Státusz<span class="required"></span></label>
-            @Html.DropDownListFor(issue => issue.Status, new SelectList(Model.StatusEnumList), new { @class = "field-long" })
-            <label class="required">@Html.ValidationMessageFor(issue => issue.Status)</label>
-        </li>
-    }
-    <li>
-        <label>Foglalkoztatott<span class="required">*</span></label>
-        @Html.DropDownListFor(issue => issue.UserId, new SelectList(Model.Users, "Id", "Name"), new { @class = "field-long" })
-        <label class="required">@Html.ValidationMessageFor(issue => issue.UserId)</label>
-    </li>
-    <li>
-        <label>Határidő</label>
-        @Html.EditorFor(issue => issue.Deadline, new { @class = "field-long" })
-        <label class="required">@Html.ValidationMessageFor(issue => issue.Deadline)</label>
-    </li>
-</ul>
+    @Html.HiddenFor(issue => issue.ProjectId)
+    @Html.HiddenFor(issue => issue.Id)
+
+    <div id="form1">
+        <form>
+            <div class="form-group">
+                <label>Leírás<span class="required">*</span></label>
+                @Html.TextBoxFor(issue => issue.Name, new { @class = "form-control" })
+                <label class="required">@Html.ValidationMessageFor(issue => issue.Name)</label>
+            </div>
+            <div class="form-group">
+                <label>Típus<span class="required">*</span></label>
+                @Html.DropDownListFor(issue => issue.Type, new SelectList(Model.TypeEnumList), new { @class = "form-control" })
+                <label class="required">@Html.ValidationMessageFor(issue => issue.Type)</label>
+            </div>
+            <div class="form-group">
+                <label>Státusz<span class="required"></span></label>
+                @Html.DropDownListFor(issue => issue.Status, new SelectList(Model.StatusEnumList), new { @class = "form-control" })
+                <label class="required">@Html.ValidationMessageFor(issue => issue.Status)</label>
+            </div>
+            <div class="form-group">
+                <label>Foglalkoztatott<span class="required">*</span></label>
+                @Html.DropDownListFor(issue => issue.UserId, new SelectList(Model.Users, "Id", "Name"), new { @class = "form-control" })
+                <label class="required">@Html.ValidationMessageFor(issue => issue.UserId)</label>
+            </div>
+            <div class="form-group">
+                <label>Határidő</label>
+                @Html.EditorFor(issue => issue.Deadline, new { @class = "form-control" })
+                <label class="required">@Html.ValidationMessageFor(issue => issue.Deadline)</label>
+            </div>
+            <button id="save" type="submit" class="btn buttonlikelink green">Mentés</button>
+        </form>
+    </div>
+}
 

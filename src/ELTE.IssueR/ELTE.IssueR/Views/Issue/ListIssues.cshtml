@@ -30,31 +30,10 @@ else
                     <tr>
                         <td></td>
                         <td class="fitToContnent" style="text-align:right">
-                            <button type="button" class="btn buttonlikelink green fs14" data-toggle="modal" data-target="#addIssueModal">
+                            <button type="button" class="btn buttonlikelink green fs14" onclick="location.href='@Url.Action("CreateIssue", new { projId = Model.SelectedProjectId })'">
                                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                                 Feladat felvétele
                             </button>
-
-                            <div class="modal" id="addIssueModal" tabindex="-1" role="dialog" aria-labelledby="addIssueModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                            <h4 class="modal-title" id="addIssueModalLabel">Feladat hozzáadása</h4>
-                                        </div>
-                                        @using (Html.BeginForm("CreateIssue", "Issue", FormMethod.Post))
-                                        { 
-                                        <div class="modal-body">
-                                            @Html.Partial("CreateIssue", Model.Issue)
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="buttonlikelink blue fs14" data-dismiss="modal">Mégsem</button>
-                                            <button type="submit" class="buttonlikelink green fs14">Mentés</button>
-                                        </div>
-                                        }
-                                    </div>
-                                </div>
-                            </div>
                         </td>
                     </tr>
                 </table>
@@ -124,7 +103,7 @@ else
                                             <span class=" glyphicon glyphicon-file" aria-hidden="true"></span>
                                         </button>
                                         <button type="button" class="btn btn-default glyphButton glyphButtonRemove" title="Törlés" onclick="location.href='@Url.Action("RemoveIssue", new { projectId = Model.SelectedProjectId, issueId = issue.Id })'">
-                                            <span class=" glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                                         </button>
                                     </td>
                                 </tr>
