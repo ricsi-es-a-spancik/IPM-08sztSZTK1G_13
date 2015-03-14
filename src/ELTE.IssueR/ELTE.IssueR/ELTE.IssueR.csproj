@@ -228,9 +228,8 @@
     <Compile Include="Models\Document.cs" />
     <Compile Include="Models\Employee.cs" />
     <Compile Include="Models\Issue.cs" />
-	<Compile Include="Models\Issue\CommentsViewModel.cs" />
+    <Compile Include="Models\Issue\CommentsViewModel.cs" />
     <Compile Include="Models\Issue\IssueListingViewModel.cs" />
-    <Compile Include="Models\Issue\IssueViewModel.cs" />
     <Compile Include="Models\Logger\Logger.cs" />
     <Compile Include="Models\Message.cs" />
     <Compile Include="Models\Organization.cs" />

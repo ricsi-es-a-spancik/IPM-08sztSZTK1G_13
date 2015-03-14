@@ -23,20 +23,26 @@ namespace ELTE.IssueR.Models
     {
         public int Id { get; set; }
 
+        [DataType(DataType.Text)]
         [Required(ErrorMessage = "A feladat megnevezésének megadása kötelezõ!")]
         [StringLength(30, ErrorMessage = "A feladat leírása maximum 30 karakter lehet!")]
         public string Name { get; set; }
 
+        [DataType(DataType.Text)]
         [Required(ErrorMessage = "A típus megadása kötelezõ!")]
         public IssueType Type { get; set; }
 
+        [DataType(DataType.Text)]
         [Required(ErrorMessage = "Az állapot megadása kötelezõ!")]
         public IssueStatus Status { get; set; }
 
+        [DataType(DataType.MultilineText)]
         public string Description { get; set; }
 
+        [DataType(DataType.Date)]
         public DateTime? Deadline { get; set; }
 
+        [DataType(DataType.Text)]
         [Required(ErrorMessage = "A foglalkoztatott megadása kötelezõ!")]
         public string UserId { get; set; }
 
