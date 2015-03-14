@@ -1,6 +1,4 @@
-﻿<style type="text/css" >
-
-h1.accountH1 {
+﻿h1.accountH1 {
     color: #1A55BC;
 }
 
@@ -51,4 +49,30 @@ table.accountTable tr:first-of-type {
 
 table.accountTable tr.new {
     background-color: #00FF00;
+}
+
+.fbloginbutton {
+    width: 200px;
+    height: 44px;
+    margin: 0px;
+    padding: 0px;
+    border: none;
+    background-image: url("/Resources/fblogin.png");
+}
+
+.loginbutton {
+    width: 200px;
+    height: 44px;
+    margin: 0px;
+    padding: 0px;
+    border: none;
+}
+
+.facebook {
+    background-image: url("/Resources/fblogin.png");
+}
+
+.google {
+    background-color: transparent;
+    background-image: url("/Resources/googlelogin.png");
 }

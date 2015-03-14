@@ -83,6 +83,26 @@ namespace ELTE.IssueR.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap fblogin {
+            get {
+                object obj = ResourceManager.GetObject("fblogin", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap googlogin {
+            get {
+                object obj = ResourceManager.GetObject("googlogin", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap issuerlogo {
             get {
                 object obj = ResourceManager.GetObject("issuerlogo", resourceCulture);

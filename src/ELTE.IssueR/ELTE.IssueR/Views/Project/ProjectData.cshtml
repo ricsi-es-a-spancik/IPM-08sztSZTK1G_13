@@ -20,7 +20,7 @@
     </tr>
     <tr>
         <td style="width:80%; text-align:center; font-size:large"><b>@Model.Project.Name</b></td>
-        <td style="width:20%; text-align:right; font-size:large">@Model.Project.Deadline</td>
+        <td style="width:20%; text-align:right; font-size:large">@String.Format("{0:d}", Model.Project.Deadline)</td>
     </tr>
     <tr>
         <td colspan="2" style="font-size:medium">

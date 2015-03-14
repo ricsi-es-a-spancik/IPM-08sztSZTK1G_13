@@ -1,0 +1,38 @@
+﻿@using ELTE.IssueR.Models
+
+@model EditMembersViewModel
+
+@{
+    ViewBag.Title = "Dolgozók kezelése";
+}
+
+@section AddToHead
+{
+    <link href="@Url.Content("~/Content/Styles/FancyFormStyle.css")" rel="stylesheet" type="text/css" />
+}
+
+<h2>Dolgozók kezelése</h2>
+
+<div>
+    <table>
+        <tr>
+            <th>Név</th>
+            <th>Jogosultságok</th>
+            <th>Műveletek</th>
+        </tr>
+        @for( Int32 i = 0; i < Model.Users.Count; ++i )
+        {
+            <tr>
+                <td>@Model.Users[i].Username</td>
+                <td>@Model.Users[i].Perm.ToString()</td>
+                <td>
+                    @Html.ActionLink("Jogosultságok módosítása", "EditMemberPermissions", "Organization", new { orgId = Model.OrganizationId, userId = Model.Users[i].Id }, new { @class = "buttonlikelink green" })
+                    @if (Html.Action("HasPermission", "Organization", new { orgId = Model.OrganizationId, perm = ELTE.IssueR.Models.Permissions.BasePermission.RemoveMember }).ToString() == true.ToString())
+                    {
+                        @Html.ActionLink("Kirúgás", "RemoveMember", "Organization", new { orgId = Model.OrganizationId, userId = Model.Users[i].Id }, new { @class = "buttonlikelink green" })
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+</div>
