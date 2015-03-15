@@ -215,7 +215,8 @@
     <Compile Include="Models\Account\UserViewModel.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
     <Compile Include="Models\Configurations\CoverImageConfiguration.cs" />
-    <Compile Include="Models\Configurations\DocumentConfiguration.cs" />
+    <Compile Include="Models\Configurations\OrganizationDocumentConfiguration .cs" />
+    <Compile Include="Models\Configurations\ProjectDocumentConfiguration.cs" />
     <Compile Include="Models\Configurations\EmployeeConfiguration.cs" />
     <Compile Include="Models\Configurations\IssueConfiguration.cs" />
     <Compile Include="Models\Configurations\MessageConfiguration.cs" />
@@ -225,7 +226,8 @@
     <Compile Include="Models\Configurations\UserConfiguration.cs" />
     <Compile Include="Models\Configurations\UserImageConfiguration.cs" />
     <Compile Include="Models\CoverImage.cs" />
-    <Compile Include="Models\Document.cs" />
+    <Compile Include="Models\ProjectDocument.cs" />
+    <Compile Include="Models\OrganizationDocument.cs" />
     <Compile Include="Models\Employee.cs" />
     <Compile Include="Models\Issue.cs" />
     <Compile Include="Models\Issue\CommentsViewModel.cs" />

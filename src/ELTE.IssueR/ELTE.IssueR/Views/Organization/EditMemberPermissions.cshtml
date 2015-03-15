@@ -1,6 +1,5 @@
 ﻿@using ELTE.IssueR.Models
-
-@model EditMemberPermViewModel
+@using ELTE.IssueR.Models.Permissions
 
 @{
     ViewBag.Title = "Jogosultságok kezelése";
@@ -8,25 +7,28 @@
 
 @section AddToHead
 {
+    <link href="@Url.Content("~/Content/Styles/OrganizationStyle.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/Content/Styles/FancyFormStyle.css")" rel="stylesheet" type="text/css" />
 }
+
+@model EditMemberPermViewModel
 
 <h2>Jogosultságok kezelése</h2>
 
 <div>
-    <ul>
+    <ul >
         <li>Név: @Model.Employee.User.UserName</li>
         <li>Jogosultságok:
-            <ul>
-                @foreach(Permissions.BasePermission bp in Model.AvailablePermissions)
+            <ul class="PermissionList">
+                @foreach(BasePermission bp in Model.AvailablePermissions)
                 {
-                    if(((Models.Persmissions.Permission)Model.Employee.Status).HasPermission(bp))
+                    if(((Permission)Model.Employee.Status).HasPermission(bp))
                     {
-                        <li>@bp.ToString() - @Html.ActionLink("Eltávolítás", "RemovePermission", "Organization", new { orgId = Model.Employee.OrganizationId, userId = Model.Employee.UserId, perm = bp } )</li>
+                        <li>@bp.ToString() - @Html.ActionLink("Eltávolítás", "RemovePermission", "Organization", new { orgId = Model.Employee.OrganizationId, userId = Model.Employee.UserId, perm = bp }, new { @class = "buttonlikelink green" })</li>
                     }
                     else
                     { 
-                        <li>@bp.ToString() - @Html.ActionLink("Hozzáadás", "AddPermission", "Organization", new { orgId = Model.Employee.OrganizationId, userId = Model.Employee.UserId, perm = bp })</li>
+                        <li>@bp.ToString() - @Html.ActionLink("Hozzáadás", "AddPermission", "Organization", new { orgId = Model.Employee.OrganizationId, userId = Model.Employee.UserId, perm = bp }, new { @class = "buttonlikelink green" })</li>
                     }
                 }
             </ul>

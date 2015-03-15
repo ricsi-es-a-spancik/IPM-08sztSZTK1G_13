@@ -15,7 +15,7 @@
     <img src="@Url.Action("CoverFor", "Organization", new { orgId = Model.Org.Id, thumb = false })" class="cover_image" />
 
     <div class="menubar">
-        @if(Session["userName"] != null)
+        @if(User.Identity.IsAuthenticated)
         {
             if (Html.Action("HasPermission", "Organization", new { orgId = Model.Org.Id, perm = ELTE.IssueR.Models.Permissions.BasePermission.AddMember }).ToString() == true.ToString())
             //if(Html.Action("IsOrgMember", "Organization", new { orgId = Model.Org.Id }).ToString() == "false")
@@ -63,6 +63,12 @@
     </p>
 
     <p>@Model.Org.Description</p>
+
+    <h2>Dokumentumok</h2>
+
+    <div>
+        
+    </div>
 
     <h2>Projektek</h2>
 

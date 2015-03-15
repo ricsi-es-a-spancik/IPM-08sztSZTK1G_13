@@ -8,13 +8,13 @@ namespace ELTE.IssueR.Models.Permissions
     [Flags]
     public enum BasePermission
     {
-        Normal = 0x0000,
-        AddMember = 0x0001,
-        EditMember = 0x0002,
-        RemoveMember = 0x0004,
-        AddContent = 0x0008,
-        EditContent = 0x0016,
-        RemoveContent = 0x0032
+        None = 0,
+        AddMember = 1,
+        EditMember = 2,
+        RemoveMember = 4,
+        AddContent = 8,
+        EditContent = 16,
+        RemoveContent = 32
     }
 
     public static class BasicPermissions
@@ -68,11 +68,11 @@ namespace ELTE.IssueR.Models.Permissions
         #region Variables
 
         private BasePermission _perm;
-        public Int16 Code
+        public BasePermission Code
         {
             get
             {
-                return Convert.ToInt16(_perm);
+                return _perm;
             }
         }
 
@@ -82,12 +82,12 @@ namespace ELTE.IssueR.Models.Permissions
 
         public Permission()
         {
-            _perm = 0;
+            _perm = BasePermission.None;
         }
 
         public Permission(params BasePermission[] ps)
         {
-            _perm = BasePermission.Normal;
+            _perm = BasePermission.None;
             foreach(BasePermission bp in ps)
             {
                 _perm |= bp;
@@ -123,7 +123,8 @@ namespace ELTE.IssueR.Models.Permissions
 
         public void RemovePermission(BasePermission p)
         {
-            _perm &= p;
+            if (_perm.HasFlag(p))
+                _perm &= ~p;
         }
 
         public Boolean HasPermission(BasePermission p)
@@ -133,7 +134,7 @@ namespace ELTE.IssueR.Models.Permissions
 
         public override String ToString()
         {
-            return Available.ConvertAll(p => DisplayName(p)).Aggregate((p1, p2) => p1 + ", " + p2);
+            return _perm.ToString();
         }
 
         #endregion
@@ -144,8 +145,6 @@ namespace ELTE.IssueR.Models.Permissions
         {
             switch(p)
             {
-                case BasePermission.Normal:
-                    return "";
                 case BasePermission.AddMember:
                     return "Tagok felvétele";
                 case BasePermission.EditMember:
@@ -163,14 +162,9 @@ namespace ELTE.IssueR.Models.Permissions
             }
         }
 
-        public static implicit operator Int16(Permission p)
+        public static explicit operator Permission(BasePermission bp)
         {
-            return p.Code;
-        }
-
-        public static implicit operator Permission(Int16 i)
-        {
-            return new Permission{ _perm = (BasePermission)i };
+            return new Permission(bp);
         }
 
         #endregion
