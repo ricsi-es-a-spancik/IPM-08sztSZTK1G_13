@@ -9,7 +9,7 @@ namespace ELTE.IssueR.Models
 
         public int OrganizationId { get; set; }
 
-        public short Status { get; set; }
+        public byte Status { get; set; }
 
         public virtual Organization Organization { get; set; }
 

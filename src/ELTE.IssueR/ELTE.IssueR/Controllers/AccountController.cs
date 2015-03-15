@@ -353,9 +353,11 @@ namespace ELTE.IssueR.Controllers
             return View("Mails");
         }
 
-        [Authorize]
         public HtmlString NewMails()
         {
+            if (!User.Identity.IsAuthenticated)
+                return new HtmlString("0");
+
             String result;
 
             String myName = User.Identity.Name;
