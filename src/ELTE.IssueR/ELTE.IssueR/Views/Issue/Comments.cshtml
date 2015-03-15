@@ -1,4 +1,5 @@
-﻿@model ELTE.IssueR.Models.CommentsViewModel
+﻿@using ELTE.IssueR.Models
+@model Comment
 
 @{
     ViewBag.Title = "Comments";
@@ -12,33 +13,40 @@
     <span class="glyphicon glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></span>
     Vissza
 </button>
-
+    
 <div class="detailBox">
     <div class="titleBox">
-        <label>XY Feladathoz tartozó hozzászólások</label>
+        <label>@ViewBag.IssueName - hozzászólások</label>
     </div>
     <div class="actionBox">
         <ul class="commentList">
-            @foreach (String comment in ViewBag.Comments)
+            @foreach (Comment comment in ViewBag.Comments)
             {
                 <li>
                     <div class="commenterImage">
-                        <img src="http://lorempixel.com/50/50/people/9" />
+                        <img src="@Url.Action("GetProfileImage", "Account")" />
                     </div>
                     <div class="commentText">
-                        <p class="">@comment</p> <span class="date sub-text">on March 5th, 2014</span>
-
+                        <p class="">@comment.Text</p> <span class="date sub-text">@comment.SentAt</span>
                     </div>
                 </li>
             }
         </ul>
-        <form class="form-inline" role="form">
-            <div class="form-group">
-                <input class="form-control" type="text" placeholder="Hozzászólás"/>
+        @using (Html.BeginForm())
+        { 
+            @Html.AntiForgeryToken()
+
+            @Html.HiddenFor(cm => cm.IssueId)
+            
+            <div class="form-inline" role="form">
+                <div class="form-group">
+                    @Html.TextBoxFor(cm => cm.Text, new { @class="form-control", @type="text", @placeholder="Hozzászólás" })
+                    <label class="required">@Html.ValidationMessageFor(cm => cm.Text)</label>
+                </div>
+                <div class="form-group">
+                    <button class="btn buttonlikelink green" type="submit">Küldés</button>
+                </div>
             </div>
-            <div class="form-group">
-                <button class="btn buttonlikelink green">Küldés</button>
-            </div>
-        </form>
+        }
     </div>
 </div>  

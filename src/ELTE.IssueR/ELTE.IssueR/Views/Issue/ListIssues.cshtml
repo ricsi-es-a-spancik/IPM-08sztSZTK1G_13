@@ -74,7 +74,10 @@ else
                             <tr>
                                 <th class="fitToContnent">#</th>
                                 <th class="fitToContnent">Megnevezés</th>
+                                <th class="fitToContnent">Típus</th>
                                 <th class="fitToContnent">Státusz</th>
+                                <th class="fitToContnent">Felelős</th>
+                                <th class="fitToContnent">Határidő</th>
                                 <th></th>
                             </tr>
                             @for (int i = 0; i < ViewBag.Issues.Count; ++i)
@@ -83,14 +86,17 @@ else
                                 <tr class="issueListRow">
                                     <td class="fitToContnent">@issue.Id</td>
                                     <td class="fitToContnent">@issue.Name</td>
+                                    <td class="fitToContnent">@issue.Type</td>
                                     <td class="fitToContnent">@issue.Status</td>
+                                    <td class="fitToContnent">@issue.User.Name</td>
+                                    <td class="fitToContnent">@issue.Deadline</td>
                                     <td style="text-align:right">
                                         <div class="btn-group">
                                             <button type="button" class="btn btn-default dropdown-toggle glyphButton" data-toggle="dropdown" aria-expanded="false">
                                                 <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                                                <li><a href="#">
+                                                <li><a href="EditIssue?issueId=@issue.Id">
                                                     Feladat módosítása
                                                 </a></li>
                                                 <li class="divider"></li>
@@ -117,12 +123,5 @@ else
 }
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-@if (!ViewData.ModelState.IsValid)
-{
-    <script>
-        $(function () {
-            $("#addIssueModal").modal("show");
-        });
-    </script>
-}
+
 <script src="~/Scripts/bootstrap.min.js"></script>

@@ -30,10 +30,14 @@ namespace ELTE.IssueR.Models
         public virtual DbSet<CoverImage> CoverImages { get; set; }
         public virtual DbSet<Employee> Employees { get; set; }
         public virtual DbSet<OrganizationDocument> OrganizationDocuments { get; set; }
+
+        public virtual DbSet<Issue> Issues { get; set; }
+        public virtual DbSet<Comment> Comments { get; set; }
+        
         public virtual DbSet<Project> Projects { get; set; }
         public virtual DbSet<ProjectMember> ProjectMembers { get; set; }
-        public virtual DbSet<Issue> Issues { get; set; }
         public virtual DbSet<ProjectDocument> ProjectDocuments { get; set; }
+
         public virtual DbSet<Message> Messages { get; set; }
         public virtual DbSet<UserImage> UserImages { get; set; }
 
@@ -61,6 +65,7 @@ namespace ELTE.IssueR.Models
             modelBuilder.Configurations.Add(new ProjectMemberConfiguration());
             modelBuilder.Configurations.Add(new UserConfiguration());
             modelBuilder.Configurations.Add(new UserImageConfiguration());
+            modelBuilder.Configurations.Add(new CommentConfiguration());
         }
     }
 }
