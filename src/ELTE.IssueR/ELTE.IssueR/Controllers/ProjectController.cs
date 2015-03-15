@@ -10,31 +10,23 @@ namespace ELTE.IssueR.Controllers
     public class ProjectController : BaseController
     {
         [HttpGet]
+        [AllowAnonymous]
         public ActionResult Index()
         {
-            if (Session["userName"] == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
             return View("Index");
         }
 
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public ActionResult Index(ProjectViewModel pvm)
         {
-            if (Session["userName"] == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
             if (!ModelState.IsValid)
             {
                 return View("Index", pvm);
             }
 
-            string username = Session["userName"].ToString();
+            string username = User.Identity.Name;
             User user = _database.Users.Where(u => u.UserName == username).FirstOrDefault();
             Employee currentUser = _database.Employees.FirstOrDefault(e => e.UserId == user.Id);
 
@@ -58,24 +50,16 @@ namespace ELTE.IssueR.Controllers
             return RedirectToAction("ProjectList", new ProjectListViewModel());
         }
 
+        [Authorize]
         public ActionResult ProjectList(ProjectListViewModel plvm)
         {
-            if (Session["userName"] == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
             plvm.ProjectList = _database.Projects.ToList();
             return View("ProjectList", plvm);   
         }
 
+        [Authorize]
         public ActionResult ProjectData(int id)
         {
-            if (Session["userName"] == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
             Project p = _database.Projects.FirstOrDefault(pr => pr.Id == id);
             ProjectViewModel pvm = new ProjectViewModel{
                 Name = p.Name,
@@ -100,13 +84,9 @@ namespace ELTE.IssueR.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public ActionResult ProjectDataModify(int id)
         {
-            if (Session["userName"] == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-            
             Project pr = _database.Projects.FirstOrDefault(p => p.Id == id);
 
             ProjectDataViewModel pdvm = new ProjectDataViewModel{
@@ -123,13 +103,9 @@ namespace ELTE.IssueR.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public ActionResult ProjectDataModify(ProjectDataViewModel pdvm)
         {
-            if (Session["userName"] == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
             Project p = _database.Projects.FirstOrDefault(pr => pr.Id == pdvm.Id);
 
             p.Name = pdvm.Project.Name;
@@ -158,14 +134,10 @@ namespace ELTE.IssueR.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public ActionResult ProjectMemberAdd(int Id)
         {
-            if (Session["userName"] == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
-            string userName = Session["userName"].ToString();
+            string userName = User.Identity.Name;
             User currentUser = _database.Users.FirstOrDefault(u => u.UserName == userName);
 
             int orgId = _database.Projects.FirstOrDefault(p => p.Id == Id).OrganizationId;
@@ -225,6 +197,7 @@ namespace ELTE.IssueR.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public ActionResult ProjectMemberAdd(UserListViewModel ulvm)
         {
             string selectedItem = Request["selectedItem"];
@@ -254,6 +227,7 @@ namespace ELTE.IssueR.Controllers
             return RedirectToAction("ProjectData", "Project", new { id = projectId });
         }
 
+        [Authorize]
         public ActionResult ProjectMemberRemove(string removeableUserId, int projectId)
         {
             ProjectMember pm = _database.ProjectMembers.First(x => x.ProjectId == projectId && 
