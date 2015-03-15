@@ -20,13 +20,15 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    @Html.ValidationSummary(true, "A feladat felvétele sikertelen volt! Ellenőrizd a bevitt adatokat!")
 
     @Html.HiddenFor(issue => issue.ProjectId)
     @Html.HiddenFor(issue => issue.Id)
 
     <div id="form1">
         <form>
+            <div class="required">
+                <label>@Html.ValidationSummary(true, "A feladat felvétele sikertelen volt! Ellenőrizd a bevitt adatokat!")</label>
+            </div>
             <div class="form-group">
                 <label>Megnevezés<span class="required">*</span></label>
                 @Html.TextBoxFor(issue => issue.Name, new { @class = "form-control" })
@@ -49,7 +51,7 @@
             </div>
             <div class="form-group">
                 <label>Leírás</label>
-                @Html.TextAreaFor(issue => issue.Description, new { @class = "form-control" })
+                @Html.TextAreaFor(issue => issue.Description, new { @class = "form-control", @style = "max-width:100%" })
                 <label class="required">@Html.ValidationMessageFor(issue => issue.Description)</label>
             </div>
             <div class="form-group">

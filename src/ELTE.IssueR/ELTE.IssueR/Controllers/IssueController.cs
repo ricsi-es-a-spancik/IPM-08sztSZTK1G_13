@@ -20,19 +20,19 @@ namespace ELTE.IssueR.Controllers
         {
             IssueListingViewModel listing = new IssueListingViewModel();
 
-            ViewBag.Projects = _database.Users.First(u => u.UserName.Equals(User.Identity.Name)).ProjectMembers.Select(pmem => pmem.Project).ToList();
+            List<Project> projects = _database.Users.First(u => u.UserName.Equals(User.Identity.Name)).ProjectMembers.Select(pmem => pmem.Project).ToList();
 
-            if (selectedPrjId.HasValue)
+            if (selectedPrjId.HasValue && projects.Any(prj => prj.Id == selectedPrjId))
             {
                 listing.SelectedProjectId = selectedPrjId;
             }
-            else if(ViewBag.Projects.Count != 0)
+            else if(projects.Count != 0)
             {
-                System.Diagnostics.Debug.WriteLine("prj count != 0");
-                listing.SelectedProjectId = ViewBag.Projects[0].Id;
+                listing.SelectedProjectId = projects[0].Id;
             }
 
             ViewBag.Issues = _database.Issues.Where(issue => issue.ProjectId == listing.SelectedProjectId).ToList();
+            ViewBag.Projects = projects;
 
             return View("ListIssues", listing);
         }
@@ -152,34 +152,59 @@ namespace ELTE.IssueR.Controllers
         [HttpGet, Authorize]
         public ActionResult Comments(int? issueId)
         {
-            if (User.Identity.Name == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
-            if(issueId.HasValue)
-            {
-                Issue issue = _database.Issues.First(i => i.Id == issueId);
-
-                ViewBag.CurrentProjectId = issue.ProjectId;
-
-                //TODO: add comments to database
-                //ViewBag.Comments = issue.Comments.ToList();
-                List<String> comments = new List<String> { 
-                    "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                    "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-                    "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
-                    "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-                };
-
-                ViewBag.Comments = comments;
-
-                return View("Comments", new CommentsViewModel { /*IssueId = issueId.Value*/ });
+            if(!issueId.HasValue)
+            { 
+                return RedirectToAction("Index"); 
             }
             else
             {
-                return RedirectToAction("Index");
+                Issue issue = _database.Issues.First(i => i.Id == issueId);
+
+                SetViewBagForComments(issue);
+
+                return View("Comments", new Comment { IssueId = issueId.Value });
             }
+        }
+
+        [HttpPost, Authorize]
+        public ActionResult Comments(Comment comment)
+        {
+            Issue issue = _database.Issues.First(i => i.Id == comment.IssueId);
+
+            if(!ModelState.IsValid)
+            {
+                ModelState.AddModelError("", "Hiba a hozzászólásban!");
+                SetViewBagForComments(issue);
+                return View("Comments", comment);
+            }
+            else
+            {
+                try
+                {
+                    comment.UserName = User.Identity.Name;
+                    comment.SentAt = DateTime.Now;
+
+                    _database.Comments.Add(comment);
+                    _database.SaveChanges();
+                }
+                catch
+                {
+                    ModelState.AddModelError("", "Hiba történt a hozzászólás mentésekor!");
+                    SetViewBagForComments(issue);
+                    return View("Comments", comment);
+                }
+
+                //SetViewBagForComments(issue);
+                return RedirectToAction("Comments", new { issueId = comment.IssueId });
+                //return View("Comments", comment);
+            }
+        }
+
+        private void SetViewBagForComments(Issue issue)
+        {
+            ViewBag.CurrentProject = issue.ProjectId;            
+            ViewBag.Comments = issue.Comments.OrderBy(cm => cm.SentAt);
+            ViewBag.IssueName = issue.Name;
         }
 
         private IEnumerable<SelectListItem> statusSelectionList = null;
@@ -221,8 +246,6 @@ namespace ELTE.IssueR.Controllers
                 throw new ArgumentException("T must be an enumerated type");
             }
 
-            //return new SelectList(Enum.GetValues(typeof(TEnum)).Cast<TEnum>());
-            
             IEnumerable<TEnum> values = Enum.GetValues(typeof(TEnum)).Cast<TEnum>();
 
             IEnumerable<SelectListItem> items =

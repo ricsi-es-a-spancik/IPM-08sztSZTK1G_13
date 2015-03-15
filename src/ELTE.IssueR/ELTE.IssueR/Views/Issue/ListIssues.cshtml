@@ -74,7 +74,10 @@ else
                             <tr>
                                 <th class="fitToContnent">#</th>
                                 <th class="fitToContnent">Megnevezés</th>
+                                <th class="fitToContnent">Típus</th>
                                 <th class="fitToContnent">Státusz</th>
+                                <th class="fitToContnent">Felelős</th>
+                                <th class="fitToContnent">Határidő</th>
                                 <th></th>
                             </tr>
                             @for (int i = 0; i < ViewBag.Issues.Count; ++i)
@@ -83,7 +86,10 @@ else
                                 <tr class="issueListRow">
                                     <td class="fitToContnent">@issue.Id</td>
                                     <td class="fitToContnent">@issue.Name</td>
+                                    <td class="fitToContnent">@issue.Type</td>
                                     <td class="fitToContnent">@issue.Status</td>
+                                    <td class="fitToContnent">@issue.User.Name</td>
+                                    <td class="fitToContnent">@issue.Deadline</td>
                                     <td style="text-align:right">
                                         <div class="btn-group">
                                             <button type="button" class="btn btn-default dropdown-toggle glyphButton" data-toggle="dropdown" aria-expanded="false">

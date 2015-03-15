@@ -51,5 +51,7 @@ namespace ELTE.IssueR.Models
         public virtual Project Project { get; set; }
 
         public virtual User User { get; set; }
+
+        public virtual ICollection<Comment> Comments { get; set; }
     }
 }

@@ -214,6 +214,8 @@
     <Compile Include="Models\Account\NewUserViewModel.cs" />
     <Compile Include="Models\Account\UserViewModel.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
+    <Compile Include="Models\Comment.cs" />
+    <Compile Include="Models\Configurations\CommentConfiguration.cs" />
     <Compile Include="Models\Configurations\CoverImageConfiguration.cs" />
     <Compile Include="Models\Configurations\DocumentConfiguration.cs" />
     <Compile Include="Models\Configurations\EmployeeConfiguration.cs" />
