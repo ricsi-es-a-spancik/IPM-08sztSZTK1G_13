@@ -9,5 +9,7 @@ namespace ELTE.IssueR.Models
     {
         //az aktuálisan kiválasztott projekt
         public int? SelectedProjectId { get; set; }
+
+        public string FilterText { get; set; }
     }
 }
