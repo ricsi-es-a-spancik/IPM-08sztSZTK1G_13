@@ -204,21 +204,20 @@ namespace ELTE.IssueR.Controllers
             return View("ProfileIndex");
         }
 
-        [Authorize]
-        public ActionResult GetProfileImage()
+        public FileResult GetProfileImage()
         {
-            // Get image of authenticated user
-            string userId = User.Identity.GetUserId();
-            UserImage img = _database.UserImages.FirstOrDefault(x => x.UserId == userId);
+            if (Session["userName"] == null)
+            {
+                return File("~/Content/NoImage.png", "image/png");
+            }
 
+            String myName = (String)Session["userName"];
+            User me = _database.Users.FirstOrDefault(x => x.UserName == myName);
+
+            UserImage img = _database.UserImages.FirstOrDefault(x => x.UserId == me.Id);
             if(img == null)
                 return File("~/Content/NoImage.png", "image/png");
 
-            // image url?
-            if (img.ImageUrl != null)
-                return Content(img.ImageUrl);
-
-            // return bytearray as file content
             Byte[] imageContent = img.Image;
 
             if (imageContent == null) // amennyiben nem sikerült betölteni, egy alapértelmezett képet adunk vissza
