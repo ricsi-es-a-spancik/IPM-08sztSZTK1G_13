@@ -75,7 +75,7 @@
     @if (Html.Action("HasPermission", "Organization", new { orgId = Model.Org.Id, perm = ELTE.IssueR.Models.Permissions.BasePermission.AddContent }).ToString() == true.ToString())
     {
         <div class="join">
-            @Html.ActionLink("+ Új projekt indítása", "Index", "Project", new { }, new { @class = "buttonlikelink green" })
+            @Html.ActionLink("+ Új projekt indítása", "Index", "Project", new { orgId = Model.Org.Id }, new { @class = "buttonlikelink green" })
         </div>
     }
     
