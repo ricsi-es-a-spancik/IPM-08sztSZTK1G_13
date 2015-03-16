@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using ELTE.IssueR.Models;
+using System.Data.Entity;
 
 namespace ELTE.IssueR.Controllers
 {
@@ -24,6 +25,11 @@ namespace ELTE.IssueR.Controllers
 
             if (selectedPrjId.HasValue && projects.Any(prj => prj.Id == selectedPrjId))
             {
+                if (!IsProjectMember(selectedPrjId.Value))
+                {
+                    return RedirectToAction("Index");
+                }
+
                 listing.SelectedProjectId = selectedPrjId;
             }
             else if(projects.Count != 0)
@@ -40,7 +46,7 @@ namespace ELTE.IssueR.Controllers
         [HttpGet, Authorize]
         public ActionResult CreateIssue(int? projId)
         {
-            if (!_database.Projects.Any(p => p.Id == projId)) //project id IS NOT valid
+            if (!_database.Projects.Any(p => p.Id == projId) || !IsProjectMember(projId.Value)) //project id IS NOT valid
             {
                 return RedirectToAction("Index");
             }
@@ -85,7 +91,7 @@ namespace ELTE.IssueR.Controllers
         {
             Issue issue = _database.Issues.First(i => i.Id == issueId);
 
-            if (issue == null)
+            if (issue == null || !IsProjectMember(issue.ProjectId))
             {
                 return RedirectToAction("Index");
             }
@@ -135,13 +141,14 @@ namespace ELTE.IssueR.Controllers
         [HttpGet, Authorize]
         public ActionResult RemoveIssue(int? projectId, int? issueId)
         {
-            if(!projectId.HasValue || !issueId.HasValue)
+            if (!projectId.HasValue || !issueId.HasValue || !IsProjectMember(projectId.Value))
             {
                 return RedirectToAction("Index");
             }
             else
             {
                 Issue issueToRemove = _database.Issues.First(issue => issue.Id == issueId);
+
                 _database.Issues.Remove(issueToRemove);
                 _database.SaveChanges();
 
@@ -159,6 +166,11 @@ namespace ELTE.IssueR.Controllers
             else
             {
                 Issue issue = _database.Issues.First(i => i.Id == issueId);
+
+                if (!IsProjectMember(issue.ProjectId))
+                {
+                    return RedirectToAction("Index");
+                }
 
                 SetViewBagForComments(issue);
 
@@ -198,6 +210,11 @@ namespace ELTE.IssueR.Controllers
                 return RedirectToAction("Comments", new { issueId = comment.IssueId });
                 //return View("Comments", comment);
             }
+        }
+
+        private bool IsProjectMember(int projId)
+        {
+            return _database.ProjectMembers.Any(pmem => pmem.ProjectId == projId && pmem.User.UserName == User.Identity.Name);
         }
 
         private void SetViewBagForComments(Issue issue)
