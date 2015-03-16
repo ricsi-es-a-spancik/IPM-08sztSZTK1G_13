@@ -27,7 +27,7 @@
                         <img src="@Url.Action("GetProfileImage", "Account")" />
                     </div>
                     <div class="commentText">
-                        <p class="">@comment.Text</p> <span class="date sub-text">@comment.SentAt</span>
+                        <p class="">@comment.Text</p> <span class="sub-text">@comment.UserName, </span><span class="date sub-text">@comment.SentAt</span>
                     </div>
                 </li>
             }
