@@ -206,10 +206,47 @@ namespace ELTE.IssueR.Controllers
                     return View("Comments", comment);
                 }
 
-                //SetViewBagForComments(issue);
                 return RedirectToAction("Comments", new { issueId = comment.IssueId });
-                //return View("Comments", comment);
             }
+        }
+
+        [HttpPost, Authorize]
+        public ActionResult Filter(IssueListingViewModel vm)
+        {
+            if(String.IsNullOrEmpty(vm.FilterText))
+            {
+                return RedirectToAction("Index");
+            }
+
+            System.Diagnostics.Debug.WriteLine(vm.SelectedProjectId.HasValue + " " + vm.FilterText);
+
+            List<Project> projects = _database.Users.First(u => u.UserName.Equals(User.Identity.Name)).ProjectMembers.Select(pmem => pmem.Project).ToList();
+            List<Issue> issues = _database.Issues.Where(issue => issue.ProjectId == vm.SelectedProjectId).ToList();
+
+            List<Issue> filteredIssues = issues.Where(i => LowerSubStr(i.Name, vm.FilterText) ||
+                LowerSubStr(i.Description, vm.FilterText) || LowerEq(i.Status.ToString(), vm.FilterText) ||
+                LowerEq(i.Type.ToString(), vm.FilterText)).ToList();
+
+            string[] filterWords = vm.FilterText.Split(' ');
+            foreach(string word in filterWords)
+            {
+                filteredIssues.AddRange(issues.Where(i => !filteredIssues.Contains(i) && 
+                    (LowerSubStr(i.Name, vm.FilterText) || LowerSubStr(i.Description, vm.FilterText))));
+            }
+            
+            ViewBag.Issues = filteredIssues;
+            ViewBag.Projects = projects;
+            return View("ListIssues", vm);
+        }
+
+        private bool LowerSubStr(string a, string b)
+        {
+            return String.IsNullOrEmpty(a) ? false : a.ToLower().Contains(b.ToLower());
+        }
+
+        private bool LowerEq(string a, string b)
+        {
+            return String.IsNullOrEmpty(a) ? false : a.ToLower().Equals(b.ToLower());
         }
 
         private bool IsProjectMember(int projId)

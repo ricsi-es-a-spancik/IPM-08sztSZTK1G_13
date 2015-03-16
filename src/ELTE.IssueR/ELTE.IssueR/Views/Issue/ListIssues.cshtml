@@ -28,7 +28,16 @@ else
             <td>
                 <table id="serviceTable">
                     <tr>
-                        <td></td>
+                            @using(Html.BeginForm("Filter", "Issue"))
+                            {
+                                <td>
+                                    @Html.HiddenFor(m => m.SelectedProjectId)
+                                    @Html.TextBoxFor(m => m.FilterText, new { @class = "form-control", @placeholder = "Szűrés...", @autocomplete = "off" })
+                                </td>
+                                <td class="fitToContnent">
+                                    <input type="submit" style="visibility: hidden" />
+                                </td>
+                            }
                         <td class="fitToContnent" style="text-align:right">
                             <button type="button" class="btn buttonlikelink green fs14" onclick="location.href='@Url.Action("CreateIssue", new { projId = Model.SelectedProjectId })'">
                                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
