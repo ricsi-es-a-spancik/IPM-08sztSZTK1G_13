@@ -214,8 +214,11 @@
     <Compile Include="Models\Account\NewUserViewModel.cs" />
     <Compile Include="Models\Account\UserViewModel.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
+    <Compile Include="Models\Comment.cs" />
+    <Compile Include="Models\Configurations\CommentConfiguration.cs" />
     <Compile Include="Models\Configurations\CoverImageConfiguration.cs" />
-    <Compile Include="Models\Configurations\DocumentConfiguration.cs" />
+    <Compile Include="Models\Configurations\OrganizationDocumentConfiguration .cs" />
+    <Compile Include="Models\Configurations\ProjectDocumentConfiguration.cs" />
     <Compile Include="Models\Configurations\EmployeeConfiguration.cs" />
     <Compile Include="Models\Configurations\IssueConfiguration.cs" />
     <Compile Include="Models\Configurations\MessageConfiguration.cs" />
@@ -225,11 +228,12 @@
     <Compile Include="Models\Configurations\UserConfiguration.cs" />
     <Compile Include="Models\Configurations\UserImageConfiguration.cs" />
     <Compile Include="Models\CoverImage.cs" />
-    <Compile Include="Models\Document.cs" />
+    <Compile Include="Models\ProjectDocument.cs" />
+    <Compile Include="Models\OrganizationDocument.cs" />
     <Compile Include="Models\Employee.cs" />
     <Compile Include="Models\Issue.cs" />
+    <Compile Include="Models\Issue\CommentsViewModel.cs" />
     <Compile Include="Models\Issue\IssueListingViewModel.cs" />
-    <Compile Include="Models\Issue\IssueViewModel.cs" />
     <Compile Include="Models\Logger\Logger.cs" />
     <Compile Include="Models\Message.cs" />
     <Compile Include="Models\Organization.cs" />
@@ -241,6 +245,7 @@
     <Compile Include="Models\Permissions\BasePermissions.cs" />
     <Compile Include="Models\Project.cs" />
     <Compile Include="Models\ProjectMember.cs" />
+    <Compile Include="Models\Project\EditProjectMemberPermViewModel.cs" />
     <Compile Include="Models\Project\ProjectDataViewModel.cs" />
     <Compile Include="Models\Project\ProjectListViewModel.cs" />
     <Compile Include="Models\Project\ProjectViewModel.cs" />
@@ -264,8 +269,10 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\NoImage.png" />
     <Content Include="Content\Styles\AccountStyle.css" />
+    <Content Include="Content\Styles\CommentStyle.css" />
     <Content Include="Content\Styles\FancyFormStyle.css" />
     <Content Include="Content\Styles\HomeStyle.css" />
+    <Content Include="Content\Styles\IssueStyle.css" />
     <Content Include="Content\Styles\LayoutStyle.css" />
     <Content Include="Content\Styles\OrganizationStyle.css" />
     <Content Include="Content\Styles\ListIssueStyle.css" />
@@ -350,11 +357,13 @@
     <Content Include="Views\Wiki\Index.cshtml" />
     <Content Include="Views\Wiki\ViewDocument.cshtml" />
     <Content Include="Views\Issue\CreateIssue.cshtml" />
+    <Content Include="Views\Issue\Comments.cshtml" />
     <Content Include="Views\Organization\AddMember.cshtml" />
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
     <Content Include="Views\Organization\EditMember.cshtml" />
     <Content Include="Views\Organization\EditMemberPermissions.cshtml" />
+    <Content Include="Views\Project\EditMemberPermissions.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\temp_upload\" />

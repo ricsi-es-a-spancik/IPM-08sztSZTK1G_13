@@ -30,31 +30,10 @@ else
                     <tr>
                         <td></td>
                         <td class="fitToContnent" style="text-align:right">
-                            <button type="button" class="buttonlikelink green fs14" data-toggle="modal" data-target="#addIssueModal">
+                            <button type="button" class="btn buttonlikelink green fs14" onclick="location.href='@Url.Action("CreateIssue", new { projId = Model.SelectedProjectId })'">
                                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                                 Feladat felvétele
                             </button>
-
-                            <div class="modal" id="addIssueModal" tabindex="-1" role="dialog" aria-labelledby="addIssueModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                            <h4 class="modal-title" id="addIssueModalLabel">Feladat hozzáadása</h4>
-                                        </div>
-                                        @using (Html.BeginForm("CreateIssue", "Issue", FormMethod.Post))
-                                        { 
-                                        <div class="modal-body">
-                                            @Html.Partial("CreateIssue", Model.Issue)
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="buttonlikelink blue fs14" data-dismiss="modal">Mégsem</button>
-                                            <button type="submit" class="buttonlikelink green fs14">Mentés</button>
-                                        </div>
-                                        }
-                                    </div>
-                                </div>
-                            </div>
                         </td>
                     </tr>
                 </table>
@@ -95,7 +74,10 @@ else
                             <tr>
                                 <th class="fitToContnent">#</th>
                                 <th class="fitToContnent">Megnevezés</th>
+                                <th class="fitToContnent">Típus</th>
                                 <th class="fitToContnent">Státusz</th>
+                                <th class="fitToContnent">Felelős</th>
+                                <th class="fitToContnent">Határidő</th>
                                 <th></th>
                             </tr>
                             @for (int i = 0; i < ViewBag.Issues.Count; ++i)
@@ -104,27 +86,30 @@ else
                                 <tr class="issueListRow">
                                     <td class="fitToContnent">@issue.Id</td>
                                     <td class="fitToContnent">@issue.Name</td>
+                                    <td class="fitToContnent">@issue.Type</td>
                                     <td class="fitToContnent">@issue.Status</td>
+                                    <td class="fitToContnent">@issue.User.Name</td>
+                                    <td class="fitToContnent">@issue.Deadline</td>
                                     <td style="text-align:right">
                                         <div class="btn-group">
                                             <button type="button" class="btn btn-default dropdown-toggle glyphButton" data-toggle="dropdown" aria-expanded="false">
                                                 <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                                                <li><a href="#">
+                                                <li><a href="EditIssue?issueId=@issue.Id">
                                                     Feladat módosítása
                                                 </a></li>
                                                 <li class="divider"></li>
                                             </ul>
                                         </div>
-                                        <button type="button" class="btn btn-default glyphButton" title="Hozzászólások">
+                                        <button type="button" class="btn btn-default glyphButton" title="Hozzászólások" onclick="location.href='@Url.Action("Comments", new { issueId = issue.Id })'">
                                             <span class=" glyphicon glyphicon-comment" aria-hidden="true"></span>
                                         </button>
                                         <button type="button" class="btn btn-default glyphButton" title="Fájlok">
                                             <span class=" glyphicon glyphicon-file" aria-hidden="true"></span>
                                         </button>
                                         <button type="button" class="btn btn-default glyphButton glyphButtonRemove" title="Törlés" onclick="location.href='@Url.Action("RemoveIssue", new { projectId = Model.SelectedProjectId, issueId = issue.Id })'">
-                                            <span class=" glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                                         </button>
                                     </td>
                                 </tr>
@@ -138,12 +123,5 @@ else
 }
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-@if (!ViewData.ModelState.IsValid)
-{
-    <script>
-        $(function () {
-            $("#addIssueModal").modal("show");
-        });
-    </script>
-}
+
 <script src="~/Scripts/bootstrap.min.js"></script>

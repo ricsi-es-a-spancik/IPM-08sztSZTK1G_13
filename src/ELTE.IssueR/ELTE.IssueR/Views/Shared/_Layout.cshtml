@@ -7,6 +7,7 @@
 <head>
     <meta charset="utf-8" />
     <title>@ViewBag.Title - IssueR</title>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
     <link href="@Url.Content("~/Content/Styles/LayoutStyle.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/Content/Styles/FancyFormStyle.css")" rel="stylesheet" type="text/css"/>
 
@@ -40,10 +41,14 @@
                             <table>
                                 <tr>
                                     <td>
-                                        @Html.ActionLink("Bejelentkezés", "Login", "Account", new { }, new { @class = "buttonlikelink blue" })
+                                        <button type="button" class="buttonlikelink blue" onclick="location.href='@Url.Action("Login", "Account", new { })'">
+                                            Bejelentkezés
+                                        </button>
                                     </td>
                                     <td>
-                                        @Html.ActionLink("Regisztráció", "Register", "Account", new { }, new { @class = "buttonlikelink blue" })
+                                        <button type="button" class="buttonlikelink blue" onclick="location.href='@Url.Action("Register", "Account", new { })'">
+                                            Regisztráció
+                                        </button>
                                     </td>
                                 </tr>
                             </table>
@@ -66,10 +71,14 @@
                                             </a>
                                     </td>
                                     <td>
-                                        @*@Html.ActionLink(Session["userName"].ToString(), "ProfileIndex", "Account", new { }, new { @class = "buttonlikelink blue" })*@
+                                        <button type="button" class="buttonlikelink blue" onclick="location.href='@Url.Action("ProfileIndex", "Account", new { })'">
+                                            @User.Identity.Name
+                                        </button>
                                     </td>
                                     <td>
-                                        @Html.ActionLink("Kijelentkezés", "Logout", "Account", new { }, new { @class = "buttonlikelink blue" })
+                                        <button type="button" class="buttonlikelink blue" onclick="location.href='@Url.Action("Logout", "Account", new { })'">
+                                            Kijelentkezés
+                                        </button>
                                     </td>
                                 </tr>
                             </table>

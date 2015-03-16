@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using ELTE.IssueR.Models;
+using ELTE.IssueR.Models.Permissions;
 using System.Drawing;
 using System.IO;
 
@@ -11,31 +12,22 @@ namespace ELTE.IssueR.Controllers
 {
     public class OrganizationController : BaseController
     {
-        //
-        // GET: /Organization/
-        public ActionResult Index()
-        {
-            return View();
-        }
-
         [HttpGet]
+        [Authorize]
         public ActionResult Add()
         {
-            if (Session["userName"] == null)
-            {
-                return RedirectToAction("Register", "Account");
-            }
+            if (!User.Identity.IsAuthenticated)
+                return RedirectToAction("Login", "Account");
+
+            string userName = User.Identity.Name;
+            if (_database.Users.First(user => user.UserName.Equals(userName)).Employees.Count != 0)
+                return RedirectToAction("Index", "Home");
             else
-            {
-                string userName = Session["userName"].ToString();
-                if (_database.Users.First(user => user.UserName.Equals(userName)).Employees.Count != 0)
-                    return RedirectToAction("Index", "Home");
-                else
-                    return View("Add");
-            }
+                return View("Add");
         }
 
         [HttpPost]
+        [Authorize]
         public ActionResult Add(OrganizationViewModel orgViewModel)
         {
             // az adatok hibás formátumban kerültek megadásra
@@ -71,13 +63,13 @@ namespace ELTE.IssueR.Controllers
             }).Id;
 
             // jelenlegi felhasználó hozzáadása a létrehozott vállalathoz
-            string userName = Session["userName"].ToString();
+            string userName = User.Identity.Name;
             string userId = _database.Users.First(user => user.UserName.Equals(userName)).Id;
             _database.Employees.Add(new Employee
             {
                 UserId = userId,
                 OrganizationId = orgId,
-                Status = Models.Permissions.BasicPermissions.Administrator
+                Status = Models.Permissions.BasicPermissions.Administrator.Code
             });
 
             _database.SaveChanges();
@@ -85,6 +77,7 @@ namespace ELTE.IssueR.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [AllowAnonymous]
         public ActionResult Details(int orgId)
         {
             var org = _database.Organizations.Find(orgId);
@@ -93,6 +86,7 @@ namespace ELTE.IssueR.Controllers
             return View("Details", new OrganizationDetails { Org = org, Projects = projects });
         }
 
+        [AllowAnonymous]
         public ActionResult Search(string orgName)
         {
             if (orgName == string.Empty)
@@ -108,26 +102,16 @@ namespace ELTE.IssueR.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public ActionResult UploadCoverImage(int orgId)
         {
-            if (Session["userName"] == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-            else
-            {
-                return View("UploadCoverImage", orgId);
-            }
+            return View("UploadCoverImage", orgId);
         }
 
         [HttpPost]
+        [Authorize]
         public ActionResult UploadCoverImage(HttpPostedFileBase file, int orgId)
         {
-            if (Session["userName"] == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
             // Verify that the user selected a file
             if (file != null && file.ContentLength > 0)
             {
@@ -178,6 +162,7 @@ namespace ELTE.IssueR.Controllers
             }
         }
 
+        [AllowAnonymous]
         public FileResult CoverFor(int orgId, bool thumb)
         {
             IEnumerable<CoverImage> images = _database.Organizations.Where(org => org.Id == orgId).Select(org => org.CoverImages).FirstOrDefault();
@@ -205,19 +190,16 @@ namespace ELTE.IssueR.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public ActionResult AddMember(Int32 orgId)
         {
-            if (Session["userName"] == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
             NewEmployeeViewModel model = new NewEmployeeViewModel(orgId);
 
             return View("AddMember", model);
         }
 
         [HttpPost]
+        [Authorize]
         public ActionResult AddMember(Int32 orgId, NewEmployeeViewModel model)
         {
             model.OrganizationId = orgId;
@@ -247,7 +229,7 @@ namespace ELTE.IssueR.Controllers
             {
                 UserId = uid,
                 OrganizationId = model.OrganizationId,
-                Status = Models.Permissions.BasicPermissions.Worker
+                Status = Models.Permissions.BasicPermissions.Worker.Code
             });
             _database.SaveChanges();
 
@@ -256,13 +238,9 @@ namespace ELTE.IssueR.Controllers
             return RedirectToAction("Details", new { orgId = model.OrganizationId });
         }
 
+        [Authorize]
         public ActionResult EditMember(Int32 orgId)
         {
-            if (Session["userName"] == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
             List<EditableEmployees> ee = new List<EditableEmployees>();
             foreach(Employee e in _database.Employees.Where(e => e.OrganizationId == orgId))
             {
@@ -270,7 +248,7 @@ namespace ELTE.IssueR.Controllers
                 { 
                     Id = e.UserId,
                     Username = e.User.UserName,
-                    Perm = e.Status
+                    Perm = new Models.Permissions.Permission(e.Status)
                 };
                 ee.Add(temp);
             }
@@ -283,53 +261,45 @@ namespace ELTE.IssueR.Controllers
             return View("EditMember", model);
         }
 
+        [Authorize]
         public ActionResult EditMemberPermissions(Int32 orgId, string userId)
         {
-            if (Session["userName"] == null)
-                return RedirectToAction("Index", "Home");
-
             Employee e = _database.Employees.First(emp => emp.OrganizationId == orgId && emp.UserId == userId);
-            List<Models.Permissions.BasePermission> ps = Enum.GetValues(typeof(Models.Permissions.BasePermission)).Cast<Models.Permissions.BasePermission>().ToList();
+            List<Models.Permissions.BasePermission> ps = Enum.GetValues(typeof(Models.Permissions.BasePermission)).Cast<Models.Permissions.BasePermission>().Where(bp => bp != BasePermission.None).ToList();
 
             return View("EditMemberPermissions", new EditMemberPermViewModel { Employee = e, AvailablePermissions = ps});
         }
 
+        [Authorize]
         public ActionResult AddPermission(Int32 orgId, string userId, Models.Permissions.BasePermission perm)
         {
-            if (Session["userName"] == null)
-                return RedirectToAction("Index", "Home");
-
             Employee e = _database.Employees.First(emp => emp.OrganizationId == orgId && emp.UserId == userId);
-            Models.Permissions.Permission p = ((Models.Permissions.Permission)e.Status);
+            Models.Permissions.Permission p = new Models.Permissions.Permission(e.Status);
             p.AddPermission(perm);
-            e.Status = p;
+            e.Status = p.Code;
             _database.SaveChanges();
 
             return RedirectToAction("EditMemberPermissions", new { orgId = orgId, userId = userId });
         }
 
+        [Authorize]
         public ActionResult RemovePermission(Int32 orgId, string userId, Models.Permissions.BasePermission perm)
         {
-            if (Session["userName"] == null)
-                return RedirectToAction("Index", "Home");
-
             Employee e = _database.Employees.First(emp => emp.OrganizationId == orgId && emp.UserId == userId);
-            Models.Permissions.Permission p = ((Models.Permissions.Permission)e.Status);
+            Models.Permissions.Permission p = new Models.Permissions.Permission(e.Status);
             p.RemovePermission(perm);
-            e.Status = p;
+            e.Status = p.Code;
             _database.SaveChanges();
 
             return RedirectToAction("EditMemberPermissions", new { orgId = orgId, userId = userId });
         }
 
+        [Authorize]
         public ActionResult RemoveMember(Int32 orgId, string userId)
         {
             //Ellenőrizni, hogy valóban jogosult jutott-e ide
-            if (Session["userName"] == null)
-                return RedirectToAction("Index", "Home");
-            
-            String thisUserName = Session["userName"].ToString();
-            Models.Permissions.Permission p = _database.Users.First(u => u.UserName == thisUserName).Employees.Where(e => e.OrganizationId == orgId).First().Status;
+            String thisUserName = User.Identity.Name;
+            Models.Permissions.Permission p = new Permission(_database.Users.First(u => u.UserName == thisUserName).Employees.Where(e => e.OrganizationId == orgId).First().Status);
             if(!p.HasPermission(Models.Permissions.BasePermission.RemoveMember))
                 return RedirectToAction("Index", "Home");
 
@@ -341,53 +311,47 @@ namespace ELTE.IssueR.Controllers
             return RedirectToAction("EditMember", new { orgId = orgId });
         }
 
+        [Authorize]
         public ActionResult AddOrgMember(int orgId)
         {
-            if (Session["userName"] != null)
+            string username = User.Identity.Name;
+
+            string userId = _database.Users.First(user => user.UserName == username).Id;
+            var org = _database.Organizations.Find(orgId);
+
+            if (org != null && _database.Users.First(user => user.UserName.Equals(username)).Employees.Count == 0)
             {
-                string username = Session["userName"].ToString();
-
-                string userId = _database.Users.First(user => user.UserName == username).Id;
-                var org = _database.Organizations.Find(orgId);
-
-                if (org != null && _database.Users.First(user => user.UserName.Equals(username)).Employees.Count == 0)
+                _database.Employees.Add(new Employee
                 {
-                    _database.Employees.Add(new Employee
-                    {
-                        UserId = userId,
-                        OrganizationId = orgId,
-                        Status = Models.Permissions.BasicPermissions.Worker
-                    });
-                    _database.SaveChanges();
+                    UserId = userId,
+                    OrganizationId = orgId,
+                    Status = Models.Permissions.BasicPermissions.Worker.Code
+                });
+                _database.SaveChanges();
 
-                    TempData["Information"] = "Csatlakoztál a vállalathoz.";
-                    return RedirectToAction("Details", new { orgId = orgId });
-                }
-                else
-                {
-                    TempData["Information"] = "Sikertelen csatlakozás.";
-                    return RedirectToAction("Details", new { orgId = orgId });
-                }
+                TempData["Information"] = "Csatlakoztál a vállalathoz.";
+                return RedirectToAction("Details", new { orgId = orgId });
             }
             else
             {
-                return RedirectToAction("Index", "Home");
+                TempData["Information"] = "Sikertelen csatlakozás.";
+                return RedirectToAction("Details", new { orgId = orgId });
             }
         }
 
         public HtmlString GetPermission(Int32 orgId)
         {
-            if (Session["userName"] == null)
+            if (!User.Identity.IsAuthenticated)
             {
                 return new HtmlString(Models.Permissions.BasicPermissions.New.ToString());
             }
 
-            String username = Session["userName"].ToString();
+            String username = User.Identity.Name;
             string userId = _database.Users.First(user => user.UserName == username).Id;
             Employee emp = _database.Employees.Find(userId, orgId);
             if(emp != null)
             {
-                return new HtmlString(((Models.Permissions.Permission)emp.Status).ToString());
+                return new HtmlString(new Permission(emp.Status).ToString());
             }
             else
             {
@@ -397,17 +361,17 @@ namespace ELTE.IssueR.Controllers
 
         public HtmlString HasPermission(Int32 orgId, Models.Permissions.BasePermission perm)
         {
-            if (Session["userName"] == null)
+            if (!User.Identity.IsAuthenticated)
             {
                 return new HtmlString(false.ToString());
             }
 
-            String username = Session["userName"].ToString();
+            String username = User.Identity.Name;
             string userId = _database.Users.First(user => user.UserName == username).Id;
             Employee emp = _database.Employees.Find(userId, orgId);
             if (emp != null)
             {
-                return new HtmlString(((Models.Permissions.Permission)emp.Status).HasPermission(perm).ToString());
+                return new HtmlString(new Models.Permissions.Permission(emp.Status).HasPermission(perm).ToString());
             }
             else
             {
@@ -417,24 +381,20 @@ namespace ELTE.IssueR.Controllers
 
         public HtmlString IsOrgMember(int orgId)
         {
-            if (Session["userName"] != null)
-            {
-                string username = Session["userName"].ToString();
-                var userId = _database.Users.First(user => user.UserName == username).Id;
-                var emp = _database.Employees.Find(userId, orgId);
+            if (!User.Identity.IsAuthenticated)
+                return new HtmlString("");
 
-                if (emp != null)
-                {
-                    return new HtmlString("true");
-                }
-                else
-                {
-                    return new HtmlString("false");
-                }
+            string username = User.Identity.Name;
+            var userId = _database.Users.First(user => user.UserName == username).Id;
+            var emp = _database.Employees.Find(userId, orgId);
+
+            if (emp != null)
+            {
+                return new HtmlString("true");
             }
             else
             {
-                return new HtmlString("");
+                return new HtmlString("false");
             }
         }
     }

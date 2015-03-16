@@ -2,6 +2,7 @@ namespace ELTE.IssueR.Models
 {
     using System;
     using System.Collections.Generic;
+    using ELTE.IssueR.Models.Permissions;
 
     public partial class Employee
     {
@@ -9,7 +10,7 @@ namespace ELTE.IssueR.Models
 
         public int OrganizationId { get; set; }
 
-        public short Status { get; set; }
+        public BasePermission Status { get; set; }
 
         public virtual Organization Organization { get; set; }
 

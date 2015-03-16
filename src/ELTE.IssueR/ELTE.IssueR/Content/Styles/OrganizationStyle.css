@@ -7,6 +7,14 @@
     text-align: right;
 }
 
+tr.EditMemberRow {
+    padding: 20px 5px 20px 5px;
+}
+
+ul.PermissionList li {
+    padding: 10px 5px 10px 5px;
+}
+
 .project_wrapper {
     margin-left: 20px;
     width: 300px;

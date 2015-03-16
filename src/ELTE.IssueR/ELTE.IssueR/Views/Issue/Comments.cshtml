@@ -1,0 +1,52 @@
+﻿@using ELTE.IssueR.Models
+@model Comment
+
+@{
+    ViewBag.Title = "Comments";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    <link href="@Url.Content("~/Content/Styles/CommentStyle.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/Styles/FancyFormStyle.css")" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+}
+
+<button class="btn buttonlikelink blue" style="margin-top:10px; margin-bottom:10px" onclick="location.href='@Url.Action("ListIssues", new { selectedPrjId = ViewBag.CurrentProjectId })'">
+    <span class="glyphicon glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></span>
+    Vissza
+</button>
+    
+<div class="detailBox">
+    <div class="titleBox">
+        <label>@ViewBag.IssueName - hozzászólások</label>
+    </div>
+    <div class="actionBox">
+        <ul class="commentList">
+            @foreach (Comment comment in ViewBag.Comments)
+            {
+                <li>
+                    <div class="commenterImage">
+                        <img src="@Url.Action("GetProfileImage", "Account")" />
+                    </div>
+                    <div class="commentText">
+                        <p class="">@comment.Text</p> <span class="sub-text">@comment.UserName, </span><span class="date sub-text">@comment.SentAt</span>
+                    </div>
+                </li>
+            }
+        </ul>
+        @using (Html.BeginForm())
+        { 
+            @Html.AntiForgeryToken()
+
+            @Html.HiddenFor(cm => cm.IssueId)
+            
+            <div class="form-inline" role="form">
+                <div class="form-group">
+                    @Html.TextBoxFor(cm => cm.Text, new { @class="form-control", @type="text", @placeholder="Hozzászólás" })
+                    <label class="required">@Html.ValidationMessageFor(cm => cm.Text)</label>
+                </div>
+                <div class="form-group">
+                    <button class="btn buttonlikelink green" type="submit">Küldés</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>  

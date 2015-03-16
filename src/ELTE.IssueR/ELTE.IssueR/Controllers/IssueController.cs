@@ -4,152 +4,277 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using ELTE.IssueR.Models;
+using System.Data.Entity;
 
 namespace ELTE.IssueR.Controllers
 {
     public class IssueController : BaseController
     {
-        private List<Project> GetProjects()
-        {
-            string username = (string)Session["userName"];
-
-            List<Project> ret = new List<Project>();
-            foreach(ProjectMember projMem in _database.Users.First(u => u.UserName.Equals(username)).ProjectMembers)
-                ret.Add(projMem.Project);
-
-            return ret;
-        }
-
-        private List<Issue> GetIssues(int projectId)
-        {
-            return _database.Issues.Where(issue => issue.ProjectId == projectId).ToList();
-        }
-
-        private List<User> GetProjectMembers(int projectId)
-        {
-            return _database.ProjectMembers.Where(conn => conn.ProjectId == projectId).Select(conn => conn.User).ToList();
-        }
-
-        private void UpdateState(IssueListingViewModel model)
-        {
-            ViewBag.Projects = GetProjects();
-
-            if (model.SelectedProjectId == null && ViewBag.Projects.Count != 0)
-                model.SelectedProjectId = ViewBag.Projects[0].Id;
-
-            if (model.SelectedProjectId != null)
-                ViewBag.Issues = GetIssues(model.SelectedProjectId.Value);
-
-            if (model.Issue == null)
-                model.Issue = new IssueViewModel { ProjectId = model.SelectedProjectId };
-
-            if (model.Issue.ProjectId != null)
-            {
-                model.Issue.Users = GetProjectMembers(model.Issue.ProjectId.Value);
-                if (model.Issue.UserId == null && model.Issue.Users.Count != 0)
-                    model.Issue.UserId = model.Issue.Users[0].Id;
-            }
-        }
-
-        [HttpGet]
+        [HttpGet, Authorize]
         public ActionResult Index()
         {
             return RedirectToAction("ListIssues");
         }
 
-        [HttpGet]
+        [HttpGet, Authorize]
         public ActionResult ListIssues(int? selectedPrjId)
         {
-            if (Session["userName"] == null)
+            IssueListingViewModel listing = new IssueListingViewModel();
+
+            List<Project> projects = _database.Users.First(u => u.UserName.Equals(User.Identity.Name)).ProjectMembers.Select(pmem => pmem.Project).ToList();
+
+            if (selectedPrjId.HasValue && projects.Any(prj => prj.Id == selectedPrjId))
             {
-                return RedirectToAction("Index", "Home");
-            }
-            else 
-            {
-                IssueListingViewModel listing = new IssueListingViewModel();
-                if (selectedPrjId.HasValue)
+                if (!IsProjectMember(selectedPrjId.Value))
                 {
-                    listing.SelectedProjectId = selectedPrjId;
+                    return RedirectToAction("Index");
                 }
 
-                UpdateState(listing);
-                return View("ListIssues", listing);
+                listing.SelectedProjectId = selectedPrjId;
+            }
+            else if(projects.Count != 0)
+            {
+                listing.SelectedProjectId = projects[0].Id;
+            }
+
+            ViewBag.Issues = _database.Issues.Where(issue => issue.ProjectId == listing.SelectedProjectId).ToList();
+            ViewBag.Projects = projects;
+
+            return View("ListIssues", listing);
+        }
+
+        [HttpGet, Authorize]
+        public ActionResult CreateIssue(int? projId)
+        {
+            if (!_database.Projects.Any(p => p.Id == projId) || !IsProjectMember(projId.Value)) //project id IS NOT valid
+            {
+                return RedirectToAction("Index");
+            }
+            else //project id IS valid
+            {
+                Issue issue = new Issue();
+                issue.ProjectId = projId.Value;
+
+                SetViewBagSelectionLists(projId.Value);
+
+                return View("CreateIssue", issue);
             }
         }
 
-        [HttpPost]
-        public ActionResult ListIssues(IssueListingViewModel listing)
+        [HttpPost, Authorize]
+        public ActionResult CreateIssue(Issue issue)
         {
-            if (Session["userName"] == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-            else
-            {
-                UpdateState(listing);
-                return View("ListIssues", listing);
-            }
-        }
-
-        [HttpPost]
-        public ActionResult CreateIssue(IssueViewModel issue)
-        {
-            if (Session["userName"] == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
             if (!ModelState.IsValid)
             {
                 ModelState.AddModelError("", "Az űrlap hibás adatokat tartlamaz.");
-                IssueListingViewModel vm = new IssueListingViewModel{Issue = issue, SelectedProjectId = issue.ProjectId};
-                UpdateState(vm);
-                return View("ListIssues", vm);
+                SetViewBagSelectionLists(issue.ProjectId);
+                return View("CreateIssue", issue);
             }
-
-            if (_database.Issues.Count(i => issue.ProjectId == i.ProjectId && issue.Name.Equals(i.Name)) != 0)
+            else
             {
-                ModelState.AddModelError("", "A megadott leírással már létezik feladat!");
-                IssueListingViewModel vm = new IssueListingViewModel { Issue = issue, SelectedProjectId = issue.ProjectId };
-                UpdateState(vm);
-                return View("ListIssues", vm);
+                try
+                {
+                    _database.Issues.Add(issue);
+                    _database.SaveChanges();
+                }
+                catch
+                {
+                    ModelState.AddModelError("", "A feladat mentése sikertelen! Próbálja újra!");
+                }
+
+                return RedirectToAction("ListIssues", new { selectedPrjId = issue.ProjectId });
             }
-
-            _database.Issues.Add(new Issue
-            {
-                Name = issue.Name,
-                Type = Convert.ToInt16(issue.Type),
-                Status = Convert.ToInt16(IssueViewModel.StatusEnum.ToDo),
-                Deadline = issue.Deadline,
-                UserId = issue.UserId,
-                ProjectId = issue.ProjectId.Value
-            });
-
-            _database.SaveChanges();
-
-            return RedirectToAction("ListIssues", new { selectedPrjId = issue.ProjectId });
         }
 
-        [HttpGet]
+        [HttpGet, Authorize]
+        public ActionResult EditIssue(int? issueId)
+        {
+            Issue issue = _database.Issues.First(i => i.Id == issueId);
+
+            if (issue == null || !IsProjectMember(issue.ProjectId))
+            {
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                SetViewBagSelectionLists(issue.ProjectId);
+                return View("CreateIssue", issue);
+            }
+        }
+
+        [HttpPost, Authorize]
+        public ActionResult EditIssue(Issue issue)
+        {
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError("", "Az űrlap hibás adatokat tartlamaz.");
+                SetViewBagSelectionLists(issue.ProjectId);
+                return View("CreateIssue", issue);
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine(issue.Id);
+                Issue issueInDb = _database.Issues.First(i => i.Id == issue.Id);
+                System.Diagnostics.Debug.WriteLine(issueInDb.Id);
+                if(issueInDb == null)
+                {
+                    ModelState.AddModelError("", "A módosítani kívánt feladat nem található az adatbázisban!");
+                    return RedirectToAction("ListIssues", new { selectedPrjId = issue.ProjectId });
+                }
+                else
+                {
+                    try
+                    {
+                        _database.Entry(issueInDb).CurrentValues.SetValues(issue);
+                        _database.SaveChanges();
+                    }
+                    catch
+                    {
+                        ModelState.AddModelError("", "A feladat mentése sikertelen! Próbálja újra!");
+                        return View("CreateIssue", issue);
+                    }
+                    return RedirectToAction("ListIssues", new { selectedPrjId = issue.ProjectId });
+                }
+            }
+        }
+
+        [HttpGet, Authorize]
         public ActionResult RemoveIssue(int? projectId, int? issueId)
         {
-            if (Session["userName"] == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
-            if(!projectId.HasValue || !issueId.HasValue)
+            if (!projectId.HasValue || !issueId.HasValue || !IsProjectMember(projectId.Value))
             {
                 return RedirectToAction("Index");
             }
             else
             {
                 Issue issueToRemove = _database.Issues.First(issue => issue.Id == issueId);
+
                 _database.Issues.Remove(issueToRemove);
                 _database.SaveChanges();
 
                 return RedirectToAction("ListIssues", new { selectedPrjId = projectId });
             }
+        }
+
+        [HttpGet, Authorize]
+        public ActionResult Comments(int? issueId)
+        {
+            if(!issueId.HasValue)
+            { 
+                return RedirectToAction("Index"); 
+            }
+            else
+            {
+                Issue issue = _database.Issues.First(i => i.Id == issueId);
+
+                if (!IsProjectMember(issue.ProjectId))
+                {
+                    return RedirectToAction("Index");
+                }
+
+                SetViewBagForComments(issue);
+
+                return View("Comments", new Comment { IssueId = issueId.Value });
+            }
+        }
+
+        [HttpPost, Authorize]
+        public ActionResult Comments(Comment comment)
+        {
+            Issue issue = _database.Issues.First(i => i.Id == comment.IssueId);
+
+            if(!ModelState.IsValid)
+            {
+                ModelState.AddModelError("", "Hiba a hozzászólásban!");
+                SetViewBagForComments(issue);
+                return View("Comments", comment);
+            }
+            else
+            {
+                try
+                {
+                    comment.UserName = User.Identity.Name;
+                    comment.SentAt = DateTime.Now;
+
+                    _database.Comments.Add(comment);
+                    _database.SaveChanges();
+                }
+                catch
+                {
+                    ModelState.AddModelError("", "Hiba történt a hozzászólás mentésekor!");
+                    SetViewBagForComments(issue);
+                    return View("Comments", comment);
+                }
+
+                //SetViewBagForComments(issue);
+                return RedirectToAction("Comments", new { issueId = comment.IssueId });
+                //return View("Comments", comment);
+            }
+        }
+
+        private bool IsProjectMember(int projId)
+        {
+            return _database.ProjectMembers.Any(pmem => pmem.ProjectId == projId && pmem.User.UserName == User.Identity.Name);
+        }
+
+        private void SetViewBagForComments(Issue issue)
+        {
+            ViewBag.CurrentProject = issue.ProjectId;            
+            ViewBag.Comments = issue.Comments.OrderBy(cm => cm.SentAt);
+            ViewBag.IssueName = issue.Name;
+        }
+
+        private IEnumerable<SelectListItem> statusSelectionList = null;
+        private IEnumerable<SelectListItem> typeSelectionList = null;
+
+        private void SetViewBagSelectionLists(int projId)
+        {
+            SetViewBagStatusSelectionList();
+            SetViewBagTypeSelectionList();
+            SetViewBagAssigneeSelectionList(projId);
+        }
+
+        private void SetViewBagAssigneeSelectionList(int projId)
+        {
+            ViewBag.AssigneeSelectionList = _database.ProjectMembers.Where(pmem => pmem.ProjectId == projId).
+                Select(pmem => new SelectListItem{ Value = pmem.UserId, Text = pmem.User.Name});
+        }
+
+        private void SetViewBagStatusSelectionList()
+        {
+            if (statusSelectionList == null)
+                statusSelectionList = SetViewBagSelectionList(IssueStatus.To_do);
+
+            ViewBag.StatusSelectionList = statusSelectionList;
+        }
+
+        private void SetViewBagTypeSelectionList()
+        {
+            if(typeSelectionList == null)
+                typeSelectionList = SetViewBagSelectionList(IssueType.Feature);
+
+            ViewBag.TypeSelectionList = typeSelectionList;
+        }
+
+        private IEnumerable<SelectListItem> SetViewBagSelectionList<TEnum>(TEnum selectedValue) where TEnum : struct, IConvertible
+        {
+            if (!typeof(TEnum).IsEnum)
+            {
+                throw new ArgumentException("T must be an enumerated type");
+            }
+
+            IEnumerable<TEnum> values = Enum.GetValues(typeof(TEnum)).Cast<TEnum>();
+
+            IEnumerable<SelectListItem> items =
+                from value in values
+                select new SelectListItem
+                {
+                    Text = value.ToString().Replace('_', ' '),
+                    Value = value.ToString(),
+                    Selected = value.Equals(selectedValue)
+                };
+
+            return items;
         }
     }
 }

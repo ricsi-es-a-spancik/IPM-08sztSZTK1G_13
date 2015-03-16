@@ -11,7 +11,11 @@ namespace ELTE.IssueR.Models.Configurations
         public IssueConfiguration()
         {
             ToTable("Issues");
-            Property(i => i.Name).IsRequired();
+            Property(i => i.Name).IsRequired().HasMaxLength(30);
+
+            HasMany(i => i.Comments)
+                .WithRequired(i => i.Issue)
+                .WillCascadeOnDelete(false);
         }
     }
 }
