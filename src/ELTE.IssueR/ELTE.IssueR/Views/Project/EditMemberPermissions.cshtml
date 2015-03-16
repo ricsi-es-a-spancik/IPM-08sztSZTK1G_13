@@ -1,0 +1,36 @@
+﻿@using ELTE.IssueR.Models
+@using ELTE.IssueR.Models.Permissions
+
+@{
+    ViewBag.Title = "Jogosultságok kezelése";
+}
+
+@section AddToHead
+{
+    <link href="@Url.Content("~/Content/Styles/FancyFormStyle.css")" rel="stylesheet" type="text/css" />
+}
+
+@model EditProjectMemberPermViewModel
+
+<h2>Jogosultságok kezelése</h2>
+
+<div>
+    <ul >
+        <li>Név: @Model.Member.User.UserName</li>
+        <li>Jogosultságok:
+            <ul class="PermissionList">
+                @foreach(BasePermission bp in Model.AvailablePermissions)
+                {
+                    if(((Permission)Model.Member.Status).HasPermission(bp))
+                    {
+                        <li>@bp.ToString() - @Html.ActionLink("Eltávolítás", "RemovePermission", "Project", new { projId = Model.Member.ProjectId, userId = Model.Member.UserId, perm = bp }, new { @class = "buttonlikelink green" })</li>
+                    }
+                    else
+                    { 
+                        <li>@bp.ToString() - @Html.ActionLink("Hozzáadás", "AddPermission", "Project", new { projId = Model.Member.ProjectId, userId = Model.Member.UserId, perm = bp }, new { @class = "buttonlikelink green" })</li>
+                    }
+                }
+            </ul>
+        </li>
+    </ul>
+</div>

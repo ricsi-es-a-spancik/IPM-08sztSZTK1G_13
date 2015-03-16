@@ -9,6 +9,7 @@
 @section AddToHead
 {
     <link href="@Url.Content("~/Content/Styles/FancyFormStyle.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/Styles/OrganizationStyle.css")" rel="stylesheet" type="text/css" />
 }
 
 <h2>Dolgozók kezelése</h2>
@@ -22,7 +23,7 @@
         </tr>
         @for( Int32 i = 0; i < Model.Users.Count; ++i )
         {
-            <tr>
+            <tr class="EditMemberRow">
                 <td>@Model.Users[i].Username</td>
                 <td>@Model.Users[i].Perm.ToString()</td>
                 <td>

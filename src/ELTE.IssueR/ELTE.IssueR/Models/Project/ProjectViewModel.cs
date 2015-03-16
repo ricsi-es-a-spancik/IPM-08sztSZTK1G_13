@@ -19,5 +19,7 @@ namespace ELTE.IssueR.Models
         [Required(ErrorMessage = "A határidő magadása kötelező.")]
         [DataType(DataType.Date)]
         public Nullable<DateTime> Deadline { get; set;}
+
+        public Int32 OrganizationId { get; set;}
     }
 }

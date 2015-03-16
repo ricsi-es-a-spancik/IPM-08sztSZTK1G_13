@@ -22,7 +22,7 @@ namespace ELTE.IssueR.Controllers
 
         public HtmlString IdToName(string p_id)
         {
-            if (Session["userName"] == null)
+            if (!User.Identity.IsAuthenticated)
             {
                 return new HtmlString("");
             }
@@ -40,14 +40,14 @@ namespace ELTE.IssueR.Controllers
 
         public HtmlString MyId()
         {
-            if (Session["userName"] == null)
+            if (!User.Identity.IsAuthenticated)
             {
                 return new HtmlString("");
             }
 
             String result;
 
-            String myName = (String)Session["userName"];
+            String myName = User.Identity.Name;
             User me = _database.Users.FirstOrDefault(x => x.UserName == myName);
 
             result = me.Id.ToString();
@@ -109,24 +109,6 @@ namespace ELTE.IssueR.Controllers
             registered.LastLogin = DateTime.Now;
 
             _database.SaveChanges();
-
-            //Application adatok letárolása
-            if (HttpContext.Application["usersList"] == null)
-            {
-                HttpContext.Application["usersList"] = new List<String>();
-                ((List<String>)HttpContext.Application["usersList"]).Add(registered.UserName);
-            }
-            else
-            {
-                if (((List<String>)HttpContext.Application["usersList"]).Contains(registered.UserName))
-                {
-                    //SKIP
-                }
-                else
-                {
-                    ((List<String>)HttpContext.Application["usersList"]).Add(registered.UserName);
-                }
-            }
 
             Log(ELTE.IssueR.Models.Logger.LogType.Account, "User " + registered.UserName + " logged in.");
             return RedirectToAction("Index", "Home"); // átirányítjuk a főoldalra
@@ -197,17 +179,6 @@ namespace ELTE.IssueR.Controllers
 
             ViewBag.Information = "A regisztráció sikeres volt. Kérjük, jelentkezzen be.";
 
-            //Ha korábban be volt jelentkezve, akkor kijelentkeztetjük
-            if (Session["userName"] != null)
-            {
-                String tempname = (String)Session["userName"];
-                Session.Remove("userName");
-                if (HttpContext.Application["usersList"] != null)
-                {
-                    ((List<String>)HttpContext.Application["usersList"]).Remove(tempname);
-                }
-            }
-
             Log(ELTE.IssueR.Models.Logger.LogType.Account,"Successful Register (" + registering.UserName + ")");
             return RedirectToAction("Login");            
         }
@@ -227,25 +198,21 @@ namespace ELTE.IssueR.Controllers
 
         #region Profile
 
-
+        [Authorize]
         public ActionResult ProfileIndex()
         {
-            if (Session["userName"] == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
             return View("ProfileIndex");
         }
 
+        [Authorize]
         public FileResult GetProfileImage()
         {
-            if (Session["userName"] == null)
+            if (!User.Identity.IsAuthenticated)
             {
                 return File("~/Content/NoImage.png", "image/png");
             }
 
-            String myName = (String)Session["userName"];
+            String myName = User.Identity.Name;
             User me = _database.Users.FirstOrDefault(x => x.UserName == myName);
 
             UserImage img = _database.UserImages.FirstOrDefault(x => x.UserId == me.Id);
@@ -261,14 +228,10 @@ namespace ELTE.IssueR.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public ActionResult AccountSettings()
         {
-            if (Session["userName"] == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
-            String myName = (String)Session["userName"];
+            String myName = User.Identity.Name;
             User me = _database.Users.FirstOrDefault(x => x.UserName == myName);
 
             AccountSettingsViewModel model = new AccountSettingsViewModel(me);
@@ -277,21 +240,17 @@ namespace ELTE.IssueR.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public ActionResult AccountSettings(AccountSettingsViewModel model)
         {
-            if (Session["user"] == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
             if (!ModelState.IsValid)
             {
                 ModelState.AddModelError("", "Hibás adatok.");
                 return View("AccountSettings", model);
             }
 
-            String myName = (String)Session["userName"];
+            String myName = User.Identity.Name;
             User me = _database.Users.FirstOrDefault(x => x.UserName == myName);
             model.Id = me.Id;
 
@@ -326,24 +285,17 @@ namespace ELTE.IssueR.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public ActionResult UploadProfileImage()
         {
-            if (Session["userName"] == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
             return View("UploadProfileImage");
         }
 
         [HttpPost]
+        [Authorize]
         public ActionResult UploadProfileImage(HttpPostedFileBase file)
         {
-            if (Session["userName"] == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-            String myName = (String)Session["userName"];
+            String myName = User.Identity.Name;
 
             // Verify that the user selected a file
             if (file != null && file.ContentLength > 0)
@@ -398,24 +350,17 @@ namespace ELTE.IssueR.Controllers
         [Authorize]
         public ActionResult Mails()
         {
-            if (Session["userName"] == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
             return View("Mails");
         }
 
         public HtmlString NewMails()
         {
-            if (Session["userName"] == null)
-            {
-                return new HtmlString("");
-            }
+            if (!User.Identity.IsAuthenticated)
+                return new HtmlString("0");
 
             String result;
 
-            String myName = (String)Session["userName"];
+            String myName = User.Identity.Name;
             User me = _database.Users.FirstOrDefault(u => u.UserName == myName);
 
             result = _database.Messages.Where(x => x.ToId == me.Id && !x.IsRead).ToList().Count.ToString();
@@ -423,14 +368,10 @@ namespace ELTE.IssueR.Controllers
             return new HtmlString(result);
         }
 
+        [Authorize]
         public ActionResult MailsReceive()
         {
-            if (Session["userName"] == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
-            String myName = (String)Session["userName"];
+            String myName = User.Identity.Name;
             User me = _database.Users.FirstOrDefault(u => u.UserName == myName);
 
             MessageViewModel vm = new MessageViewModel();
@@ -440,14 +381,10 @@ namespace ELTE.IssueR.Controllers
             return View("MailsReceive", vm);
         }
 
+        [Authorize]
         public ActionResult MailsSent()
         {
-            if (Session["userName"] == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
-            String myName = (String)Session["userName"];
+            String myName = User.Identity.Name;
             User me = _database.Users.FirstOrDefault(u => u.UserName == myName);
 
             MessageViewModel vm = new MessageViewModel();
@@ -457,14 +394,10 @@ namespace ELTE.IssueR.Controllers
             return View("MailsSent", vm);
         }
 
+        [Authorize]
         public ActionResult ReadMail(Int32 p_id)
         {
-            if (Session["userName"] == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
-            String myName = (String)Session["username"];
+            String myName = User.Identity.Name;
             User me = _database.Users.FirstOrDefault(x => x.UserName == myName);
 
             Message msg = _database.Messages.FirstOrDefault(x => x.Id == p_id);
@@ -476,27 +409,19 @@ namespace ELTE.IssueR.Controllers
             return View("ReadMail", msg);
         }
 
+        [Authorize]
         public ActionResult DeleteMail(Int32 p_id)
         {
-            if (Session["userName"] == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
             Message msg = _database.Messages.FirstOrDefault(x => x.Id == p_id);
 
             return View("DeleteMail", msg);
         }
 
+        [Authorize]
         public ActionResult DeleteMailConfirm(Int32 p_id)
         {
-            if (Session["userName"] == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
             Message msg = _database.Messages.FirstOrDefault(x => x.Id == p_id);
-            String myName = (String)Session["userName"];
+            String myName = User.Identity.Name;
             User me = _database.Users.FirstOrDefault(u => u.UserName == myName);
 
             if (msg.FromId == me.Id)
@@ -520,48 +445,36 @@ namespace ELTE.IssueR.Controllers
             return View("Mails", msg);
         }
 
+        [Authorize]
         public ActionResult NewMail()
         {
-            if (Session["userName"] == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
-            String myName = (String)Session["userName"];
+            String myName = User.Identity.Name;
             List<string> ids = _database.Users.Where(x => x.UserName != myName).Select(x => x.Id).ToList();
 
             return View("NewMailList", ids);
         }
 
         [HttpGet]
+        [Authorize]
         public ActionResult NewMailTo(Int32 p_id)
         {
-            if (Session["userName"] == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
             NewMessageViewModel vm = new NewMessageViewModel(p_id);
 
             return View("NewMail", vm);
         }
 
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public ActionResult NewMailTo(NewMessageViewModel model, string p_id)
         {
-            if (Session["userName"] == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
             if (!ModelState.IsValid)
             {
                 ModelState.AddModelError("", "Hibás adatok.");
                 return View("NewMail", model);
             }
 
-            String myName = (String)Session["userName"];
+            String myName = User.Identity.Name;
             User me = _database.Users.FirstOrDefault(u => u.UserName == myName);
             User to = _database.Users.FirstOrDefault(u => u.Id == p_id);
 
