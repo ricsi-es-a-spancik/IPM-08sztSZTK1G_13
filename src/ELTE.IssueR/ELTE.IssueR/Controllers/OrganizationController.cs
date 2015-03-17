@@ -105,6 +105,9 @@ namespace ELTE.IssueR.Controllers
         [Authorize]
         public ActionResult UploadCoverImage(int orgId)
         {
+            if(checkPermission(BasePermission.AddContent, orgId))
+                return RedirectToAction("Index", "Home");
+
             return View("UploadCoverImage", orgId);
         }
 
@@ -112,6 +115,9 @@ namespace ELTE.IssueR.Controllers
         [Authorize]
         public ActionResult UploadCoverImage(HttpPostedFileBase file, int orgId)
         {
+            if(checkPermission(BasePermission.AddContent, orgId))
+                return RedirectToAction("Index", "Home");
+
             // Verify that the user selected a file
             if (file != null && file.ContentLength > 0)
             {
@@ -193,6 +199,9 @@ namespace ELTE.IssueR.Controllers
         [Authorize]
         public ActionResult AddMember(Int32 orgId)
         {
+            if(checkPermission(BasePermission.AddMember, orgId))
+                return RedirectToAction("Index", "Home");
+
             NewEmployeeViewModel model = new NewEmployeeViewModel(orgId);
 
             return View("AddMember", model);
@@ -202,6 +211,9 @@ namespace ELTE.IssueR.Controllers
         [Authorize]
         public ActionResult AddMember(Int32 orgId, NewEmployeeViewModel model)
         {
+            if(checkPermission(BasePermission.AddMember, orgId))
+                return RedirectToAction("Index", "Home");
+
             model.OrganizationId = orgId;
             // az adatok hibás formátumban kerültek megadásra
             if (!ModelState.IsValid)
@@ -241,6 +253,9 @@ namespace ELTE.IssueR.Controllers
         [Authorize]
         public ActionResult EditMember(Int32 orgId)
         {
+            if (checkPermission(BasePermission.EditMember, orgId))
+                return RedirectToAction("Index", "Home");
+
             List<EditableEmployees> ee = new List<EditableEmployees>();
             foreach(Employee e in _database.Employees.Where(e => e.OrganizationId == orgId))
             {
@@ -264,6 +279,9 @@ namespace ELTE.IssueR.Controllers
         [Authorize]
         public ActionResult EditMemberPermissions(Int32 orgId, string userId)
         {
+            if (checkPermission(BasePermission.EditMember, orgId))
+                return RedirectToAction("Index", "Home");
+
             Employee e = _database.Employees.First(emp => emp.OrganizationId == orgId && emp.UserId == userId);
             List<Models.Permissions.BasePermission> ps = Enum.GetValues(typeof(Models.Permissions.BasePermission)).Cast<Models.Permissions.BasePermission>().Where(bp => bp != BasePermission.None).ToList();
 
@@ -273,6 +291,9 @@ namespace ELTE.IssueR.Controllers
         [Authorize]
         public ActionResult AddPermission(Int32 orgId, string userId, Models.Permissions.BasePermission perm)
         {
+            if (checkPermission(BasePermission.EditMember, orgId))
+                return RedirectToAction("Index", "Home");
+
             Employee e = _database.Employees.First(emp => emp.OrganizationId == orgId && emp.UserId == userId);
             Models.Permissions.Permission p = new Models.Permissions.Permission(e.Status);
             p.AddPermission(perm);
@@ -285,6 +306,9 @@ namespace ELTE.IssueR.Controllers
         [Authorize]
         public ActionResult RemovePermission(Int32 orgId, string userId, Models.Permissions.BasePermission perm)
         {
+            if (checkPermission(BasePermission.EditMember, orgId))
+                return RedirectToAction("Index", "Home");
+
             Employee e = _database.Employees.First(emp => emp.OrganizationId == orgId && emp.UserId == userId);
             Models.Permissions.Permission p = new Models.Permissions.Permission(e.Status);
             p.RemovePermission(perm);
@@ -297,10 +321,7 @@ namespace ELTE.IssueR.Controllers
         [Authorize]
         public ActionResult RemoveMember(Int32 orgId, string userId)
         {
-            //Ellenőrizni, hogy valóban jogosult jutott-e ide
-            String thisUserName = User.Identity.Name;
-            Models.Permissions.Permission p = new Permission(_database.Users.First(u => u.UserName == thisUserName).Employees.Where(e => e.OrganizationId == orgId).First().Status);
-            if(!p.HasPermission(Models.Permissions.BasePermission.RemoveMember))
+            if (checkPermission(BasePermission.RemoveMember, orgId))
                 return RedirectToAction("Index", "Home");
 
             //Kitörölni a dolgozót
@@ -311,7 +332,7 @@ namespace ELTE.IssueR.Controllers
             return RedirectToAction("EditMember", new { orgId = orgId });
         }
 
-        [Authorize]
+        /*[Authorize]
         public ActionResult AddOrgMember(int orgId)
         {
             string username = User.Identity.Name;
@@ -337,7 +358,7 @@ namespace ELTE.IssueR.Controllers
                 TempData["Information"] = "Sikertelen csatlakozás.";
                 return RedirectToAction("Details", new { orgId = orgId });
             }
-        }
+        }*/
 
         public HtmlString GetPermission(Int32 orgId)
         {
@@ -397,5 +418,15 @@ namespace ELTE.IssueR.Controllers
                 return new HtmlString("false");
             }
         }
+
+        private bool checkPermission(BasePermission bp, Int32 orgId)
+        {
+            Employee me = _database.Employees.Where(emp => emp.OrganizationId == orgId && emp.UserId == User.Identity.Name).FirstOrDefault();
+            if (me == null)
+                return false;
+
+            return ((Permission)me.Status).HasPermission(bp);
+        }
+
     }
 }
