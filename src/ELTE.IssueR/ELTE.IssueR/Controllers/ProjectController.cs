@@ -117,7 +117,7 @@ namespace ELTE.IssueR.Controllers
 
             _database.SaveChanges();
 
-            return View("ProjectData", pdvm);
+            return RedirectToAction("ProjectData", new { id = p.Id });
         }
 
         [HttpGet]

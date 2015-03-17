@@ -15,7 +15,7 @@ namespace ELTE.IssueR.Models.Configurations
 
             HasMany(i => i.Comments)
                 .WithRequired(i => i.Issue)
-                .WillCascadeOnDelete(false);
+                .WillCascadeOnDelete(true);
         }
     }
 }
