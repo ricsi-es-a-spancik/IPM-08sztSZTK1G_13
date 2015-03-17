@@ -295,6 +295,8 @@
     <Content Include="App_Data\Log\log1.log" />
     <None Include="Resources\fblogin.png" />
     <None Include="Resources\googlelogin.png" />
+    <None Include="Resources\googleth.png" />
+    <None Include="Resources\fbth.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />

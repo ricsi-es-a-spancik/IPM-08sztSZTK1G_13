@@ -17,7 +17,7 @@ namespace ELTE.IssueR.Controllers
 {
     public partial class AccountController : BaseController
     {
-        [HttpPost]
+        //[HttpPost, HttpGet]
         [AllowAnonymous]
         // [ValidateAntiForgeryToken]
         public ActionResult ExternalLogin(string provider, string returnUrl)

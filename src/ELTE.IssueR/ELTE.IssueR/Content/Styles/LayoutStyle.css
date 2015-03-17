@@ -82,3 +82,18 @@
     text-align: right;
 }
 
+.loginthumb {
+    display: block;
+    width: 30px;
+    height: 30px;
+    background-color: transparent;
+    margin-right: 5px;
+}
+
+.facebookthumb {
+    background-image: url("../../Resources/fbth.png");
+}
+
+.googlethumb {
+    background-image: url("../../Resources/googleth.png");
+}

@@ -127,6 +127,12 @@
   <data name="fblogin" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\fblogin.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="fbth" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\fbth.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="googleth" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\googleth.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="googlogin" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\googlelogin.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>

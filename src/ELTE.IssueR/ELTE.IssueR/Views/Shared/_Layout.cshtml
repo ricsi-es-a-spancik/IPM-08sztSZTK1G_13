@@ -1,4 +1,6 @@
-﻿@{
+﻿@using Microsoft.Owin.Security
+
+@{
     Layout = null;
 }
 
@@ -9,7 +11,7 @@
     <title>@ViewBag.Title - IssueR</title>
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
     <link href="@Url.Content("~/Content/Styles/LayoutStyle.css")" rel="stylesheet" type="text/css" />
-    <link href="@Url.Content("~/Content/Styles/FancyFormStyle.css")" rel="stylesheet" type="text/css"/>
+    <link href="@Url.Content("~/Content/Styles/FancyFormStyle.css")" rel="stylesheet" type="text/css" />
 
     @if (IsSectionDefined("AddToHead"))
     {
@@ -40,11 +42,34 @@
                         {
                             <table>
                                 <tr>
+                                    
+                                    @{
+                                        var loginProviders = Context.GetOwinContext().Authentication.GetExternalAuthenticationTypes();
+
+                                        foreach (var p in loginProviders)
+                                        {
+                                            <td>
+                                                @switch (p.AuthenticationType)
+                                                {
+                                                    case "Facebook":
+                                                        @Html.ActionLink(" ", "ExternalLogin", "Account", new { provider = p.AuthenticationType, returnUrl = Request.Url.PathAndQuery }, new { @class = "loginthumb facebookthumb" })
+                                                        break;
+                                                    case "Google":
+                                                    @Html.ActionLink(" ", "ExternalLogin", "Account", new { provider = p.AuthenticationType, returnUrl = Request.Url.PathAndQuery }, new { @class = "loginthumb googlethumb" })
+                                                        break;
+                                                    default:
+                                                        break;
+                                                }
+                                            </td>
+                                        }
+                                    }
+                                        
                                     <td>
                                         <button type="button" class="buttonlikelink blue" onclick="location.href='@Url.Action("Login", "Account", new { })'">
                                             Bejelentkezés
                                         </button>
                                     </td>
+
                                     <td>
                                         <button type="button" class="buttonlikelink blue" onclick="location.href='@Url.Action("Register", "Account", new { })'">
                                             Regisztráció
@@ -58,17 +83,17 @@
                             <table>
                                 <tr>
                                     <td>
-                                        
-                                            <a href="@Url.Action("MailsReceive", "Account")">
-                                                @if (@Html.Action("NewMails", "Account").ToString() != "0")
-                                                {
-                                                    <img src="@Url.Content("/Images/newmail.jpg")" />
-                                                }
-                                                else
-                                                {
-                                                    <img src="@Url.Content("/Images/mail.jpg")" />
-                                                }
-                                            </a>
+
+                                        <a href="@Url.Action("MailsReceive", "Account")">
+                                            @if (@Html.Action("NewMails", "Account").ToString() != "0")
+                                            {
+                                                <img src="@Url.Content("/Images/newmail.jpg")" />
+                                            }
+                                            else
+                                            {
+                                                <img src="@Url.Content("/Images/mail.jpg")" />
+                                            }
+                                        </a>
                                     </td>
                                     <td>
                                         <button type="button" class="buttonlikelink blue" onclick="location.href='@Url.Action("ProfileIndex", "Account", new { })'">
@@ -88,7 +113,7 @@
             </table>
         </div>
 
-        <div id="contentwrapper">   
+        <div id="contentwrapper">
             @RenderBody()
         </div>
 
