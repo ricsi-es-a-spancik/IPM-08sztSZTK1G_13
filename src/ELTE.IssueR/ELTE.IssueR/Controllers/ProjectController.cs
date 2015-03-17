@@ -48,6 +48,8 @@ namespace ELTE.IssueR.Controllers
                     Status = BasicPermissions.Administrator.Code
                 });
                 _database.SaveChanges();
+
+                return ProjectData(pr.Id);
             }
 
             return RedirectToAction("ProjectList", new ProjectListViewModel());
