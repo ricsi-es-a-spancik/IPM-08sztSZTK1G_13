@@ -204,17 +204,15 @@ namespace ELTE.IssueR.Controllers
             return View("ProfileIndex");
         }
 
-        public FileResult GetProfileImage()
+        [Authorize]
+        public FileResult GetProfileImage(string userName)
         {
-            if (Session["userName"] == null)
-            {
-                return File("~/Content/NoImage.png", "image/png");
-            }
+            if (String.IsNullOrEmpty(userName))
+                userName = User.Identity.Name;
 
-            String myName = (String)Session["userName"];
-            User me = _database.Users.FirstOrDefault(x => x.UserName == myName);
+            string userId = _database.Users.First(u => u.UserName == userName).Id;
 
-            UserImage img = _database.UserImages.FirstOrDefault(x => x.UserId == me.Id);
+            UserImage img = _database.UserImages.FirstOrDefault(x => x.UserId == userId);
             if(img == null)
                 return File("~/Content/NoImage.png", "image/png");
 
