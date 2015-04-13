@@ -87,6 +87,9 @@ namespace ELTE.IssueR.Controllers
         [Authorize]
         public ActionResult ProjectDataModify(int id)
         {
+            if (!checkPermission(BasePermission.EditContent, id))
+                return RedirectToAction("Index", "Home");
+
             Project pr = _database.Projects.FirstOrDefault(p => p.Id == id);
 
             ProjectDataViewModel pdvm = new ProjectDataViewModel{
@@ -106,6 +109,9 @@ namespace ELTE.IssueR.Controllers
         [Authorize]
         public ActionResult ProjectDataModify(ProjectDataViewModel pdvm)
         {
+            if (!checkPermission(BasePermission.EditContent, pdvm.Id))
+                return RedirectToAction("Index", "Home");
+
             Project p = _database.Projects.FirstOrDefault(pr => pr.Id == pdvm.Id);
 
             p.Name = pdvm.Project.Name;
@@ -124,6 +130,9 @@ namespace ELTE.IssueR.Controllers
         [Authorize]
         public ActionResult ProjectMemberAdd(int Id)
         {
+            if (!checkPermission(BasePermission.AddMember, Id))
+                return RedirectToAction("Index", "Home");
+
             string userName = User.Identity.Name;
             User currentUser = userManager.Users.FirstOrDefault(u => u.UserName == userName);
 
@@ -151,6 +160,9 @@ namespace ELTE.IssueR.Controllers
         [Authorize]
         public ActionResult ProjectMemberAdd(UserListViewModel ulvm)
         {
+            if (!checkPermission(BasePermission.AddMember, ulvm.ProjectId))
+                return RedirectToAction("Index", "Home");
+
             string selectedItem = Request["selectedItem"];
 
             int projectId = ulvm.ProjectId;
@@ -174,6 +186,9 @@ namespace ELTE.IssueR.Controllers
         [Authorize]
         public ActionResult ProjectMemberRemove(string removeableUserId, int projectId)
         {
+            if (!checkPermission(BasePermission.RemoveMember, projectId))
+                return RedirectToAction("Index", "Home");
+
             ProjectMember pm = _database.ProjectMembers.First(x => x.ProjectId == projectId && 
                                                                    x.UserId == removeableUserId);
             _database.ProjectMembers.Remove(pm);
@@ -185,6 +200,9 @@ namespace ELTE.IssueR.Controllers
         [Authorize]
         public ActionResult EditMemberPermissions(Int32 projId, string userId)
         {
+            if (!checkPermission(BasePermission.EditMember, projId))
+                return RedirectToAction("Index", "Home");
+
             ProjectMember pm = _database.ProjectMembers.First(mem => mem.ProjectId == projId && mem.UserId == userId);
             List<BasePermission> ps = Enum.GetValues(typeof(BasePermission)).Cast<BasePermission>().Where(bp => bp != BasePermission.None).ToList();
 
@@ -194,6 +212,9 @@ namespace ELTE.IssueR.Controllers
         [Authorize]
         public ActionResult AddPermission(Int32 projId, string userId, BasePermission perm)
         {
+            if (!checkPermission(BasePermission.EditMember, projId))
+                return RedirectToAction("Index", "Home");
+
             ProjectMember pm = _database.ProjectMembers.First(mem => mem.ProjectId == projId && mem.UserId == userId);
             Permission pr = new Permission(pm.Status);
             pr.AddPermission(perm);
@@ -206,6 +227,9 @@ namespace ELTE.IssueR.Controllers
         [Authorize]
         public ActionResult RemovePermission(Int32 projId, string userId, BasePermission perm)
         {
+            if (!checkPermission(BasePermission.EditMember, projId))
+                return RedirectToAction("Index", "Home");
+
             ProjectMember pm = _database.ProjectMembers.First(mem => mem.ProjectId == projId && mem.UserId == userId);
             Permission pr = new Permission(pm.Status);
             pr.RemovePermission(perm);
@@ -233,6 +257,15 @@ namespace ELTE.IssueR.Controllers
             {
                 return new HtmlString(false.ToString());
             }
+        }
+
+        private bool checkPermission(BasePermission bp, Int32 projId)
+        {
+            ProjectMember me = _database.ProjectMembers.Where(mem => mem.ProjectId == projId && mem.UserId == User.Identity.Name).FirstOrDefault();
+            if (me == null)
+                return false;
+
+            return ((Permission)me.Status).HasPermission(bp);
         }
     
     }
