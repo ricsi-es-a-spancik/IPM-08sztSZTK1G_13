@@ -24,7 +24,7 @@
             {
                 <li>
                     <div class="commenterImage">
-                        <img src="@Url.Action("GetProfileImage", "Account")" />
+                        <img src="@Url.Action("GetProfileImage", "Account", new { userName = comment.UserName })" />
                     </div>
                     <div class="commentText">
                         <p class="">@comment.Text</p> <span class="sub-text">@comment.UserName, </span><span class="date sub-text">@comment.SentAt</span>
@@ -40,8 +40,7 @@
             
             <div class="form-inline" role="form">
                 <div class="form-group">
-                    @Html.TextBoxFor(cm => cm.Text, new { @class="form-control", @type="text", @placeholder="Hozzászólás" })
-                    <label class="required">@Html.ValidationMessageFor(cm => cm.Text)</label>
+                    @Html.TextBoxFor(cm => cm.Text, new { @class="form-control", @style="width:100%", @type="text", @placeholder="Hozzászólás" })
                 </div>
                 <div class="form-group">
                     <button class="btn buttonlikelink green" type="submit">Küldés</button>
