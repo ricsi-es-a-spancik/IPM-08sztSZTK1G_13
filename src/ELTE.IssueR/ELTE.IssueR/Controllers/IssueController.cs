@@ -313,5 +313,39 @@ namespace ELTE.IssueR.Controllers
 
             return items;
         }
+
+        // Charts
+
+        [Authorize]
+        public ActionResult Charts(int PrjId)
+        {
+            var issuesByType = from i
+                                in _database.Issues
+                                where i.ProjectId == PrjId
+                                group i by i.Type into g
+                                select new { TypeId = g.Key, IssuesCount = g.Count() };
+
+            var typeData = new List<PieChartData>();
+
+            foreach (var issueGroup in issuesByType.ToList())
+            {
+                typeData.Add(new PieChartData(issueGroup.IssuesCount, "#F7464A", "#FF5A5E", issueGroup.TypeId.ToString()));
+            }
+
+            var issuesByStatus = from i
+                                 in _database.Issues
+                                 where i.ProjectId == PrjId
+                                 group i by i.Status into g
+                                 select new { StatusId = g.Key, IssuesCount = g.Count() };
+
+            var statusData = new List<PieChartData>();
+
+            foreach (var issueGroup in issuesByStatus.ToList())
+            {
+                statusData.Add(new PieChartData(issueGroup.IssuesCount, "#F7464A", "#FF5A5E", issueGroup.StatusId.ToString()));
+            }
+
+            return View(new ChartsViewModel { TypePieChart = typeData, StatusPieChart = statusData });
+        }
     }
 }
