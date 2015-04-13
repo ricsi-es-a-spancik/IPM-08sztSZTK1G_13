@@ -228,6 +228,8 @@
     <Compile Include="Models\Configurations\UserConfiguration.cs" />
     <Compile Include="Models\Configurations\UserImageConfiguration.cs" />
     <Compile Include="Models\CoverImage.cs" />
+    <Compile Include="Models\Issue\ChartsViewModel.cs" />
+    <Compile Include="Models\Issue\PieChartData.cs" />
     <Compile Include="Models\ProjectDocument.cs" />
     <Compile Include="Models\OrganizationDocument.cs" />
     <Compile Include="Models\Employee.cs" />
@@ -267,6 +269,7 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\jsgantt.css" />
     <Content Include="Content\NoImage.png" />
     <Content Include="Content\Styles\AccountStyle.css" />
     <Content Include="Content\Styles\CommentStyle.css" />
@@ -299,6 +302,8 @@
     <None Include="Resources\fbth.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\Chart.js" />
+    <Content Include="Scripts\Chart.min.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
@@ -310,6 +315,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\jsgantt.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\npm.js" />
@@ -366,6 +372,7 @@
     <Content Include="Views\Organization\EditMember.cshtml" />
     <Content Include="Views\Organization\EditMemberPermissions.cshtml" />
     <Content Include="Views\Project\EditMemberPermissions.cshtml" />
+    <Content Include="Views\Issue\Charts.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\temp_upload\" />
