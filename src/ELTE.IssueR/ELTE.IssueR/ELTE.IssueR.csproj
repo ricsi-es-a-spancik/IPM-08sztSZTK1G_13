@@ -217,6 +217,7 @@
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\Configurations\CommentConfiguration.cs" />
     <Compile Include="Models\Configurations\CoverImageConfiguration.cs" />
+    <Compile Include="Models\Configurations\FilterConfiguration.cs" />
     <Compile Include="Models\Configurations\OrganizationDocumentConfiguration .cs" />
     <Compile Include="Models\Configurations\ProjectDocumentConfiguration.cs" />
     <Compile Include="Models\Configurations\EmployeeConfiguration.cs" />
@@ -228,6 +229,7 @@
     <Compile Include="Models\Configurations\UserConfiguration.cs" />
     <Compile Include="Models\Configurations\UserImageConfiguration.cs" />
     <Compile Include="Models\CoverImage.cs" />
+    <Compile Include="Models\Filter.cs" />
     <Compile Include="Models\Issue\ChartsViewModel.cs" />
     <Compile Include="Models\Issue\PieChartData.cs" />
     <Compile Include="Models\ProjectDocument.cs" />
@@ -254,6 +256,7 @@
     <Compile Include="Models\Project\UserListViewModel.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserImage.cs" />
+    <Compile Include="Models\Utility.cs" />
     <Compile Include="Models\Wiki\DocumentsViewModel.cs" />
     <Compile Include="Models\Wiki\WikiViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -341,7 +344,6 @@
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Issue\ListIssues.cshtml" />
-    <Content Include="Views\Issue\AddIssue.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Account\UploadProfileImage.cshtml" />
     <Content Include="Views\Organization\Add.cshtml" />
