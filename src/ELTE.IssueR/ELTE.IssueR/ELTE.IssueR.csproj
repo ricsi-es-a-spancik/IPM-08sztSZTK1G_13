@@ -196,6 +196,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ExternalLogin.cs" />
+    <Compile Include="Controllers\FilterController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\IssueController.cs" />
     <Compile Include="Controllers\OrganizationController.cs" />
@@ -377,6 +378,9 @@
     <Content Include="Views\Organization\EditMemberPermissions.cshtml" />
     <Content Include="Views\Project\EditMemberPermissions.cshtml" />
     <Content Include="Views\Issue\Charts.cshtml" />
+    <Content Include="Views\Filter\FilterForm.cshtml" />
+    <Content Include="Views\Filter\_Filter.cshtml" />
+    <Content Include="Views\Filter\OrganizeFilters.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\temp_upload\" />

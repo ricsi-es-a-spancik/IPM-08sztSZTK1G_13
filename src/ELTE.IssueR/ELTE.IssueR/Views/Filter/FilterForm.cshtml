@@ -1,0 +1,52 @@
+﻿@model ELTE.IssueR.Models.Filter
+
+@{
+    ViewBag.Title = "FilterForm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section AddToHead
+{
+    <link href="@Url.Content("~/Content/Styles/FancyFormStyle.css")" rel="stylesheet" type="text/css" />
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(f => f.Id)
+    @Html.HiddenFor(f => f.ProjectId)
+    
+        <div>
+            <form>
+                <div class="required">
+                    <label>@Html.ValidationSummary(true, "A szűrő felvétele sikertelen volt! Ellenőrizd a bevitt adatokat!")</label>
+                </div>
+                <div class="form-group">
+                    <label>Név<span class="required">*</span></label>
+                    @Html.TextBoxFor(f => f.Name, new { @class = "form-control" })
+                    <label class="required">@Html.ValidationMessageFor(f => f.Name)</label>
+                </div>
+                <div class="form-group">
+                    <label>Felhasználók</label>
+                    @Html.ListBoxFor(f => f.DeserializedUserIds, ViewBag.Users as MultiSelectList, new { @class = "form-control" })
+                    <label class="required">@Html.ValidationMessageFor(f => f.DeserializedUserIds)</label>
+                </div>
+                <div class="form-group">
+                    <label>Típusok</label>
+                    @Html.ListBoxFor(f => f.DeserializedTypes, ViewBag.Types as MultiSelectList, new { @class = "form-control" })
+                    <label class="required">@Html.ValidationMessageFor(f => f.DeserializedTypes)</label>
+                </div>
+                <div class="form-group">
+                    <label>Státuszok</label>
+                    @Html.ListBoxFor(f => f.DeserializedStatuses, ViewBag.Statuses as MultiSelectList, new { @class = "form-control" })
+                    <label class="required">@Html.ValidationMessageFor(f => f.DeserializedStatuses)</label>
+                </div>
+                <div class="form-group">
+                    <label>Határidők adott napon belül</label>
+                    @Html.EditorFor(f => f.DeadlineInterval, new { @class = "form-control" })
+                    <label class="required">@Html.ValidationMessageFor(f => f.DeadlineInterval)</label>
+                </div>
+                <button id="save" type="submit" class="btn buttonlikelink green">Mentés</button>
+            </form>
+        </div>
+}

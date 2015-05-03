@@ -1,0 +1,77 @@
+﻿@using Filter = ELTE.IssueR.Models.Filter
+@model IEnumerable<Filter>
+
+@{
+    ViewBag.Title = "OrganizeFilters";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div style="width:85%">
+    <button id="back" class="btn buttonlikelink blue" onclick="location.href='@Url.Action("ListIssues", "Issue", new { selectedPrjId = ViewBag.ProjectId })'">
+        <span class="glyphicon glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></span>
+        Vissza
+    </button>
+    <span id="addspan">
+        <button id="addbutton" type="button" class="btn buttonlikelink green" onclick="location.href='@Url.Action("AddFilter", new { projectId = ViewBag.ProjectId })'">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            Szűrő felvétele
+        </button>
+    </span>
+</div>
+
+@if(Model == null || !Model.Any())
+{
+    <div style="text-align:center">A projekthez még nincs szűrő felvéve.</div>
+}
+else
+{
+    <div class="list-group" style="width:70%; margin:auto">
+        @foreach (Filter f in Model)
+        {
+            <div class="list-group-item">
+                <h4 class="list-group-item-heading">
+                    @f.Name
+                    <span style="float:right">
+                        <a class="btn btn-default glyphButton" title="Módosít" onclick="location.href='@Url.Action("ModifyFilter", new { filterId = f.Id })'">
+                            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                        </a>
+                        <a class="btn btn-default glyphButton" title="Töröl" onclick="location.href='@Url.Action("RemoveFilter", new { filterId = f.Id })'">
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        </a>
+                    </span>
+                </h4>
+                <p class="list-group-item-text">
+                    <dl class="dl-horizontal">
+                        <dt>Nevek:</dt>
+                        <dd>
+                            <ul class="list-inline">
+                                @if (!f.UserNames.Any()){<li>-</li>}
+                                else {foreach (string name in f.UserNames){<li><span class="label label-default">@name</span></li>}}
+                            </ul>
+                        </dd>
+
+                        <dt>Típsuok:</dt>
+                        <dd>
+                            <ul class="list-inline">
+                                @if (!f.TypeTexts.Any()){<li>-</li>}
+                                else {foreach (string type in f.TypeTexts){<li><span class="label label-info">@type</span></li>}}
+                            </ul>
+                        </dd>
+
+                        <dt>Státuszok:</dt>
+                        <dd>
+                            <ul class="list-inline">
+                                @if (!f.StatusTexts.Any()){<li>-</li>}
+                                else {foreach (string status in f.StatusTexts){<li><span class="label label-warning">@status</span></li>}}
+                            </ul>
+                        </dd>
+
+                        <dt>Határidő intervallum:</dt>
+                        @if (!f.DeadlineInterval.HasValue) {<dd>-</dd>} 
+                        else {<dd>@f.DeadlineInterval.Value</dd>}
+                    </dl>
+                </p>
+            </div>
+        }
+    </div>
+}

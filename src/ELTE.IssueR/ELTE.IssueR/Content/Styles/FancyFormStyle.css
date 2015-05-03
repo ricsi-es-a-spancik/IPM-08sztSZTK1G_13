@@ -88,3 +88,29 @@ select{
 .required{
     color:red;
 }
+
+button#back {
+    margin-top:10px; 
+    margin-bottom:10px;
+    font-size:16px;
+    padding-left:10px;
+    padding-right:10px;
+}
+
+button#addbutton {
+    font-size:16px;
+    padding-left:10px;
+    padding-right:10px;
+}
+
+span#addspan {
+    margin-top:10px; 
+    margin-bottom:10px;
+    float:right;
+}
+
+.btn.btn-default.glyphButton {
+    border:none;
+    background:none;
+    padding: 3px;
+}
