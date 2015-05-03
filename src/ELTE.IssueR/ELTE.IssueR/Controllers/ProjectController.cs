@@ -69,7 +69,9 @@ namespace ELTE.IssueR.Controllers
             ProjectViewModel pvm = new ProjectViewModel{
                 Name = p.Name,
                 Description = p.Description,
-                Deadline = (DateTime)p.Deadline
+                Deadline = (DateTime)p.Deadline,
+                OrganizationId = p.OrganizationId,
+                OrganizationName = p.Organization.Name
             };
 
             List<User> projectMembersUsers = p.ProjectMembers.Select(mem => mem.User).ToList();

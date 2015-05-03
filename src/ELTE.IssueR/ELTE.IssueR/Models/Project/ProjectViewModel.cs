@@ -21,5 +21,7 @@ namespace ELTE.IssueR.Models
         public Nullable<DateTime> Deadline { get; set;}
 
         public Int32 OrganizationId { get; set;}
+
+        public string OrganizationName { get; set; }
     }
 }
