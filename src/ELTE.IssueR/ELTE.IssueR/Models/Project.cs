@@ -29,5 +29,7 @@ namespace ELTE.IssueR.Models
         public virtual ICollection<ProjectMember> ProjectMembers { get; set; }
 
         public virtual ICollection<ProjectDocument> Documents { get; set; }
+
+        public virtual ICollection<Filter> Filters { get; set; }
     }
 }

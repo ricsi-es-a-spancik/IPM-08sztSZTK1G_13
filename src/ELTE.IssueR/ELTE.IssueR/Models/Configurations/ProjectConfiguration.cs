@@ -24,6 +24,10 @@ namespace ELTE.IssueR.Models.Configurations
             HasMany(e => e.Documents)
                 .WithRequired(e => e.Project)
                 .WillCascadeOnDelete(false);
+
+            HasMany(e => e.Filters)
+                .WithRequired(e => e.Project)
+                .WillCascadeOnDelete(true);
         }
     }
 }

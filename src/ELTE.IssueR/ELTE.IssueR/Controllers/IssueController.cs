@@ -113,9 +113,7 @@ namespace ELTE.IssueR.Controllers
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine(issue.Id);
                 Issue issueInDb = _database.Issues.First(i => i.Id == issue.Id);
-                System.Diagnostics.Debug.WriteLine(issueInDb.Id);
                 if(issueInDb == null)
                 {
                     ModelState.AddModelError("", "A módosítani kívánt feladat nem található az adatbázisban!");

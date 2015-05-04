@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web;
 using ELTE.IssueR.Models.Configurations;
 using ELTE.IssueR.Migrations;
+using System.Web.Mvc;
 
 namespace ELTE.IssueR.Models
 {
@@ -37,6 +38,7 @@ namespace ELTE.IssueR.Models
         public virtual DbSet<Project> Projects { get; set; }
         public virtual DbSet<ProjectMember> ProjectMembers { get; set; }
         public virtual DbSet<ProjectDocument> ProjectDocuments { get; set; }
+        public virtual DbSet<Filter> Filters { get; set; }
 
         public virtual DbSet<Message> Messages { get; set; }
         public virtual DbSet<UserImage> UserImages { get; set; }
@@ -66,6 +68,26 @@ namespace ELTE.IssueR.Models
             modelBuilder.Configurations.Add(new UserConfiguration());
             modelBuilder.Configurations.Add(new UserImageConfiguration());
             modelBuilder.Configurations.Add(new CommentConfiguration());
+            modelBuilder.Configurations.Add(new FilterConfiguration());
         }
+
+        #region extension methods
+
+        public IEnumerable<User> GetUsersOnProject(int projectId)
+        {
+            return ProjectMembers.Where(pmem => pmem.ProjectId == projectId).Select(pm =>  pm.User);
+        }
+
+        public bool IsProjectMember(string userId, int projectId)
+        {
+            return ProjectMembers.Any(pm => pm.ProjectId == projectId && pm.User.Id == userId);
+        }
+
+        public IEnumerable<User> GetUsers(Filter filter)
+        {
+            return filter.DeserializedUserIds.Select(uId => Users.FirstOrDefault(u => u.Id == uId));
+        }
+
+        #endregion extension methods
     }
 }
