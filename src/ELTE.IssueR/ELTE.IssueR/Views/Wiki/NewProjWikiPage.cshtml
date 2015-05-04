@@ -1,0 +1,92 @@
+﻿@using ELTE.IssueR.Models;
+
+@model ProjectDocument
+
+@section AddToHead
+{
+    <link href="@Url.Content("~/Content/Styles/FancyFormStyle.css")" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="~/Scripts/jquery-2.1.3.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/jHtmlArea-0.8.min.js"></script>
+    <link rel="Stylesheet" type="text/css" href="~/Content/jHtmlArea/jHtmlArea.css" />
+    <script type="text/javascript">
+        $(function () {
+            $("#txtEditor").htmlarea({
+                toolbar: [
+                    ["bold", "italic", "underline", "strikethrough"],
+                    ["h1", "h2", "h3"],
+                    ["image", "link", "unlink"],
+                    ["orderedList", "unorderedList"],
+                    ["justifyleft", "justifycenter", "justifyright"],
+                    ["forecolor", "horizontalrule"]
+                ],
+                toolbarText: $.extend({}, jHtmlArea.defaultOptions.toolbarText, {
+                    "bold": "félkövér",
+                    "italic": "dőlt",
+                    "underline": "aláhúzott",
+                    "strikethrough": "áthúzott",
+                    "h1": "egyes címsor",
+                    "h2": "kettes címsor",
+                    "h3": "hármas címsor",
+                    "image": "kép beillesztése",
+                    "link": "hiperhivatkozás beillesztése",
+                    "unlink": "hiperhivatkozás megszüntetése",
+                    "orderedList": "számozott felsorolás",
+                    "unorderedList": "felsorolás",
+                    "justifyleft": "balra igazítás",
+                    "justifycenter": "középre igazítás",
+                    "justifyright": "jobbra igazítás",
+                    "forecolor": "betű szín",
+                    "horizontalrule": "vízszintes vonal"
+                })
+            });
+        });
+    </script>
+}
+
+@{
+    ViewBag.Title = "Új wiki oldal létrehozása";
+}
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (ViewBag.Information != null)
+{
+    <p>ViewBag.Information</p>
+}
+
+<h1 class="accountH1">Új wiki oldal létrehozása</h1>
+@Html.ActionLink("Vissza", "Index", new { section = "Project", id = Model.ProjectId }, new { @class = "buttonlikelink blue" })
+
+@if(Model == null)
+{
+    <p>Hiba történt, ezért nincs megjeleníthető adat.</p>
+}
+else
+{
+    using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "A wiki oldalt nem sikerült lementeni!")
+
+        <ul class="form-style-1">
+            <li>
+                @Html.HiddenFor(m => m.ProjectId)
+                <label>Cím<span class="required">*</span></label>
+                @Html.TextBoxFor(m => m.Name, new { @class = "field-long" })
+                <label class="required">@Html.ValidationMessageFor(m => m.Name)</label>
+            </li>
+
+            <li>
+                <label>Oldal tartalma<span class="required">*</span></label>
+                @Html.TextAreaFor(m => m.Content, new { @id = "txtEditor", @cols = 70, @rows = 25 })
+                <label class="required">@Html.ValidationMessageFor(m => m.Content)</label>
+            </li>
+        </ul>
+
+    <input type="submit" value="Mentés" class="buttonlikelink green" />
+    }
+}
+
+

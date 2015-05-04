@@ -22,19 +22,37 @@
 
 <h1>Wiki oldal - @Model.Section</h1>
 
-
-<nav>
-    @foreach(KeyValuePair<String, Int32> title in Model.Nav)
-    {
-        <p>@Html.ActionLink(title.Key, "ViewDocument", new { id = title.Value }, new { @class = "buttonlikelink blue" })</p>
-    }
-</nav>
+<div>
+    <p>@Html.ActionLink("Vissza", "Details", "Organization", new { orgId = Model.Id }, new { @class = "buttonlikelink blue" })</p>
+</div>
 
 <div>
-    <h1>@Model.Body.Title</h1>
-    <em>@Model.Body.Author, @Model.Body.Modified</em>
+    @if(Model.Section == "Organization")
+    { 
+        if (Html.Action("HasPermission", "Organization", new { orgId = Model.Id, perm = ELTE.IssueR.Models.Permissions.BasePermission.AddContent }).ToString() == true.ToString())
+        {
+            <p>@Html.ActionLink("Új", "NewWikiPage", new { section = Model.Section, id = Model.Id }, new { @class = "buttonlikelink green" })</p>
+        }
+    }
+    else if (Model.Section == "Project")
+    {
+        if (Html.Action("HasPermission", "Project", new { projId = Model.Id, perm = ELTE.IssueR.Models.Permissions.BasePermission.AddContent }).ToString() == true.ToString())
+        {
+            <p>@Html.ActionLink("Új", "NewWikiPage", new { section = Model.Section, id = Model.Id }, new { @class = "buttonlikelink green" })</p>
+        }
+    }
+</div>
 
-    <div>
-        @Model.Body.Content
-    </div>
+<div>
+    @foreach(KeyValuePair<String, Int32> title in Model.Docs)
+    {
+        if(Model.Section == "Organization")
+        {
+            <p>@Html.ActionLink(title.Key, "ViewOrgDocument", new { id = title.Value }, new { @class = "buttonlikelink blue" })</p>
+        }
+        else if (Model.Section == "Project")
+        { 
+            <p>@Html.ActionLink(title.Key, "ViewProjDocument", new { id = title.Value }, new { @class = "buttonlikelink blue" })</p>
+        }
+    }
 </div>
