@@ -388,7 +388,7 @@ namespace ELTE.IssueR.Controllers
             }
 
             String username = User.Identity.Name;
-            string userId = _database.Users.First(user => user.UserName == username).Id;
+            String userId = _database.Users.First(user => user.UserName == username).Id;
             Employee emp = _database.Employees.Find(userId, orgId);
             if (emp != null)
             {

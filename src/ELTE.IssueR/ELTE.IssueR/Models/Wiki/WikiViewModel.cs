@@ -12,8 +12,8 @@ namespace ELTE.IssueR.Models.Wiki
         /// </summary>
         public String Section { get; set; }
 
-        public Dictionary<String, Int32> Nav { get; set; }
+        public Int32 Id { get; set; }
 
-        public DocumentsViewModel Body { get; set; }
+        public Dictionary<String, Int32> Docs { get; set; }
     }
 }

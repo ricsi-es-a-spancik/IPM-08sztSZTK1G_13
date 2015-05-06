@@ -257,8 +257,11 @@
     <Compile Include="Models\Project\UserListViewModel.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserImage.cs" />
+<<<<<<< HEAD
+=======
     <Compile Include="Models\Utility.cs" />
     <Compile Include="Models\Wiki\DocumentsViewModel.cs" />
+>>>>>>> af6631f7f22b069ce3b1795c2587e669f1f6e1c7
     <Compile Include="Models\Wiki\WikiViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -273,6 +276,12 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\jHtmlArea\jHtmlArea.ColorPickerMenu.css" />
+    <Content Include="Content\jHtmlArea\jHtmlArea.css" />
+    <Content Include="Content\jHtmlArea\jHtmlArea.Editor.css" />
+    <Content Include="Content\jHtmlArea\jHtmlArea.png" />
+    <Content Include="Content\jHtmlArea\jHtmlArea_Toolbar_Group_BG.png" />
+    <Content Include="Content\jHtmlArea\jHtmlArea_Toolbar_Group__Btn_Select_BG.png" />
     <Content Include="Content\jsgantt.css" />
     <Content Include="Content\NoImage.png" />
     <Content Include="Content\Styles\AccountStyle.css" />
@@ -310,6 +319,10 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\Chart.js" />
     <Content Include="Scripts\Chart.min.js" />
+    <Content Include="Scripts\jHtmlArea-0.8.js" />
+    <Content Include="Scripts\jHtmlArea-0.8.min.js" />
+    <Content Include="Scripts\jHtmlArea.ColorPickerMenu-0.8.js" />
+    <Content Include="Scripts\jHtmlArea.ColorPickerMenu-0.8.min.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
@@ -368,7 +381,7 @@
     <Content Include="Views\Organization\Modify.cshtml" />
     <Content Include="Views\Organization\UploadCoverImage.cshtml" />
     <Content Include="Views\Wiki\Index.cshtml" />
-    <Content Include="Views\Wiki\ViewDocument.cshtml" />
+    <Content Include="Views\Wiki\ViewOrgDocument.cshtml" />
     <Content Include="Views\Issue\CreateIssue.cshtml" />
     <Content Include="Views\Issue\Comments.cshtml" />
     <Content Include="Views\Organization\AddMember.cshtml" />
@@ -378,9 +391,17 @@
     <Content Include="Views\Organization\EditMemberPermissions.cshtml" />
     <Content Include="Views\Project\EditMemberPermissions.cshtml" />
     <Content Include="Views\Issue\Charts.cshtml" />
+<<<<<<< HEAD
+    <Content Include="Views\Wiki\ViewProjDocument.cshtml" />
+    <Content Include="Views\Wiki\NewOrgWikiPage.cshtml" />
+    <Content Include="Views\Wiki\EditOrgWikiPage.cshtml" />
+    <Content Include="Views\Wiki\NewProjWikiPage.cshtml" />
+    <Content Include="Views\Wiki\EditProjWikiPage.cshtml" />
+=======
     <Content Include="Views\Filter\FilterForm.cshtml" />
     <Content Include="Views\Filter\_Filter.cshtml" />
     <Content Include="Views\Filter\OrganizeFilters.cshtml" />
+>>>>>>> af6631f7f22b069ce3b1795c2587e669f1f6e1c7
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\temp_upload\" />
