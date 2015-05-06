@@ -114,3 +114,7 @@ span#addspan {
     background:none;
     padding: 3px;
 }
+
+.margin10px {
+    margin: 5px 5px 0px 5px;
+}

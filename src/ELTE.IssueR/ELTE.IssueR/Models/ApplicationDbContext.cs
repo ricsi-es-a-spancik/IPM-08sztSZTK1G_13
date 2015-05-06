@@ -88,6 +88,11 @@ namespace ELTE.IssueR.Models
             return filter.DeserializedUserIds.Select(uId => Users.FirstOrDefault(u => u.Id == uId));
         }
 
+        public IEnumerable<Filter> GetFilters(int projectId)
+        {
+            return Filters.Where(f => f.ProjectId == projectId).ToList();
+        }
+
         #endregion extension methods
     }
 }

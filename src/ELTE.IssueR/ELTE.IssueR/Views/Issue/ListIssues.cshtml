@@ -1,4 +1,5 @@
 ﻿@using ELTE.IssueR.Models
+@using Filter = ELTE.IssueR.Models.Filter
 @model IssueListingViewModel
 @{
     ViewBag.Title = "Index";
@@ -22,9 +23,7 @@ else
 {
     <table id="extTable">
         <tr>
-            <td id="projectTitleTd">
-                <h3 id="projectTitle">Projektek</h3>
-            </td>
+            <td></td>
             <td>
                 <table id="serviceTable">
                     <tr>
@@ -32,16 +31,52 @@ else
                             {
                                 <td>
                                     @Html.HiddenFor(m => m.SelectedProjectId)
-                                    @Html.TextBoxFor(m => m.FilterText, new { @class = "form-control", @placeholder = "Szűrés...", @autocomplete = "off" })
+                                    @Html.TextBoxFor(m => m.FilterText, new { @class = "form-control margin10px", @placeholder = "Szűrés...", @autocomplete = "off" })
                                 </td>
                                 <td class="fitToContnent">
                                     <input type="submit" style="visibility: hidden" />
                                 </td>
                             }
                         <td class="fitToContnent" style="text-align:right">
-                            <button type="button" class="btn buttonlikelink green fs14" onclick="location.href='@Url.Action("CreateIssue", new { projId = Model.SelectedProjectId })'">
+                            <button type="button" class="btn buttonlikelink green fs14 margin10px" onclick="location.href='@Url.Action("CreateIssue", new { projId = Model.SelectedProjectId })'">
                                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                                 Feladat felvétele
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td id="projectTitleTd">
+                <h3 id="projectTitle">Projektek</h3>
+            </td>
+            <td style="text-align:right">
+                <table style="width:100%">
+                    <tr>
+                        <td style="text-align:left; margin:auto; overflow-x:visible; overflow-y:visible">
+                            <div class="btn-group margin10px" role="group" aria-label="...">
+                                @foreach (Filter f in Model.Filters)
+                                {
+                                    if (f.IsActive)
+                                    {
+                                        <button type="button" class="btn btn-default active">
+                                            @f.Name
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <button type="button" class="btn btn-default" onclick="location.href='@Url.Action("CustomFilter", new { filterId = f.Id })'">
+                                            @f.Name
+                                        </button>
+                                    }
+                                }
+                            </div>
+                        </td>
+                        <td style="text-align:right" class="fitToContnent">
+                            <button type="button" class="btn buttonlikelink blue fs14 margin10px" onclick="location.href='@Url.Action("OrganizeFilters", "Filter", new { projectId = Model.SelectedProjectId })'">
+                                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                                Szűrők kezelése
                             </button>
                         </td>
                     </tr>

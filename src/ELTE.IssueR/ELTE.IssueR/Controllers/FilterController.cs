@@ -27,7 +27,7 @@ namespace ELTE.IssueR.Controllers
             }
             else
             {
-                var filters = _database.Filters.Where(f => f.ProjectId == projectId.Value).ToList();
+                var filters = _database.GetFilters(projectId.Value).ToList();
                 filters.ForEach(f => {
                     f.UserNames = _database.GetUsers(f).Select(u => u.Name);
                     f.TypeTexts = f.DeserializedTypes.Select(t => Utility.GetEnumValueAsString(t));
@@ -98,8 +98,8 @@ namespace ELTE.IssueR.Controllers
         [HttpGet, Authorize]
         public ActionResult ModifyFilter(int? filterId)
         {
-            Filter filter = _database.Filters.First(f => f.Id == filterId);
-            if (!filterId.HasValue || !_database.IsProjectMember(User.Identity.GetUserId(), filter.ProjectId))
+            Filter filter = _database.Filters.FirstOrDefault(f => f.Id == filterId);
+            if (filter==null || !_database.IsProjectMember(User.Identity.GetUserId(), filter.ProjectId))
             {
                 return RedirectToAction("Index");
             }
@@ -142,7 +142,7 @@ namespace ELTE.IssueR.Controllers
             {
                 try
                 {
-                    Filter filterInDb = _database.Filters.First(f => f.Id == filter.Id);
+                    Filter filterInDb = _database.Filters.FirstOrDefault(f => f.Id == filter.Id);
                     _database.Entry(filterInDb).CurrentValues.SetValues(filter);
                     _database.SaveChanges();
                 }
@@ -165,7 +165,7 @@ namespace ELTE.IssueR.Controllers
             }
             else
             {
-                Filter filterToRemove = _database.Filters.First(f => f.Id == filterId);
+                Filter filterToRemove = _database.Filters.FirstOrDefault(f => f.Id == filterId);
 
                 if(filterToRemove == null || !_database.IsProjectMember(User.Identity.GetUserId(), filterToRemove.ProjectId))
                 {

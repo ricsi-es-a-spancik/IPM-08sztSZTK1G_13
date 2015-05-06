@@ -12,6 +12,7 @@ namespace ELTE.IssueR.Models.Configurations
         {
             ToTable("Filters");
             Property(f => f.Name).IsRequired().HasMaxLength(15);
+            Ignore(f => f.IsActive);
         }
     }
 }

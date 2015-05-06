@@ -11,5 +11,7 @@ namespace ELTE.IssueR.Models
         public int? SelectedProjectId { get; set; }
 
         public string FilterText { get; set; }
+
+        public IEnumerable<Filter> Filters { get; set; }
     }
 }

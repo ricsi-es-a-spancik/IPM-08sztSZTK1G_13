@@ -94,6 +94,8 @@
         public IEnumerable<string> TypeTexts { get; set; }
         public IEnumerable<string> StatusTexts { get; set; }
 
+        public bool IsActive { get; set; }
+
         #endregion properties
 
         #region methods

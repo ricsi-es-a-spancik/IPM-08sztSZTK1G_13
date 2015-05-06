@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.Mvc;
 using ELTE.IssueR.Models;
 using System.Data.Entity;
+using Microsoft.AspNet.Identity;
+using Filter = ELTE.IssueR.Models.Filter;
 
 namespace ELTE.IssueR.Controllers
 {
@@ -21,7 +23,7 @@ namespace ELTE.IssueR.Controllers
         {
             IssueListingViewModel listing = new IssueListingViewModel();
 
-            List<Project> projects = _database.Users.First(u => u.UserName.Equals(User.Identity.Name)).ProjectMembers.Select(pmem => pmem.Project).ToList();
+            List<Project> projects = _database.Users.FirstOrDefault(u => u.UserName.Equals(User.Identity.Name)).ProjectMembers.Select(pmem => pmem.Project).ToList();
 
             if (selectedPrjId.HasValue && projects.Any(prj => prj.Id == selectedPrjId))
             {
@@ -36,6 +38,8 @@ namespace ELTE.IssueR.Controllers
             {
                 listing.SelectedProjectId = projects[0].Id;
             }
+
+            listing.Filters = _database.GetFilters(listing.SelectedProjectId.Value);
 
             ViewBag.Issues = _database.Issues.Where(issue => issue.ProjectId == listing.SelectedProjectId).ToList();
             ViewBag.Projects = projects;
@@ -89,7 +93,7 @@ namespace ELTE.IssueR.Controllers
         [HttpGet, Authorize]
         public ActionResult EditIssue(int? issueId)
         {
-            Issue issue = _database.Issues.First(i => i.Id == issueId);
+            Issue issue = _database.Issues.FirstOrDefault(i => i.Id == issueId);
 
             if (issue == null || !IsProjectMember(issue.ProjectId))
             {
@@ -113,7 +117,7 @@ namespace ELTE.IssueR.Controllers
             }
             else
             {
-                Issue issueInDb = _database.Issues.First(i => i.Id == issue.Id);
+                Issue issueInDb = _database.Issues.FirstOrDefault(i => i.Id == issue.Id);
                 if(issueInDb == null)
                 {
                     ModelState.AddModelError("", "A módosítani kívánt feladat nem található az adatbázisban!");
@@ -145,7 +149,7 @@ namespace ELTE.IssueR.Controllers
             }
             else
             {
-                Issue issueToRemove = _database.Issues.First(issue => issue.Id == issueId);
+                Issue issueToRemove = _database.Issues.FirstOrDefault(issue => issue.Id == issueId);
 
                 _database.Issues.Remove(issueToRemove);
                 _database.SaveChanges();
@@ -163,7 +167,7 @@ namespace ELTE.IssueR.Controllers
             }
             else
             {
-                Issue issue = _database.Issues.First(i => i.Id == issueId);
+                Issue issue = _database.Issues.FirstOrDefault(i => i.Id == issueId);
 
                 if (!IsProjectMember(issue.ProjectId))
                 {
@@ -179,7 +183,7 @@ namespace ELTE.IssueR.Controllers
         [HttpPost, Authorize]
         public ActionResult Comments(Comment comment)
         {
-            Issue issue = _database.Issues.First(i => i.Id == comment.IssueId);
+            Issue issue = _database.Issues.FirstOrDefault(i => i.Id == comment.IssueId);
 
             if(!ModelState.IsValid)
             {
@@ -218,7 +222,7 @@ namespace ELTE.IssueR.Controllers
 
             System.Diagnostics.Debug.WriteLine(vm.SelectedProjectId.HasValue + " " + vm.FilterText);
 
-            List<Project> projects = _database.Users.First(u => u.UserName.Equals(User.Identity.Name)).ProjectMembers.Select(pmem => pmem.Project).ToList();
+            List<Project> projects = _database.Users.FirstOrDefault(u => u.UserName.Equals(User.Identity.Name)).ProjectMembers.Select(pmem => pmem.Project).ToList();
             List<Issue> issues = _database.Issues.Where(issue => issue.ProjectId == vm.SelectedProjectId).ToList();
 
             List<Issue> filteredIssues = issues.Where(i => LowerSubStr(i.Name, vm.FilterText) ||
@@ -235,6 +239,50 @@ namespace ELTE.IssueR.Controllers
             ViewBag.Issues = filteredIssues;
             ViewBag.Projects = projects;
             return View("ListIssues", vm);
+        }
+
+        [HttpGet, Authorize]
+        public ActionResult CustomFilter(int? filterId)
+        {
+            if(!filterId.HasValue)
+            {
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                Filter filter = _database.Filters.FirstOrDefault(f => f.Id == filterId.Value);
+
+                if(filter == null || !_database.IsProjectMember(User.Identity.GetUserId(), filter.ProjectId))
+                {
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    IssueListingViewModel listing = new IssueListingViewModel();
+
+                    listing.SelectedProjectId = filter.ProjectId;
+
+                    string userId = User.Identity.GetUserId();
+                    List<Project> projects = _database.ProjectMembers.Where(pm => pm.UserId == userId)
+                        .Select(pm => pm.Project).ToList();
+
+                    listing.Filters = _database.GetFilters(listing.SelectedProjectId.Value);
+                    Filter ff = listing.Filters.FirstOrDefault(f => f.Id == filterId.Value);
+                    ff.IsActive = true;
+
+                    List<Issue> issues = _database.Issues.Where(issue => issue.ProjectId == listing.SelectedProjectId).ToList();
+                    issues.RemoveAll(i => 
+                           (filter.DeserializedUserIds.Any() && !filter.DeserializedUserIds.Contains(i.UserId))
+                        || (filter.DeserializedTypes.Any() && !filter.DeserializedTypes.Contains(i.Type))
+                        || (filter.DeserializedStatuses.Any() && !filter.DeserializedStatuses.Contains(i.Status))
+                        || (i.Deadline.HasValue && (i.Deadline.Value - DateTime.Now).Days <= filter.DeadlineInterval));
+
+                    ViewBag.Projects = projects;
+                    ViewBag.Issues = issues;
+
+                    return View("ListIssues", listing);
+                }
+            }
         }
 
         private bool LowerSubStr(string a, string b)
