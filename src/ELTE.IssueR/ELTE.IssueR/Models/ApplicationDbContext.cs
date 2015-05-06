@@ -24,15 +24,14 @@ namespace ELTE.IssueR.Models
 
         // IssueR stuff
 
-        
-
         public virtual DbSet<Organization> Organizations { get; set; }
         public virtual DbSet<CoverImage> CoverImages { get; set; }
         public virtual DbSet<Employee> Employees { get; set; }
         public virtual DbSet<OrganizationDocument> OrganizationDocuments { get; set; }
 
         public virtual DbSet<Issue> Issues { get; set; }
-        public virtual DbSet<IssueChangeLog> IssueChangeLogs { get; set; }
+        public virtual DbSet<IssueStatusChangeLog> IssueStatusChangeLogs { get; set; }
+        public virtual DbSet<IssueTypeChangeLog> IssueTypeChangeLogs { get; set; }
         public virtual DbSet<Comment> Comments { get; set; }
         
         public virtual DbSet<Project> Projects { get; set; }
@@ -57,7 +56,8 @@ namespace ELTE.IssueR.Models
 
             modelBuilder.Configurations.Add(new CoverImageConfiguration());
             modelBuilder.Configurations.Add(new EmployeeConfiguration());
-            modelBuilder.Configurations.Add(new IssueChangeLogConfiguration());
+            modelBuilder.Configurations.Add(new IssueStatusChangeLogConfiguration());
+            modelBuilder.Configurations.Add(new IssueTypeChangeLogConfiguration());
             modelBuilder.Configurations.Add(new IssueConfiguration());
             modelBuilder.Configurations.Add(new MessageConfiguration());
             modelBuilder.Configurations.Add(new OrganizationConfiguration());

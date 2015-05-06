@@ -231,7 +231,8 @@
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\Configurations\CommentConfiguration.cs" />
     <Compile Include="Models\Configurations\CoverImageConfiguration.cs" />
-    <Compile Include="Models\Configurations\IssueChangeLogConfiguration.cs" />
+    <Compile Include="Models\Configurations\IssueStatusChangeLogConfiguration.cs" />
+    <Compile Include="Models\Configurations\IssueTypeChangeLogConfiguration.cs" />
     <Compile Include="Models\Configurations\OrganizationDocumentConfiguration .cs" />
     <Compile Include="Models\Configurations\ProjectDocumentConfiguration.cs" />
     <Compile Include="Models\Configurations\EmployeeConfiguration.cs" />

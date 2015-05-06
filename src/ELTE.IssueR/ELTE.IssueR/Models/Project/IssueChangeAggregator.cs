@@ -8,18 +8,13 @@ using System.Web.DynamicData;
 namespace ELTE.IssueR.Models
 {
 
-    public class IssueChangeAggregator<TEnumType> where TEnumType : struct
+    public class IssueChangeAggregator<TEnumType> where TEnumType : struct, IConvertible
     {
-        private readonly IEnumerable<IssueChangeLog> _changes;
-        private readonly Func<IssueChangeLog, TEnumType?> _oldValueSelector;
-        private readonly Func<IssueChangeLog, TEnumType> _newValueSelector;
+        private readonly IEnumerable<IssueChangeLog<TEnumType>> _changes;
 
-        public IssueChangeAggregator(IEnumerable<IssueChangeLog> changes,
-            Func<IssueChangeLog, TEnumType?> oldValueSelector, Func<IssueChangeLog, TEnumType> newValueSelector)
+        public IssueChangeAggregator(IEnumerable<IssueChangeLog<TEnumType>> changes)
         {
             _changes = changes;
-            _oldValueSelector = oldValueSelector;
-            _newValueSelector = newValueSelector;
         }
 
         public void GetRealTimeChanges(out List<string> labels, out Dictionary<TEnumType, List<int>> counts)
@@ -92,7 +87,7 @@ namespace ELTE.IssueR.Models
                     status => new List<int>() {0});
         }
 
-        private Dictionary<TEnumType, List<int>> GetAggregatedChanges(IEnumerable<IssueChangeLog> logs)
+        private Dictionary<TEnumType, List<int>> GetAggregatedChanges(IEnumerable<IssueChangeLog<TEnumType>> logs)
         {
             var counts = GetInitialDictionary();
 
@@ -105,13 +100,13 @@ namespace ELTE.IssueR.Models
                     counts[key].Add(counts[key].Last());
                 }
 
-                if (_oldValueSelector(change) != null)
+                if (change.OldValue != null)
                 {
-                    if (Enum.GetName(typeof(TEnumType), _oldValueSelector(change).Value) == Enum.GetName(typeof(TEnumType), _newValueSelector(change))) continue;
-                    counts[_oldValueSelector(change).Value][i] -= 1;
+                    if (Enum.GetName(typeof(TEnumType), change.OldValue.Value) == Enum.GetName(typeof(TEnumType), change.NewValue)) continue;
+                    counts[change.OldValue.Value][i] -= 1;
                 }
 
-                counts[_newValueSelector(change)][i] += 1;
+                counts[change.NewValue][i] += 1;
 
                 ++i;
             }

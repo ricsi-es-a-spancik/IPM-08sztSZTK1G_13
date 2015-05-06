@@ -81,29 +81,39 @@ namespace ELTE.IssueR.Models
             return new PointChartData(labels, new[] { dataset1, dataset2 });
         }
 
-        private Dictionary<IssueStatus, List<int>> GetInitStatusDictionary()
-        {
-            return Enum.GetNames(typeof (IssueStatus))
-                .ToDictionary(
-                    status => (IssueStatus) Enum.Parse(typeof (IssueStatus), status),
-                    status => new List<int>() {0});
-        }
-
         public PointChartData GetIssueStatusLineChart(IssueChangeScale scale, int projectId)
         {
-            var aggregator = new IssueChangeAggregator<IssueStatus>(GetLogs(projectId), (l => l.OldStatus), (l => l.NewStatus));
+            var aggregator = new IssueChangeAggregator<IssueStatus>(GetLogs(projectId, (ctx => ctx.IssueStatusChangeLogs)));
             return GetLineChartData(aggregator, scale);
         }
 
         public PointChartData GetIssueTypeLineChart(IssueChangeScale scale, int projectId)
         {
-            var aggregator = new IssueChangeAggregator<IssueType>(GetLogs(projectId), (l => l.OldType), (l => l.NewType));
+            var aggregator = new IssueChangeAggregator<IssueType>(GetLogs(projectId, (ctx => ctx.IssueTypeChangeLogs)));
             return GetLineChartData(aggregator, scale);
         }
 
-        private IEnumerable<IssueChangeLog> GetLogs(int projectId)
+        /*private IEnumerable<IssueChangeLog<IssueStatus>> GetStatusLogs(int projectId)
         {
-            return from l in _context.IssueChangeLogs
+            return from l in _context.IssueStatusChangeLogs
+                where l.Issue.ProjectId == projectId
+                orderby l.ModifiedAt
+                select l;
+        }
+
+        private IEnumerable<IssueChangeLog<IssueType>> GetTypeLogs(int projectId)
+        {
+            return from l in _context.IssueTypeChangeLogs
+                   where l.Issue.ProjectId == projectId
+                   orderby l.ModifiedAt
+                   select l;
+        }*/
+
+        private IEnumerable<IssueChangeLog<TEnumType>> GetLogs<TEnumType>(int projectId,
+            Func<ApplicationDbContext, IQueryable<IssueChangeLog<TEnumType>>> logTypeSelector)
+            where TEnumType : struct, IConvertible
+        {
+            return from l in logTypeSelector(_context)
                 where l.Issue.ProjectId == projectId
                 orderby l.ModifiedAt
                 select l;
@@ -111,7 +121,7 @@ namespace ELTE.IssueR.Models
 
         private PointChartData GetLineChartData<TEnumType>(IssueChangeAggregator<TEnumType> aggregator,
             IssueChangeScale scale)
-            where TEnumType : struct
+            where TEnumType : struct, IConvertible
         {
             List<string> labels;
             Dictionary<TEnumType, List<int>> counts;

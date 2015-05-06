@@ -5,16 +5,22 @@ using System.Web;
 
 namespace ELTE.IssueR.Models
 {
-    public partial class IssueChangeLog
+    public partial class IssueChangeLog<TEnumType> where TEnumType : struct, IConvertible
     {
+        public IssueChangeLog()
+        {
+            if (!typeof (TEnumType).IsEnum)
+                throw new ArgumentException("Generic type parameter must be a type of Enum");
+        }
+
         public int Id { get; set; }
         public int IssueId { get; set; }
         public DateTime ModifiedAt { get; set; }
-        public IssueStatus? OldStatus { get; set; }
-        public IssueStatus NewStatus { get; set; }
-        public IssueType? OldType { get; set; }
-        public IssueType NewType { get; set; }
-
+        public TEnumType? OldValue { get; set; }
+        public TEnumType NewValue { get; set; }
         public virtual Issue Issue { get; set; }
     }
+
+    public class IssueStatusChangeLog : IssueChangeLog<IssueStatus> { }
+    public class IssueTypeChangeLog : IssueChangeLog<IssueType> { }
 }
