@@ -126,6 +126,10 @@
     <Reference Include="System.Net.Http.Extensions">
       <HintPath>..\packages\Microsoft.Net.Http.2.2.28\lib\net45\System.Net.Http.Extensions.dll</HintPath>
     </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.2\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
     <Reference Include="System.Net.Http.Primitives">
       <HintPath>..\packages\Microsoft.Net.Http.2.2.28\lib\net45\System.Net.Http.Primitives.dll</HintPath>
     </Reference>
@@ -140,6 +144,14 @@
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.2\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.2\lib\net45\System.Web.Http.WebHost.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -193,8 +205,10 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\ChartsController.cs" />
     <Compile Include="Controllers\ExternalLogin.cs" />
     <Compile Include="Controllers\FilterController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -219,6 +233,8 @@
     <Compile Include="Models\Configurations\CommentConfiguration.cs" />
     <Compile Include="Models\Configurations\CoverImageConfiguration.cs" />
     <Compile Include="Models\Configurations\FilterConfiguration.cs" />
+    <Compile Include="Models\Configurations\IssueStatusChangeLogConfiguration.cs" />
+    <Compile Include="Models\Configurations\IssueTypeChangeLogConfiguration.cs" />
     <Compile Include="Models\Configurations\OrganizationDocumentConfiguration .cs" />
     <Compile Include="Models\Configurations\ProjectDocumentConfiguration.cs" />
     <Compile Include="Models\Configurations\EmployeeConfiguration.cs" />
@@ -231,8 +247,11 @@
     <Compile Include="Models\Configurations\UserImageConfiguration.cs" />
     <Compile Include="Models\CoverImage.cs" />
     <Compile Include="Models\Filter.cs" />
+    <Compile Include="Models\IssueChangeLog.cs" />
     <Compile Include="Models\Issue\ChartsViewModel.cs" />
-    <Compile Include="Models\Issue\PieChartData.cs" />
+    <Compile Include="Models\Project\IssueChangeAggregator.cs" />
+    <Compile Include="Models\Project\IssueChangeScale.cs" />
+    <Compile Include="Models\Project\PieChartData.cs" />
     <Compile Include="Models\ProjectDocument.cs" />
     <Compile Include="Models\OrganizationDocument.cs" />
     <Compile Include="Models\Employee.cs" />
@@ -250,18 +269,18 @@
     <Compile Include="Models\Permissions\BasePermissions.cs" />
     <Compile Include="Models\Project.cs" />
     <Compile Include="Models\ProjectMember.cs" />
+    <Compile Include="Models\Project\ChartManager.cs" />
     <Compile Include="Models\Project\EditProjectMemberPermViewModel.cs" />
+    <Compile Include="Models\Project\ProjectChartTypes.cs" />
     <Compile Include="Models\Project\ProjectDataViewModel.cs" />
     <Compile Include="Models\Project\ProjectListViewModel.cs" />
     <Compile Include="Models\Project\ProjectViewModel.cs" />
+    <Compile Include="Models\Project\PointChartData.cs" />
     <Compile Include="Models\Project\UserListViewModel.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserImage.cs" />
-<<<<<<< HEAD
-=======
     <Compile Include="Models\Utility.cs" />
     <Compile Include="Models\Wiki\DocumentsViewModel.cs" />
->>>>>>> af6631f7f22b069ce3b1795c2587e669f1f6e1c7
     <Compile Include="Models\Wiki\WikiViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -292,6 +311,7 @@
     <Content Include="Content\Styles\LayoutStyle.css" />
     <Content Include="Content\Styles\OrganizationStyle.css" />
     <Content Include="Content\Styles\ListIssueStyle.css" />
+    <Content Include="Content\Styles\ProjectStatsStyle.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -320,6 +340,7 @@
     <Content Include="Scripts\Chart.js" />
     <Content Include="Scripts\Chart.min.js" />
     <Content Include="Scripts\jHtmlArea-0.8.js" />
+    <Content Include="Scripts\hex-to-rgb.min.js" />
     <Content Include="Scripts\jHtmlArea-0.8.min.js" />
     <Content Include="Scripts\jHtmlArea.ColorPickerMenu-0.8.js" />
     <Content Include="Scripts\jHtmlArea.ColorPickerMenu-0.8.min.js" />
@@ -358,6 +379,7 @@
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Issue\ListIssues.cshtml" />
+    <Content Include="Views\Issue\AddIssue.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Account\UploadProfileImage.cshtml" />
     <Content Include="Views\Organization\Add.cshtml" />
@@ -382,6 +404,7 @@
     <Content Include="Views\Organization\UploadCoverImage.cshtml" />
     <Content Include="Views\Wiki\Index.cshtml" />
     <Content Include="Views\Wiki\ViewOrgDocument.cshtml" />
+    <Content Include="Views\Wiki\ViewDocument.cshtml" />
     <Content Include="Views\Issue\CreateIssue.cshtml" />
     <Content Include="Views\Issue\Comments.cshtml" />
     <Content Include="Views\Organization\AddMember.cshtml" />
@@ -391,17 +414,14 @@
     <Content Include="Views\Organization\EditMemberPermissions.cshtml" />
     <Content Include="Views\Project\EditMemberPermissions.cshtml" />
     <Content Include="Views\Issue\Charts.cshtml" />
-<<<<<<< HEAD
     <Content Include="Views\Wiki\ViewProjDocument.cshtml" />
     <Content Include="Views\Wiki\NewOrgWikiPage.cshtml" />
     <Content Include="Views\Wiki\EditOrgWikiPage.cshtml" />
     <Content Include="Views\Wiki\NewProjWikiPage.cshtml" />
     <Content Include="Views\Wiki\EditProjWikiPage.cshtml" />
-=======
     <Content Include="Views\Filter\FilterForm.cshtml" />
     <Content Include="Views\Filter\_Filter.cshtml" />
     <Content Include="Views\Filter\OrganizeFilters.cshtml" />
->>>>>>> af6631f7f22b069ce3b1795c2587e669f1f6e1c7
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\temp_upload\" />

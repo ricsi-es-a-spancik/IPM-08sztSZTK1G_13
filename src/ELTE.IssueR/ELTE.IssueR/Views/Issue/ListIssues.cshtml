@@ -10,9 +10,16 @@
 {
     <link href="@Url.Content("~/Content/Styles/FancyFormStyle.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/Content/Styles/ListIssueStyle.css")" rel="stylesheet" type="text/css" />
-    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
-}
-
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet"/>
+    <script type="text/javascript" src="../../Scripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../Scripts/jquery-2.1.3.min.js"></script>
+    <script type="text/javascript">
+        // Initializing Tooltips
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        })
+    </script>
+}   
 <p></p>
 
 @if (Model.SelectedProjectId == null)
@@ -37,6 +44,15 @@ else
                                     <input type="submit" style="visibility: hidden" />
                                 </td>
                             }
+
+                        <td class="fitToContnent">
+                            <button type="button" class="btn buttonlikelink yellow fs14" data-toggle="tooltip" data-placement="bottom" title="Statisztikák"
+                                    onclick="location.href='@Url.Action("ProjectData", "Project", new { id = Model.SelectedProjectId })'">
+                                <span class="glyphicon glyphicon-stats" aria-hidden="true"></span>
+
+                            </button>
+                        </td>
+                        
                         <td class="fitToContnent" style="text-align:right">
                             <button type="button" class="btn buttonlikelink green fs14 margin10px" onclick="location.href='@Url.Action("CreateIssue", new { projId = Model.SelectedProjectId })'">
                                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
@@ -92,13 +108,13 @@ else
                         if (prj.Id == Model.SelectedProjectId)
                         {
                             <label class="btn btn-default active">
-                                <input type="radio" name="options" autocomplete="off" checked> @prj.Name.Chop(10)
+                                <input type="radio" name="options" autocomplete="off" checked> @prj.Name.Chop(15)
                             </label>
                         }
                         else
                         {
                             <label class="btn btn-default ">
-                                <input type="radio" name="options" autocomplete="off" onchange="location.href='@Url.Action("ListIssues", "Issue", new { selectedPrjId = prj.Id })'" /> @prj.Name.Chop(10)
+                                <input type="radio" name="options" autocomplete="off" onchange="location.href='@Url.Action("ListIssues", "Issue", new { selectedPrjId = prj.Id })'" /> @prj.Name.Chop(15)
                             </label>
                         }
                     }
@@ -141,18 +157,21 @@ else
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-right" role="menu">
                                                 <li><a href="EditIssue?issueId=@issue.Id">
+                                                        <span class="glyphicon glyphicon-pencil dropdown-glyph" aria-hidden="true"></span>
                                                     Feladat módosítása
                                                 </a></li>
                                                 <li class="divider"></li>
                                             </ul>
                                         </div>
-                                        <button type="button" class="btn btn-default glyphButton" title="Hozzászólások" onclick="location.href='@Url.Action("Comments", new { issueId = issue.Id })'">
+                                        <button type="button" class="btn btn-default glyphButton" title="Hozzászólások" data-toggle="tooltip" data-placement="top"
+                                                onclick="location.href='@Url.Action("Comments", new { issueId = issue.Id })'">
                                             <span class=" glyphicon glyphicon-comment" aria-hidden="true"></span>
                                         </button>
-                                        <button type="button" class="btn btn-default glyphButton" title="Fájlok">
+                                        <button type="button" class="btn btn-default glyphButton" title="Fájlok" data-toggle="tooltip" data-placement="top">
                                             <span class=" glyphicon glyphicon-file" aria-hidden="true"></span>
                                         </button>
-                                        <button type="button" class="btn btn-default glyphButton glyphButtonRemove" title="Törlés" onclick="location.href='@Url.Action("RemoveIssue", new { projectId = Model.SelectedProjectId, issueId = issue.Id })'">
+                                        <button type="button" class="btn btn-default glyphButton glyphButtonRemove" title="Törlés" data-toggle="tooltip" data-placement="top"
+                                                onclick="location.href='@Url.Action("RemoveIssue", new { projectId = Model.SelectedProjectId, issueId = issue.Id })'">
                                             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                                         </button>
                                     </td>

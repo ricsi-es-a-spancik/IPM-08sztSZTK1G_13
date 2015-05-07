@@ -1,0 +1,17 @@
+﻿.pielegendli {
+    margin-left: -100px;
+    list-style-type: none;
+}
+
+.radarandlinelegendli {
+    list-style-type: none;
+}
+
+.pielegendli span, .radarandlinelegendli span {
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+

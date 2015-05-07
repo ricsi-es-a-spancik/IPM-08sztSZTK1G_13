@@ -78,6 +78,18 @@
     background-color: #53d30c;
 }
 
+.yellow {
+    background-color: rgb(240, 173, 78);
+}
+
+.dropdown-glyph {
+    margin-right: 10px;    
+}
+
+.project-navbar {
+    margin-right: 5px;
+}
+
 #neworgpanel {
     text-align: right;
 }
