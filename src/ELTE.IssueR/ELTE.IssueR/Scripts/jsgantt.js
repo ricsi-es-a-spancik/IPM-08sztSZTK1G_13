@@ -365,7 +365,7 @@ JSGantt.GanttChart =  function(pGanttVar, pDiv, pFormat)
                for(var k=0;k<n;k++) {
                   var vTask = this.getArrayLocationByID(vDepList[k]);
 
-                  if(vList[vTask].getVisible()==1)
+                  if(vList[vTask] != null && vList[vTask].getVisible()==1)
                      this.drawDependency(vList[vTask].getEndX(),vList[vTask].getEndY(),vList[i].getStartX()-1,vList[i].getStartY())
                }
   	    }
@@ -408,7 +408,7 @@ JSGantt.GanttChart =  function(pGanttVar, pDiv, pFormat)
       var vStr = "";
       var vNameWidth = 220;	
       var vStatusWidth = 70;
-      var vLeftWidth = 15 + 220 + 70 + 70 + 70 + 70 + 70;
+       var vLeftWidth = 15 + 220 + 70 + 70;// + 70 + 70 + 70;
 
       if(vTaskList.length > 0)
       {

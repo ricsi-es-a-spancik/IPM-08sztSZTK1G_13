@@ -102,13 +102,17 @@ namespace ELTE.IssueR.Models
 
                 if (change.OldValue != null)
                 {
-                    if (Enum.GetName(typeof(TEnumType), change.OldValue.Value) == Enum.GetName(typeof(TEnumType), change.NewValue)) continue;
                     counts[change.OldValue.Value][i] -= 1;
                 }
 
                 counts[change.NewValue][i] += 1;
 
                 ++i;
+            }
+
+            foreach (var kv in counts)
+            {
+                kv.Value.RemoveAt(0);
             }
 
             return counts;

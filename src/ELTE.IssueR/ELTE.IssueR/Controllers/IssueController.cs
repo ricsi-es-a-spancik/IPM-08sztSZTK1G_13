@@ -76,6 +76,22 @@ namespace ELTE.IssueR.Controllers
                 {
                     _database.Issues.Add(issue);
                     _database.SaveChanges();
+                    
+                    _database.IssueStatusChangeLogs.Add(new IssueStatusChangeLog()
+                    {
+                        IssueId = issue.Id,
+                        ModifiedAt = DateTime.Now,
+                        NewValue = issue.Status
+                    });
+
+                    _database.IssueTypeChangeLogs.Add(new IssueTypeChangeLog()
+                    {
+                        IssueId = issue.Id,
+                        ModifiedAt = DateTime.Now,
+                        NewValue = issue.Type
+                    });
+
+                    _database.SaveChanges();
                 }
                 catch
                 {
@@ -125,7 +141,30 @@ namespace ELTE.IssueR.Controllers
                 {
                     try
                     {
+                        if (issueInDb.Status != issue.Status)
+                        {
+                            _database.IssueStatusChangeLogs.Add(new IssueStatusChangeLog()
+                            {
+                                IssueId = issueInDb.Id,
+                                ModifiedAt = DateTime.Now,
+                                OldValue = issueInDb.Status,
+                                NewValue = issue.Status
+                            });
+                        }
+
+                        if (issueInDb.Type != issue.Type)
+                        {
+                            _database.IssueTypeChangeLogs.Add(new IssueTypeChangeLog()
+                            {
+                                IssueId = issueInDb.Id,
+                                ModifiedAt = DateTime.Now,
+                                OldValue = issueInDb.Type,
+                                NewValue = issue.Type
+                            });
+                        }
+
                         _database.Entry(issueInDb).CurrentValues.SetValues(issue);
+
                         _database.SaveChanges();
                     }
                     catch
