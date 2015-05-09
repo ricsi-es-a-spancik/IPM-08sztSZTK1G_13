@@ -277,6 +277,7 @@
     <Compile Include="Models\Project\ProjectViewModel.cs" />
     <Compile Include="Models\Project\PointChartData.cs" />
     <Compile Include="Models\Project\UserListViewModel.cs" />
+    <Compile Include="Models\Task.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserImage.cs" />
     <Compile Include="Models\Utility.cs" />
