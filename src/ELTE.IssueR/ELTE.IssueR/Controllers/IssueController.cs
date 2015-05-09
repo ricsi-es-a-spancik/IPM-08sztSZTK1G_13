@@ -39,7 +39,8 @@ namespace ELTE.IssueR.Controllers
                 listing.SelectedProjectId = projects[0].Id;
             }
 
-            listing.Filters = _database.GetFilters(listing.SelectedProjectId.Value);
+            if (listing.SelectedProjectId.HasValue)
+                listing.Filters = _database.GetFilters(listing.SelectedProjectId.Value);            
 
             ViewBag.Issues = _database.Issues.Where(issue => issue.ProjectId == listing.SelectedProjectId).ToList();
             ViewBag.Projects = projects;
