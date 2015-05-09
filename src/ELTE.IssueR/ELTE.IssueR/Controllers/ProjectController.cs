@@ -66,12 +66,13 @@ namespace ELTE.IssueR.Controllers
         public ActionResult ProjectData(int id)
         {
             Project p = _database.Projects.FirstOrDefault(pr => pr.Id == id);
+            string OrganizationName = _database.Organizations.FirstOrDefault(o => o.Id == p.OrganizationId).Name;
             ProjectViewModel pvm = new ProjectViewModel{
                 Name = p.Name,
                 Description = p.Description,
                 Deadline = (DateTime)p.Deadline,
                 OrganizationId = p.OrganizationId,
-                OrganizationName = p.Organization.Name
+                OrganizationName = OrganizationName
             };
 
             List<User> projectMembersUsers = p.ProjectMembers.Select(mem => mem.User).ToList();
