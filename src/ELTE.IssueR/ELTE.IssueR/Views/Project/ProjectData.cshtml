@@ -305,6 +305,7 @@
 @if (Html.Action("HasPermission", new { projId = Model.Id, perm = BasePermission.EditContent }).ToString() == true.ToString())
 {
     @Html.ActionLink("Adatok módosíta", "ProjectDataModify", "Project", new { @Model.Id }, new { @class = "buttonlikelink green" })
+    @Html.ActionLink("Projekt tervezése", "ProjectPlan", "Project", new { @Model.Id }, new { @class = "buttonlikelink green" })
 }
 
 <p></p>

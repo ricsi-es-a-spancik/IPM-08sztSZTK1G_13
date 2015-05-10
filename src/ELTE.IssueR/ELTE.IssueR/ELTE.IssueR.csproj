@@ -274,6 +274,7 @@
     <Compile Include="Models\Project\ProjectChartTypes.cs" />
     <Compile Include="Models\Project\ProjectDataViewModel.cs" />
     <Compile Include="Models\Project\ProjectListViewModel.cs" />
+    <Compile Include="Models\Project\ProjectTaskViewModel.cs" />
     <Compile Include="Models\Project\ProjectViewModel.cs" />
     <Compile Include="Models\Project\PointChartData.cs" />
     <Compile Include="Models\Project\UserListViewModel.cs" />
@@ -422,6 +423,7 @@
     <Content Include="Views\Filter\FilterForm.cshtml" />
     <Content Include="Views\Filter\_Filter.cshtml" />
     <Content Include="Views\Filter\OrganizeFilters.cshtml" />
+    <Content Include="Views\Project\ProjectPlan.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\temp_upload\" />

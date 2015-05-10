@@ -133,8 +133,8 @@ namespace ELTE.IssueR.Controllers
         [Authorize]
         public ActionResult ProjectMemberAdd(int Id)
         {
-            if (!checkPermission(BasePermission.AddMember, Id))
-                return RedirectToAction("Index", "Home");
+            //if (!checkPermission(BasePermission.AddMember, Id))
+            //    return RedirectToAction("Index", "Home");
 
             string userName = User.Identity.Name;
             User currentUser = userManager.Users.FirstOrDefault(u => u.UserName == userName);
@@ -163,8 +163,8 @@ namespace ELTE.IssueR.Controllers
         [Authorize]
         public ActionResult ProjectMemberAdd(UserListViewModel ulvm)
         {
-            if (!checkPermission(BasePermission.AddMember, ulvm.ProjectId))
-                return RedirectToAction("Index", "Home");
+            //if (!checkPermission(BasePermission.AddMember, ulvm.ProjectId))
+            //    return RedirectToAction("Index", "Home");
 
             string selectedItem = Request["selectedItem"];
 
@@ -198,6 +198,53 @@ namespace ELTE.IssueR.Controllers
             _database.SaveChanges();
 
             return RedirectToAction("ProjectData", "Project", new { id = projectId});
+        }
+
+        [HttpGet]
+        [Authorize]
+        public ActionResult ProjectPlan(int Id)
+        {
+            //if (!checkPermission(BasePermission.EditContent, projectId))
+            //    return RedirectToAction("Index", "Home");
+
+            ProjectTaskViewModel ptvm = new ProjectTaskViewModel{
+                ProjectId = Id
+            };
+
+            return View("ProjectPlan", ptvm);
+
+        }
+
+        [HttpPost]
+        [Authorize]
+        public ActionResult ProjectPlan(ProjectTaskViewModel ptvm)
+        {
+            //if (!checkPermission(BasePermission.EditContent, ptvm.ProjectId))
+            //    return RedirectToAction("Index", "Home");
+
+            if (!ModelState.IsValid)
+            {
+                return View("ProjectPlan", ptvm);
+            }
+
+            Project p = _database.Projects.FirstOrDefault(x => x.Id == ptvm.ProjectId);
+            if (ptvm.StartDate > ptvm.EndDate || 
+                ptvm.EndDate > p.Deadline)
+            {
+                return View("ProjectPlan", ptvm);
+            }
+
+            _database.Tasks.Add(new Task{
+                ProjectId = ptvm.ProjectId,
+                Name = ptvm.Name,
+                StartDate = ptvm.StartDate,
+                EndDate = ptvm.EndDate,
+                Resource = ptvm.Resource
+            });
+
+            _database.SaveChanges();
+            
+            return RedirectToAction("ProjectData", "Project", new { id = ptvm.ProjectId });
         }
 
         [Authorize]
