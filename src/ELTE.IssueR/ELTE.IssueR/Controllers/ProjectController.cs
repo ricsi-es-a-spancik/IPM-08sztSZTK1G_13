@@ -135,8 +135,8 @@ namespace ELTE.IssueR.Controllers
         [Authorize]
         public ActionResult ProjectMemberAdd(int Id)
         {
-            //if (!checkPermission(BasePermission.AddMember, Id))
-            //    return RedirectToAction("Index", "Home");
+            if (!checkPermission(BasePermission.AddMember, Id))
+                return RedirectToAction("Index", "Home");
 
             string userName = User.Identity.Name;
             User currentUser = userManager.Users.FirstOrDefault(u => u.UserName == userName);
@@ -165,8 +165,8 @@ namespace ELTE.IssueR.Controllers
         [Authorize]
         public ActionResult ProjectMemberAdd(UserListViewModel ulvm)
         {
-            //if (!checkPermission(BasePermission.AddMember, ulvm.ProjectId))
-            //    return RedirectToAction("Index", "Home");
+            if (!checkPermission(BasePermission.AddMember, ulvm.ProjectId))
+                return RedirectToAction("Index", "Home");
 
             string selectedItem = Request["selectedItem"];
 
@@ -206,8 +206,8 @@ namespace ELTE.IssueR.Controllers
         [Authorize]
         public ActionResult ProjectPlan(int Id)
         {
-            //if (!checkPermission(BasePermission.EditContent, projectId))
-            //    return RedirectToAction("Index", "Home");
+            if (!checkPermission(BasePermission.EditContent, projectId))
+                return RedirectToAction("Index", "Home");
 
             setViewBagLists(Id);
 
@@ -233,8 +233,8 @@ namespace ELTE.IssueR.Controllers
         [Authorize]
         public ActionResult ProjectPlan(ProjectTaskViewModel ptvm)
         {
-            //if (!checkPermission(BasePermission.EditContent, ptvm.ProjectId))
-            //    return RedirectToAction("Index", "Home");
+            if (!checkPermission(BasePermission.EditContent, ptvm.ProjectId))
+                return RedirectToAction("Index", "Home");
 
             if (!ModelState.IsValid)
             {
