@@ -18,5 +18,7 @@
         public DateTime? EndDate { get; set; }
 
         public string Resource { get; set; }
+
+        public int DependentTaskId { get; set; }
     }
 }
