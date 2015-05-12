@@ -25,13 +25,13 @@
 </div>
 
 <div>
-    @if (Html.Action("HasPermission", "Project", new { orgId = Model.ProjectId, perm = ELTE.IssueR.Models.Permissions.BasePermission.EditContent }).ToString() == true.ToString())
+    @if (Html.Action("HasPermission", "Project", new { projId = Model.ProjectId, perm = ELTE.IssueR.Models.Permissions.BasePermission.EditContent }).ToString() == true.ToString())
     {
-        <p>@Html.ActionLink("Szerkesztés", "EditOrgWikiPage", new { id = Model.Id }, new { @class = "buttonlikelink green" })</p>
+        <p>@Html.ActionLink("Szerkesztés", "EditProjWikiPage", new { id = Model.Id }, new { @class = "buttonlikelink green" })</p>
     }
-    @if (Html.Action("HasPermission", "Project", new { orgId = Model.ProjectId, perm = ELTE.IssueR.Models.Permissions.BasePermission.RemoveContent }).ToString() == true.ToString())
+    @if (Html.Action("HasPermission", "Project", new { projId = Model.ProjectId, perm = ELTE.IssueR.Models.Permissions.BasePermission.RemoveContent }).ToString() == true.ToString())
     {
-        <p>@Html.ActionLink("Törlés", "RemoveOrgWikiPage", new { id = Model.Id }, new { @class = "buttonlikelink green", onclick = "return confirm('Biztosan ki akarod törölni ezt a wiki oldalt?');" })</p>
+        <p>@Html.ActionLink("Törlés", "RemoveProjWikiPage", new { id = Model.Id }, new { @class = "buttonlikelink green", onclick = "return confirm('Biztosan ki akarod törölni ezt a wiki oldalt?');" })</p>
     }
 </div>
 
@@ -39,5 +39,5 @@
 <em>@Model.Author, @Model.Modified</em>
 
 <div>
-    @Model.Content
+    <text>@(new HtmlString(Model.Content))</text>
 </div>
