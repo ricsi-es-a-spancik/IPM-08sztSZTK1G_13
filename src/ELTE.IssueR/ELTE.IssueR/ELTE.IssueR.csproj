@@ -403,7 +403,6 @@
     <Content Include="Views\Organization\UploadCoverImage.cshtml" />
     <Content Include="Views\Wiki\Index.cshtml" />
     <Content Include="Views\Wiki\ViewOrgDocument.cshtml" />
-    <Content Include="Views\Wiki\ViewDocument.cshtml" />
     <Content Include="Views\Issue\CreateIssue.cshtml" />
     <Content Include="Views\Issue\Comments.cshtml" />
     <Content Include="Views\Organization\AddMember.cshtml" />

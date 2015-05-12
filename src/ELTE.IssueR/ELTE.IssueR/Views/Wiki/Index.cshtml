@@ -23,12 +23,12 @@
 <h1>Wiki oldal - @Model.Section</h1>
 
 <div>
-    <p>@Html.ActionLink("Vissza", "Details", "Organization", new { orgId = Model.Id }, new { @class = "buttonlikelink blue" })</p>
-</div>
-
-<div>
-    @if(Model.Section == "Organization")
-    { 
+    <h2>Műveletek:</h2>
+    @if (Model.Section == "Organization")
+    {
+        <div>
+            <p>@Html.ActionLink("Vissza", "Details", "Organization", new { orgId = Model.Id }, new { @class = "buttonlikelink blue" })</p>
+        </div>
         if (Html.Action("HasPermission", "Organization", new { orgId = Model.Id, perm = ELTE.IssueR.Models.Permissions.BasePermission.AddContent }).ToString() == true.ToString())
         {
             <p>@Html.ActionLink("Új", "NewWikiPage", new { section = Model.Section, id = Model.Id }, new { @class = "buttonlikelink green" })</p>
@@ -36,6 +36,9 @@
     }
     else if (Model.Section == "Project")
     {
+        <div>
+            <p>@Html.ActionLink("Vissza", "ProjectData", "Project", new { id = Model.Id }, new { @class = "buttonlikelink blue" })</p>
+        </div>
         if (Html.Action("HasPermission", "Project", new { projId = Model.Id, perm = ELTE.IssueR.Models.Permissions.BasePermission.AddContent }).ToString() == true.ToString())
         {
             <p>@Html.ActionLink("Új", "NewWikiPage", new { section = Model.Section, id = Model.Id }, new { @class = "buttonlikelink green" })</p>
@@ -44,15 +47,18 @@
 </div>
 
 <div>
-    @foreach(KeyValuePair<String, Int32> title in Model.Docs)
-    {
-        if(Model.Section == "Organization")
+    <h2>Wiki oldalak:</h2>
+    <ul>
+        @foreach (KeyValuePair<String, Int32> title in Model.Docs)
         {
-            <p>@Html.ActionLink(title.Key, "ViewOrgDocument", new { id = title.Value }, new { @class = "buttonlikelink blue" })</p>
+            if (Model.Section == "Organization")
+            {
+                <li>@Html.ActionLink(title.Key, "ViewOrgDocument", new { id = title.Value }, new { @class = "buttonlikelink blue" })</li>
+            }
+            else if (Model.Section == "Project")
+            {
+                <li>@Html.ActionLink(title.Key, "ViewProjDocument", new { id = title.Value }, new { @class = "buttonlikelink blue" })</li>
+            }
         }
-        else if (Model.Section == "Project")
-        { 
-            <p>@Html.ActionLink(title.Key, "ViewProjDocument", new { id = title.Value }, new { @class = "buttonlikelink blue" })</p>
-        }
-    }
+    </ul>
 </div>
