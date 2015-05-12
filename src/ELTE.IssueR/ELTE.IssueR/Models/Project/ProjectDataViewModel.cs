@@ -11,5 +11,7 @@ namespace ELTE.IssueR.Models
         public ProjectViewModel Project { get; set; }
 
         public List<User> ProjectMembers { get; set; }
+
+        public List<Task> Tasks { get; set; }
     }
 }
