@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using ELTE.IssueR.Models;
 using ELTE.IssueR.Models.Permissions;
+using Microsoft.AspNet.Identity;
 
 namespace ELTE.IssueR.Controllers
 {
@@ -206,7 +207,7 @@ namespace ELTE.IssueR.Controllers
         [Authorize]
         public ActionResult ProjectPlan(int Id)
         {
-            if (!checkPermission(BasePermission.EditContent, projectId))
+            if (!checkPermission(BasePermission.EditContent, Id))
                 return RedirectToAction("Index", "Home");
 
             setViewBagLists(Id);
@@ -333,7 +334,8 @@ namespace ELTE.IssueR.Controllers
 
         private bool checkPermission(BasePermission bp, Int32 projId)
         {
-            ProjectMember me = _database.ProjectMembers.Where(mem => mem.ProjectId == projId && mem.UserId == User.Identity.Name).FirstOrDefault();
+            var userId = User.Identity.GetUserId();
+            ProjectMember me = _database.ProjectMembers.Where(mem => mem.ProjectId == projId && mem.UserId == userId).FirstOrDefault();
             if (me == null)
                 return false;
 
