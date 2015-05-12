@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using ELTE.IssueR.Models;
 using ELTE.IssueR.Models.Permissions;
+using Microsoft.AspNet.Identity;
 
 namespace ELTE.IssueR.Controllers
 {
@@ -76,11 +77,13 @@ namespace ELTE.IssueR.Controllers
             };
 
             List<User> projectMembersUsers = p.ProjectMembers.Select(mem => mem.User).ToList();
+            List<Task> tasks = _database.Tasks.Where(t => t.ProjectId == p.Id).ToList();
 
             ProjectDataViewModel pdvm = new ProjectDataViewModel{
                 Id = id,
                 Project = pvm,
-                ProjectMembers = projectMembersUsers
+                ProjectMembers = projectMembersUsers,
+                Tasks = tasks
             };
         
             return View("ProjectData", pdvm);
@@ -200,6 +203,73 @@ namespace ELTE.IssueR.Controllers
             return RedirectToAction("ProjectData", "Project", new { id = projectId});
         }
 
+        [HttpGet]
+        [Authorize]
+        public ActionResult ProjectPlan(int Id)
+        {
+            if (!checkPermission(BasePermission.EditContent, Id))
+                return RedirectToAction("Index", "Home");
+
+            setViewBagLists(Id);
+
+            ProjectTaskViewModel ptvm = new ProjectTaskViewModel{
+                ProjectId = Id
+            };
+
+            return View("ProjectPlan", ptvm);
+
+        }
+
+        private void setViewBagLists(int Id)
+        {
+            List<Task> tasks = _database.Tasks.Where(t => t.ProjectId == Id).ToList();
+            ViewBag.TaskSelectionList = new SelectList(tasks, "Id", "Name");
+
+            Project p = _database.Projects.First(pr => pr.Id == Id);
+            List<User> projectMembersUsers = p.ProjectMembers.Select(mem => mem.User).ToList();
+            ViewBag.ResourceSelectionList = new SelectList(projectMembersUsers, "Name", "Name");
+        }
+
+        [HttpPost]
+        [Authorize]
+        public ActionResult ProjectPlan(ProjectTaskViewModel ptvm)
+        {
+            if (!checkPermission(BasePermission.EditContent, ptvm.ProjectId))
+                return RedirectToAction("Index", "Home");
+
+            if (!ModelState.IsValid)
+            {
+                setViewBagLists(ptvm.ProjectId);
+                return View("ProjectPlan", ptvm);
+            }
+
+            Project p = _database.Projects.FirstOrDefault(x => x.Id == ptvm.ProjectId);
+            if (ptvm.StartDate > ptvm.EndDate || 
+                ptvm.EndDate > p.Deadline)
+            {
+                setViewBagLists(ptvm.ProjectId);
+                return View("ProjectPlan", ptvm);
+            }
+
+            if (ptvm.Resource == null)
+            {
+                ptvm.Resource = "";
+            }
+
+            _database.Tasks.Add(new Task{
+                ProjectId = ptvm.ProjectId,
+                Name = ptvm.Name,
+                StartDate = ptvm.StartDate,
+                EndDate = ptvm.EndDate,
+                Resource = ptvm.Resource,
+                DependentTaskId = ptvm.SelectedTaskId
+            });
+
+            _database.SaveChanges();
+            
+            return RedirectToAction("ProjectData", "Project", new { id = ptvm.ProjectId });
+        }
+
         [Authorize]
         public ActionResult EditMemberPermissions(Int32 projId, string userId)
         {
@@ -264,7 +334,8 @@ namespace ELTE.IssueR.Controllers
 
         private bool checkPermission(BasePermission bp, Int32 projId)
         {
-            ProjectMember me = _database.ProjectMembers.Where(mem => mem.ProjectId == projId && mem.UserId == User.Identity.Name).FirstOrDefault();
+            var userId = User.Identity.GetUserId();
+            ProjectMember me = _database.ProjectMembers.Where(mem => mem.ProjectId == projId && mem.UserId == userId).FirstOrDefault();
             if (me == null)
                 return false;
 

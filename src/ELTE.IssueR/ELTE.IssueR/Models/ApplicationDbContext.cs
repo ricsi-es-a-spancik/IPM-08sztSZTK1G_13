@@ -43,6 +43,8 @@ namespace ELTE.IssueR.Models
         public virtual DbSet<Message> Messages { get; set; }
         public virtual DbSet<UserImage> UserImages { get; set; }
 
+        public virtual DbSet<Task> Tasks { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

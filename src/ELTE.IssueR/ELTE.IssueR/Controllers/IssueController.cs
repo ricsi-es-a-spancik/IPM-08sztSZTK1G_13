@@ -275,6 +275,8 @@ namespace ELTE.IssueR.Controllers
                 filteredIssues.AddRange(issues.Where(i => !filteredIssues.Contains(i) && 
                     (LowerSubStr(i.Name, vm.FilterText) || LowerSubStr(i.Description, vm.FilterText))));
             }
+
+            vm.Filters = _database.GetFilters(vm.SelectedProjectId.Value);  
             
             ViewBag.Issues = filteredIssues;
             ViewBag.Projects = projects;
