@@ -133,8 +133,8 @@ namespace ELTE.IssueR.Controllers
         [Authorize]
         public ActionResult ProjectMemberAdd(int Id)
         {
-            //if (!checkPermission(BasePermission.AddMember, Id))
-            //    return RedirectToAction("Index", "Home");
+            if (!checkPermission(BasePermission.AddMember, Id))
+                return RedirectToAction("Index", "Home");
 
             string userName = User.Identity.Name;
             User currentUser = userManager.Users.FirstOrDefault(u => u.UserName == userName);
@@ -163,8 +163,8 @@ namespace ELTE.IssueR.Controllers
         [Authorize]
         public ActionResult ProjectMemberAdd(UserListViewModel ulvm)
         {
-            //if (!checkPermission(BasePermission.AddMember, ulvm.ProjectId))
-            //    return RedirectToAction("Index", "Home");
+            if (!checkPermission(BasePermission.AddMember, ulvm.ProjectId))
+                return RedirectToAction("Index", "Home");
 
             string selectedItem = Request["selectedItem"];
 
@@ -204,8 +204,10 @@ namespace ELTE.IssueR.Controllers
         [Authorize]
         public ActionResult ProjectPlan(int Id)
         {
-            //if (!checkPermission(BasePermission.EditContent, projectId))
-            //    return RedirectToAction("Index", "Home");
+            if (!checkPermission(BasePermission.EditContent, Id))
+                return RedirectToAction("Index", "Home");
+
+            setViewBagLists(Id);
 
             ProjectTaskViewModel ptvm = new ProjectTaskViewModel{
                 ProjectId = Id
@@ -215,15 +217,26 @@ namespace ELTE.IssueR.Controllers
 
         }
 
+        private void setViewBagLists(int Id)
+        {
+            List<Task> tasks = _database.Tasks.Where(t => t.ProjectId == Id).ToList();
+            ViewBag.TaskSelectionList = new SelectList(tasks, "Id", "Name");
+
+            Project p = _database.Projects.First(pr => pr.Id == Id);
+            List<User> projectMembersUsers = p.ProjectMembers.Select(mem => mem.User).ToList();
+            ViewBag.ResourceSelectionList = new SelectList(projectMembersUsers, "Name", "Name");
+        }
+
         [HttpPost]
         [Authorize]
         public ActionResult ProjectPlan(ProjectTaskViewModel ptvm)
         {
-            //if (!checkPermission(BasePermission.EditContent, ptvm.ProjectId))
-            //    return RedirectToAction("Index", "Home");
+            if (!checkPermission(BasePermission.EditContent, ptvm.ProjectId))
+                return RedirectToAction("Index", "Home");
 
             if (!ModelState.IsValid)
             {
+                setViewBagLists(ptvm.ProjectId);
                 return View("ProjectPlan", ptvm);
             }
 
@@ -231,7 +244,13 @@ namespace ELTE.IssueR.Controllers
             if (ptvm.StartDate > ptvm.EndDate || 
                 ptvm.EndDate > p.Deadline)
             {
+                setViewBagLists(ptvm.ProjectId);
                 return View("ProjectPlan", ptvm);
+            }
+
+            if (ptvm.Resource == null)
+            {
+                ptvm.Resource = "";
             }
 
             _database.Tasks.Add(new Task{
@@ -239,12 +258,24 @@ namespace ELTE.IssueR.Controllers
                 Name = ptvm.Name,
                 StartDate = ptvm.StartDate,
                 EndDate = ptvm.EndDate,
-                Resource = ptvm.Resource
+                Resource = ptvm.Resource,
+                DependentTaskId = ptvm.SelectedTaskId
             });
 
             _database.SaveChanges();
             
             return RedirectToAction("ProjectData", "Project", new { id = ptvm.ProjectId });
+        }
+
+        [Authorize]
+        public ActionResult GanttChart(int Id)
+        {
+            List<Task> tasks = _database.Tasks.Where(t => t.ProjectId == Id).ToList();
+            GanttChartViewModel gcvm = new GanttChartViewModel{
+                Tasks = tasks
+            };
+
+            return View("GanttChart", gcvm);
         }
 
         [Authorize]

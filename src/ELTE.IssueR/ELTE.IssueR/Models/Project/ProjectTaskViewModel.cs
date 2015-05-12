@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
 
 namespace ELTE.IssueR.Models
 {
@@ -23,5 +24,11 @@ namespace ELTE.IssueR.Models
         public String Resource { get; set; }
 
         public int ProjectId { get; set; }
+
+        public int SelectedTaskId { get; set; }
+
+        //public List<Task> Tasks { get; set;}
+
+        //public IEnumerable<SelectListItem> TaskItems { get {return new SelectList(Tasks, "Id", "Name");} }
     }
 }

@@ -249,6 +249,7 @@
     <Compile Include="Models\Filter.cs" />
     <Compile Include="Models\IssueChangeLog.cs" />
     <Compile Include="Models\Issue\ChartsViewModel.cs" />
+    <Compile Include="Models\Project\GanttChartViewModel.cs" />
     <Compile Include="Models\Project\IssueChangeAggregator.cs" />
     <Compile Include="Models\Project\IssueChangeScale.cs" />
     <Compile Include="Models\Project\PieChartData.cs" />
@@ -424,6 +425,7 @@
     <Content Include="Views\Filter\_Filter.cshtml" />
     <Content Include="Views\Filter\OrganizeFilters.cshtml" />
     <Content Include="Views\Project\ProjectPlan.cshtml" />
+    <Content Include="Views\Project\GanttChart.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\temp_upload\" />

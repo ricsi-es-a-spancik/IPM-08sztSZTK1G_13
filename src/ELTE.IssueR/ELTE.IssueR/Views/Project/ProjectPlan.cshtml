@@ -31,9 +31,9 @@
 
     @Html.HiddenFor(m => m.ProjectId)
 
-    <table>
+    <table style="padding:5px">
         <tr>
-            <td>Név:</td>
+            <td>Feladat neve:</td>
             <td>
                 @Html.EditorFor(task => task.Name)
                 @Html.ValidationMessageFor(task => task.Name)
@@ -54,10 +54,15 @@
             </td>
         </tr>
         <tr>
-            <td>Hozzárendelt tag</td>
+            <td>Hozzárendelt tag:  </td>
             <td>
-                @Html.EditorFor(task => task.Resource)
-                @Html.ValidationMessageFor(task => task.Resource)
+                @Html.DropDownListFor(task => task.Resource, (IEnumerable<SelectListItem>)ViewBag.ResourceSelectionList, "Nincs")
+            </td>
+        </tr>
+        <tr>
+            <td>Függőség:</td>
+            <td>
+               @Html.DropDownListFor(task => task.SelectedTaskId, (IEnumerable<SelectListItem>)ViewBag.TaskSelectionList, "Nincs")
             </td>
         </tr>
         <tr>
