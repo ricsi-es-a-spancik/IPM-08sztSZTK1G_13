@@ -25,8 +25,7 @@ namespace ELTE.IssueR.Controllers
             else if(section == "Project")
             {
                 model.Docs = _database.ProjectDocuments.Where(doc => doc.ProjectId == id)
-                    .Select(doc => new KeyValuePair<String, Int32>(doc.Name, doc.Id))
-                    .ToDictionary(p => p.Key, p => p.Value);
+                    .ToDictionary(p => p.Name, p => p.Id);
             }
 
             return View("Index", model);

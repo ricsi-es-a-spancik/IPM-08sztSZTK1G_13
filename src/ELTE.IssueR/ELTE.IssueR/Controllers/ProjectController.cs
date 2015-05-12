@@ -66,20 +66,23 @@ namespace ELTE.IssueR.Controllers
         public ActionResult ProjectData(int id)
         {
             Project p = _database.Projects.FirstOrDefault(pr => pr.Id == id);
+            string OrganizationName = _database.Organizations.FirstOrDefault(o => o.Id == p.OrganizationId).Name;
             ProjectViewModel pvm = new ProjectViewModel{
                 Name = p.Name,
                 Description = p.Description,
                 Deadline = (DateTime)p.Deadline,
                 OrganizationId = p.OrganizationId,
-                OrganizationName = p.Organization.Name
+                OrganizationName = OrganizationName
             };
 
             List<User> projectMembersUsers = p.ProjectMembers.Select(mem => mem.User).ToList();
+            List<Task> tasks = _database.Tasks.Where(t => t.ProjectId == p.Id).ToList();
 
             ProjectDataViewModel pdvm = new ProjectDataViewModel{
                 Id = id,
                 Project = pvm,
-                ProjectMembers = projectMembersUsers
+                ProjectMembers = projectMembersUsers,
+                Tasks = tasks
             };
         
             return View("ProjectData", pdvm);
@@ -197,6 +200,73 @@ namespace ELTE.IssueR.Controllers
             _database.SaveChanges();
 
             return RedirectToAction("ProjectData", "Project", new { id = projectId});
+        }
+
+        [HttpGet]
+        [Authorize]
+        public ActionResult ProjectPlan(int Id)
+        {
+            if (!checkPermission(BasePermission.EditContent, projectId))
+                return RedirectToAction("Index", "Home");
+
+            setViewBagLists(Id);
+
+            ProjectTaskViewModel ptvm = new ProjectTaskViewModel{
+                ProjectId = Id
+            };
+
+            return View("ProjectPlan", ptvm);
+
+        }
+
+        private void setViewBagLists(int Id)
+        {
+            List<Task> tasks = _database.Tasks.Where(t => t.ProjectId == Id).ToList();
+            ViewBag.TaskSelectionList = new SelectList(tasks, "Id", "Name");
+
+            Project p = _database.Projects.First(pr => pr.Id == Id);
+            List<User> projectMembersUsers = p.ProjectMembers.Select(mem => mem.User).ToList();
+            ViewBag.ResourceSelectionList = new SelectList(projectMembersUsers, "Name", "Name");
+        }
+
+        [HttpPost]
+        [Authorize]
+        public ActionResult ProjectPlan(ProjectTaskViewModel ptvm)
+        {
+            if (!checkPermission(BasePermission.EditContent, ptvm.ProjectId))
+                return RedirectToAction("Index", "Home");
+
+            if (!ModelState.IsValid)
+            {
+                setViewBagLists(ptvm.ProjectId);
+                return View("ProjectPlan", ptvm);
+            }
+
+            Project p = _database.Projects.FirstOrDefault(x => x.Id == ptvm.ProjectId);
+            if (ptvm.StartDate > ptvm.EndDate || 
+                ptvm.EndDate > p.Deadline)
+            {
+                setViewBagLists(ptvm.ProjectId);
+                return View("ProjectPlan", ptvm);
+            }
+
+            if (ptvm.Resource == null)
+            {
+                ptvm.Resource = "";
+            }
+
+            _database.Tasks.Add(new Task{
+                ProjectId = ptvm.ProjectId,
+                Name = ptvm.Name,
+                StartDate = ptvm.StartDate,
+                EndDate = ptvm.EndDate,
+                Resource = ptvm.Resource,
+                DependentTaskId = ptvm.SelectedTaskId
+            });
+
+            _database.SaveChanges();
+            
+            return RedirectToAction("ProjectData", "Project", new { id = ptvm.ProjectId });
         }
 
         [Authorize]

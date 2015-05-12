@@ -1,0 +1,74 @@
+﻿@using ELTE.IssueR.Models
+@using ELTE.IssueR.Models.Permissions
+
+@model ProjectTaskViewModel
+
+@{
+    ViewBag.Title = "ProjectPlan";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section AddToHead
+{
+    <link href="@Url.Content("~/Content/jsgatt.css")" rel="stylesheet" type="text/css" />
+
+    <script language="javascript" src="../../Scripts/jsgantt.js"></script>
+}
+
+<p></p>
+
+<button type="button" class="btn buttonlikelink blue btn-default" onclick="history.go(-1); return false;">
+    <span class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true">
+    </span>
+    Vissza
+</button>
+
+<h2>Projekt tervezése</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(m => m.ProjectId)
+
+    <table style="padding:5px">
+        <tr>
+            <td>Feladat neve:</td>
+            <td>
+                @Html.EditorFor(task => task.Name)
+                @Html.ValidationMessageFor(task => task.Name)
+            </td>
+        </tr>
+        <tr>
+            <td>Kezdés:</td>
+            <td>
+                @Html.EditorFor(task => task.StartDate)
+                @Html.ValidationMessageFor(task => task.StartDate)
+            </td>
+        </tr>
+        <tr>
+            <td>Vége:</td>
+            <td>
+                @Html.EditorFor(task => task.EndDate)
+                @Html.ValidationMessageFor(task => task.EndDate)
+            </td>
+        </tr>
+        <tr>
+            <td>Hozzárendelt tag:  </td>
+            <td>
+                @Html.DropDownListFor(task => task.Resource, (IEnumerable<SelectListItem>)ViewBag.ResourceSelectionList, "Nincs")
+            </td>
+        </tr>
+        <tr>
+            <td>Függőség:</td>
+            <td>
+               @Html.DropDownListFor(task => task.SelectedTaskId, (IEnumerable<SelectListItem>)ViewBag.TaskSelectionList, "Nincs")
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="submit" value="Létrehoz" class="buttonlikelink green" />
+            </td>
+        </tr>
+    </table>
+}

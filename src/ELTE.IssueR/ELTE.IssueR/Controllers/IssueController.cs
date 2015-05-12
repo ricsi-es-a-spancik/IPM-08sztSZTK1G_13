@@ -39,7 +39,8 @@ namespace ELTE.IssueR.Controllers
                 listing.SelectedProjectId = projects[0].Id;
             }
 
-            listing.Filters = _database.GetFilters(listing.SelectedProjectId.Value);
+            if (listing.SelectedProjectId.HasValue)
+                listing.Filters = _database.GetFilters(listing.SelectedProjectId.Value);            
 
             ViewBag.Issues = _database.Issues.Where(issue => issue.ProjectId == listing.SelectedProjectId).ToList();
             ViewBag.Projects = projects;
@@ -274,6 +275,8 @@ namespace ELTE.IssueR.Controllers
                 filteredIssues.AddRange(issues.Where(i => !filteredIssues.Contains(i) && 
                     (LowerSubStr(i.Name, vm.FilterText) || LowerSubStr(i.Description, vm.FilterText))));
             }
+
+            vm.Filters = _database.GetFilters(vm.SelectedProjectId.Value);  
             
             ViewBag.Issues = filteredIssues;
             ViewBag.Projects = projects;
